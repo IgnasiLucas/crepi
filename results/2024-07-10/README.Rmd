@@ -1,0 +1,178 @@
+---
+title: "Filter bad contigs, based on coverage"
+author: "J. Ignacio Lucas Lledó"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Previous runs used a VCF, generated with GATK, to identify contigs with extreme values
+of depth of coverage. I believe it is faster to use `samtools depth`. The goal is to 
+generate a matrix of coverage per site and sample, isn't it?
+
+
+```{bash}
+#BAM=../2023-05-18/BAM
+BAM=/nata/mar/crepidostomum2/results/2023-05-18/BAM
+#REF=../2023-05-12/farionis2-scaffolds.fa
+if [ ! -e depth.txt ]; then
+   samtools depth -o depth.txt $BAM/*.bam
+fi
+```
+
+The resulting matrix is 203 Gb, and I'd rather not load it in R as a matrix. Because
+all positions where at least one sample is covered by at least one read are reported,
+the file is unnecessarily large. What I want is a summary of total average depth by
+contig. That is, one line per contig with the average depth per site across all samples.
+
+```{bash}
+if [ ! -e depth_summary.txt ]; then
+   gawk 'BEGIN{
+      CONTIG = 0
+      COVLEN = 0
+      TOTDEP = 0
+      TOTSAM = 0
+   }{
+      if (($1 != CONTIG) && (NR > 1)) {
+         print CONTIG "\t" COVLEN "\t" TOTDEP "\t" TOTSAM
+         CONTIG = $1
+         COVLEN = 0
+         TOTDEP = 0
+         TOTSAM = 0
+      }
+      COVLEN += 1
+      for (i = 3; i <= NF; i++) {
+         TOTDEP += $i
+         TOTSAM += ($i > 0)
+      }
+   }END{
+      print CONTIG "\t" COVLEN "\t" TOTDEP "\t" TOTSAM
+   }' depth.txt > depth_summary.txt
+fi
+```
+
+The `depth_summary.txt` file contains contig number, covered length, total
+depth of coverage, and total number of samples (summed over covered sites).
+I'd like to compare this to the real length of the contigs, which I can get
+from the assembly.
+
+```{bash}
+#ASM=../2023-05-12/ILLUMINA/farionis2-scaffolds.fa
+ASM=/nata/mar/crepidostomum2/results/2023-05-12/ILLUMINA/farionis2-scaffolds.fa
+if [ ! -e assembly_stats.txt ]; then
+   gawk '(/^>/){
+      CONTIG = $1
+      gsub(/>/, "", CONTIG)
+   }(/^[^>]/){
+      print CONTIG "\t" length($1)
+   }' $ASM > assembly_stats.txt
+fi
+```
+
+The average coverage per site, and average number of samples with coverage of
+at least 1 need to be calculated dividing by the number of covered bases per
+contig.
+
+```{r}
+contigLength <- read.table('assembly_stats.txt',
+                           col.names = c('contig', 'L'),
+                           row.names = 1)
+depthSummary <- read.table('depth_summary.txt',
+                           col.names = c('contig', 'covered', 'totDepth', 'totSampl'),
+                           skip = 1)
+depthSummary$totLength <- contigLength[as.character(depthSummary$contig),
+                                       'L']
+rm(contigLength)
+depthSummary$avgDepth <- depthSummary$totDepth / depthSummary$covered
+depthSummary$avgSampl <- depthSummary$totSampl / depthSummary$covered
+
+plot(depthSummary$totDepth, depthSummary$covered, xlim = c(0, 1000000))
+abline(a = 0, b = 1, col = 'red', lty = 2)
+
+# This plot does not work, too much data?
+#plot(density(depthSummary$avgDepth), xlim = c(0, 200))
+
+AvgDepth <- depthSummary$avgDepth
+AvgDepth[AvgDepth > 1000] <- 1000
+plot(density(AvgDepth))
+plot(ecdf(AvgDepth), xlim = c(50, 600), ylim = c(0.96, 1.00))
+rm(AvgDepth)
+```
+
+There is no clear cutoff in coverage depth. The decay of frequency with
+coverage depth is very progressive, making it impossible to choose a
+reasonable threshold between loci suspected to be affected by collapsed
+duplication and those that are not. There being 99 samples, coverage
+depths below 99 cannot have all samples represented.
+
+Let's see the average number of samples with coverage.
+
+```{r samplesPerContig}
+plot(density(depthSummary$avgSampl))
+plot(ecdf(depthSummary$avgSampl))
+```
+
+Again, there is no clear cutoff threshold. What about the relationship
+between average depth and average number of samples covered along a contig?
+
+```{r depthAndSamples}
+f <- depthSummary$avgDepth < 1000
+plot(x = depthSummary[f, 'avgDepth'], y = depthSummary[f, 'avgSampl'],
+     xlab = 'Average depth of coverage',
+     ylab = 'Average number of samples',
+     pch = '.')
+```
+
+In the plot above, every dot is a contig, most of which are very short.
+Three tendencies can be observed. First, the deeper the coverage, the
+larger fraction of samples get covered, until saturation.
+This represents the bulk of loci that get sequenced in any sample where
+the sequencing effort is large enough.
+
+The second pattern is formed by a subset of loci that *resist* to get
+sequenced in most samples, unless the coverage is extremely high. The
+reason could be that such loci got over-amplified in only a subset of
+samples, thus gaining extraordinary depths of coverage, but only thanks
+to the high coverage in those few samples.
+
+In between these two patterns, a third one can be seen: loci sequenced
+in more samples the higher the coverage, but only up to some half of
+the samples. 
+
+In any case, the variation in average depth spans so many orders
+of magnitude that a two or three-fold excess of coverage in some
+collapsed contigs would go completely unnoticed.
+
+## Conclusions
+
+1. Loci with average or *normal* coverage cannot be sequenced in
+most samples.
+2. For a locus to be sequenced in most samples, it needs a total
+coverage of more than 300.
+3. Removing contigs with high coverage would remove many of the few
+contigs sequenced in most samples.
+4. There seems to be loci that are specific of certain subsets of
+samples.
+5. There is no discontinuity in the distribution of depth of coverage,
+and therefore, no clear threshold to distinguish badly behaved contigs.
+6. At this very early stage of the analysis, a complex or too
+agressive filtering strategy could bias subsequent results.
+7. I propose to remove only the 503 loci with average depth of
+coverage higher than 5000.
+
+```{bash}
+# Not conditional on purpose, to always re-write BadContigs.txt.
+gawk '($3 / $2 > 5000){print $1}' depth_summary.txt > BadContigs.txt
+```
+
+It would have been nice to identify mitochondrial contigs and see where
+they fall in the plots.
+
+```{r sessionInfo}
+sessionInfo()
+```
+
+
