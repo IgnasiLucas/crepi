@@ -1,0 +1,15 @@
+  loading Assembly: crepi94
+  from saved path: /scr/joiglu/crepi/2023-05-17b/crepi94.json
+
+ -------------------------------------------------------------
+  ipyrad [v.0.9.96]
+  Interactive assembly and analysis of RAD-seq data
+ ------------------------------------------------------------- 
+  Parallel connection | osd06: 6 cores
+  
+  Step 3: Clustering/Mapping reads within samples
+  [####################] 100% 0:04:52 | join merged pairs      
+  [####################] 100% 0:01:04 | join unmerged pairs    
+  [####################] 100% 0:03:27 | dereplicating          
+  [###########         ]  58% 23:06:49 | clustering/mapping
+

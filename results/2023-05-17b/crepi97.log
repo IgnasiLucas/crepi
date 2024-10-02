@@ -1,0 +1,46 @@
+  loading Assembly: crepi97
+  from saved path: /scr/joiglu/crepi/2023-05-17b/crepi97.json
+
+ -------------------------------------------------------------
+  ipyrad [v.0.9.96]
+  Interactive assembly and analysis of RAD-seq data
+ ------------------------------------------------------------- 
+  Parallel connection | osd03: 6 cores
+  
+  Step 3: Clustering/Mapping reads within samples
+  [####################] 100% 0:05:29 | join merged pairs      
+  [####################] 100% 0:01:09 | join unmerged pairs    
+  [####################] 100% 0:03:36 | dereplicating          
+  [####################] 100% 2 days, 8:10:15 | clustering/mapping     
+  [####################] 100% 0:00:03 | building clusters      
+  [####################] 100% 0:00:01 | chunking clusters      
+  [####################] 100% 6:47:09 | aligning clusters      
+  [####################] 100% 0:40:28 | concat clusters        
+  [####################] 100% 0:01:11 | calc cluster stats     
+  
+  Step 4: Joint estimation of error rate and heterozygosity
+  [####################] 100% 0:20:32 | inferring [H, E]       
+  
+  Step 5: Consensus base/allele calling 
+  Mean error  [0.00745 sd=0.00074]
+  Mean hetero [0.00826 sd=0.00145]
+  [####################] 100% 0:01:11 | calculating depths     
+  [####################] 100% 0:01:55 | chunking clusters      
+  [####################] 100% 0:42:10 | consens calling        
+  [####################] 100% 0:01:01 | indexing alleles       
+  
+  Step 6: Clustering/Mapping across samples 
+  [####################] 100% 0:00:10 | concatenating inputs   
+  [####################] 100% 0:14:07 | clustering across    
+  [####################] 100% 0:00:08 | building clusters      
+  [####################] 100% 0:04:56 | aligning clusters      
+  
+  Step 7: Filtering and formatting output files 
+  [####################] 100% 0:00:27 | applying filters       
+  [####################] 100% 0:01:10 | building arrays        
+  [####################] 100% 0:02:55 | writing conversions    
+[5:apply] IPyradError: Error creating outfile: ('.treemix',)
+NameError	name 'toytree' is not defined
+  [####################] 100% 0:13:04 | indexing vcf depths    
+  [####################] 100% 0:01:46 | writing vcf output     
+  Parallel connection closed.

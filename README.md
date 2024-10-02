@@ -1,4 +1,10 @@
+
+
+
 # 2024-07-10
+Deprecated. It was run with an untrusted assembly from two different
+species.
+
 Any genome assembly is bound to assembly errors, which can bias the
 assessment of genetic variation. One common error is the collapsing
 of two or more paralogous regions into the same contig. Such erroneous
@@ -22,3 +28,21 @@ filter at this point is to remove a few contigs from the end of the
 coverage distribution, quite arbitrarily. The file `BadContigs.txt`
 contains the identifiers of the 503 (of over 3 million) contigs with
 the highest coverage.
+
+# 2023-10-02
+Extraction of *cox1* and *lsrDNA* genes from all samples.
+
+# 2023-05-17b
+Attempt to run `ipyrad` in *de novo* mode. This will be run in Garnatxa.
+
+# 2023-05-17
+This is the `ipyrad` run to demultiplex the FASTQ files. Currently running
+to correct a mistake made in the original `crepidostomum` project folder.
+
+# 2023-05-12
+This is the attempt to assemble the reference genome of *Crepidostomum farionis*.
+After realizing the Nanopore data came from *C. pseudofarionis*,
+Mar had to repeat the assembly with only Illumina and PacBio data.
+
+It seems to be work in progress. Not sure if it is reproducible from the
+`README.Rmd`. 
