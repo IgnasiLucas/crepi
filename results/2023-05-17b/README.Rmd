@@ -283,10 +283,128 @@ splitting alleles. The only sensitive decision is to keep running the analysis
 with more than one value and choose later. See @McCartney-Melstad2019.
 
 ## The rest of the analysis
+I run in Garnatxa de whole analysis with 5 different clustering thresholds:
+0.94, 0.95, 0.96, 0.97 and 0.98. The scripts submitted there are saved in the
+`GarnatxaScripts` subfolder. Below I specify, but do not run, how I would
+do it here:
 
 ```{bash, eval=FALSE}
-
+IPYRAD=/opt/miniconda3/envs/ipyrad/bin/ipyrad
+for i in 94 95 96 97 98; do
+   if [ ! -e crepi${i}_outfiles/crepi${i}.vcf ]; then
+      if [ ! -e params-crepi$i.txt ]; then
+         ipyrad -p params-crepi -b crepi$i
+         sed -i "/## \[5\]/c denovo       ## [5] [assembly_method]"  params-crepi$i.txt
+         sed -i "/## \[14\]/c 0.$i        ## [14] [clust_threshold]" params-crepi$i.txt
+      fi
+      $IPYRAD -p params-crepi$i.txt -f -s 34567 -c 6 1> crepi$i.log 2> crepi$i.err
+   fi
+done
 ```
+
+```{bash}
+if [ ! -e summary_loci_filters.txt ]; then
+   echo -e "Threshold\tDuplicates\tIndels\tSNPs\tHetSites\tMinSamp\tPassing\tNumSNPs" > summary_loci_filters.txt
+   for i in 94 95 96 97 98; do
+      DUP=$(grep filtered_by_rm_duplicates  crepi${i}_outfiles/crepi${i}_stats.txt | gawk '{print $3}')
+      IND=$(grep filtered_by_max_indels     crepi${i}_outfiles/crepi${i}_stats.txt | gawk '{print $3}')
+      SNP=$(grep filtered_by_max_SNPs       crepi${i}_outfiles/crepi${i}_stats.txt | gawk '{print $3}')
+      HET=$(grep filtered_by_max_shared_het crepi${i}_outfiles/crepi${i}_stats.txt | gawk '{print $3}')
+      MIN=$(grep filtered_by_min_sample     crepi${i}_outfiles/crepi${i}_stats.txt | gawk '{print $3}')
+      PAS=$(grep total_filtered_loci        crepi${i}_outfiles/crepi${i}_stats.txt | gawk '{print $4}')
+      NUMSNP=$(grep -v "^#" crepi${i}_outfiles/crepi${i}.vcf | wc -l)
+      echo -e "0.${i}\t${DUP}\t${IND}\t${SNP}\t${HET}\t${MIN}\t${PAS}\t${NUMSNP}" >> summary_loci_filters.txt
+      
+      
+   done
+fi
+```
+
+```{r}
+paleta <- MetBrewer::met.brewer('Egypt', 6)
+lociFilters <- read.table('summary_loci_filters.txt', header = TRUE)
+plot(c(0, 10), c(0, 1e+05), type = 'n', xlab = 'Clustering threshold', ylab = '', axes = FALSE)
+barplot(t(lociFilters[,-1]), col = paleta, add = TRUE)
+axis(1, at = (1:5) * 6 / 5 - 0.5, labels = c('0.94', '0.95', '0.96', '0.97', '0.98'), tick = FALSE)
+legend(6.3, 8.0e+04, legend = c('Filtered by rm duplicates',
+                                'Filtered by max indels',
+                                'Filtered by max SNPs',
+                                'Filtered by max shared het',
+                                'Filtered by min sample',
+                                'Loci that passed filters'),
+       fill = paleta, cex = 0.9)
+plot(lociFilters$Threshold, lociFilters$NumSNPs,
+     xlab = 'Clustering threshold', ylab = 'Number of SNPs', type = 'b')
+```
+
+```{r, fig.width=10, fig.height=25}
+library(gridExtra)
+ipyradStats <- lapply(
+   c(94, 95, 96, 97, 98),
+   function(x) {
+      s3 <- read.table(sprintf('crepi%i_clust_%.2f/s3_cluster_stats.txt', x, x/100))
+      s4 <- read.table(sprintf('crepi%i_clust_%.2f/s4_joint_estimate.txt', x, x/100))
+      s5 <- read.table(sprintf('crepi%i_consens/s5_consens_stats.txt', x))
+      stopifnot(all.equal(row.names(s3), row.names(s4)))
+      stopifnot(all.equal(row.names(s4), row.names(s5)))
+      cbind(Sample = row.names(s3), s3, s4, s5[, -1], ClustThres = rep(x/100, dim(s3)[1]))
+})
+names(ipyradStats) <- c('94', '95', '96', '97', '98')
+ipyStats <- rbind(ipyradStats[['94']], ipyradStats[['95']], ipyradStats[['96']],
+                 ipyradStats[['97']], ipyradStats[['98']])
+row.names(ipyStats) <- NULL
+rm(ipyradStats)
+
+p1 <- ggplot(ipyStats, 
+             aes(x = ClustThres, y = clusters_total, color = Sample)) +
+      geom_line() + theme(legend.position = 'none') +
+      ggtitle('Total number of clusters')
+p2 <- ggplot(ipyStats,
+             aes(x = ClustThres, y = clusters_hidepth, color = Sample)) +
+      geom_line() + theme(legend.position = 'none') +
+      ggtitle('Number of clusters with hight depth')
+p3 <- ggplot(ipyStats,
+             aes(x = ClustThres, y = filtered_by_maxH, color = Sample)) +
+      geom_line() + theme(legend.position = 'none') +
+      ggtitle('Clusters filtered by maximum heterozygous sites')
+p4 <- ggplot(ipyStats,
+             aes(x = ClustThres, y = avg_depth_mj, color = Sample)) +
+      geom_line() + theme(legend.position = 'none') +
+      ggtitle('Average cluster depth, majority-rule sites')
+p5 <- ggplot(ipyStats,
+             aes(x = ClustThres, y = avg_depth_stat, color = Sample)) +
+      geom_line() + theme(legend.position = 'none') +
+      ggtitle('Average cluster depth, statistical inference')
+p6 <- ggplot(ipyStats,
+             aes(x = ClustThres, y = error_est, color = Sample)) +
+      geom_line() + theme(legend.position = 'none') +
+      ggtitle('ML error estimates')
+p7 <- ggplot(ipyStats,
+             aes(x = ClustThres, y = hetero_est, color = Sample)) +
+      geom_line() + theme(legend.position = 'none') +
+      ggtitle('ML heterozygosity estimates')
+p8 <- ggplot(ipyStats,
+             aes(x = ClustThres, y = heterozygosity, color = Sample)) +
+      geom_line() + theme(legend.position = 'none') +
+      ggtitle('Fraction of heterozygous sites')
+p9 <- ggplot(ipyStats,
+             aes(x = ClustThres, y = nsites, color = Sample)) +
+      geom_line() + theme(legend.position = 'none') +
+      ggtitle('Number of sites')
+pF <- ggplot(lociFilters, aes(x = Threshold, y = NumSNPs)) +
+   geom_line() + geom_point()
+grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, p9, pF, ncol = 2)
+```
+
+## Conclusions
+The total number of clusters increase as clustering threshold increases,
+because some clusters get split when requiring a higher clustering
+threshold. However, the number of clusters filtered because of having
+too many heterozygous sites drops between clustering thresholds 0.94 and
+0.95, and remains low from then on. The 0.95 threshold also generates
+some of the highest numbers of sites and SNPs  [@McCartney-Melstad2019].
+
+I will use results from clustering threshold 0.95.
 
 ```{r sessionInfo}
 sessionInfo()

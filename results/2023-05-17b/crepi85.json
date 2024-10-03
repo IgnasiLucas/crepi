@@ -2,9 +2,9 @@
     "assembly":{
         "name":"crepi85",
         "dirs":{
-            "project":"/nata/joiglu/crepidostomum2/results/2023-05-17b",
+            "project":"/scr/joiglu/crepi/2023-05-17b",
             "fastqs":"",
-            "edits":"../2023-05-17b/crepi_edits",
+            "edits":"/scr/joiglu/crepi/2023-05-17b/crepi_edits",
             "clusts":"",
             "consens":"",
             "across":"",
@@ -44,7 +44,7 @@
                 "_reference_as_filter"
             ],
             "_assembly_name":"crepi85",
-            "_project_dir":"/nata/joiglu/crepidostomum2/results/2023-05-17b",
+            "_project_dir":"/scr/joiglu/crepi/2023-05-17b",
             "_raw_fastq_path":"",
             "_barcodes_path":"",
             "_sorted_fastq_path":"",
@@ -106,7 +106,7 @@
                 "t",
                 "m"
             ],
-            "_pop_assign_file":"/nata/joiglu/crepidostomum2/results/2023-05-17b/ipopmap.txt",
+            "_pop_assign_file":"/scr/joiglu/crepi/2023-05-17b/ipopmap.txt",
             "_reference_as_filter":""
         },
         "samples":[
@@ -345,7 +345,7 @@
         },
         "barcodes":{},
         "stats_files":{
-            "s2":"../2023-05-17b/crepi_edits/s2_rawedit_stats.txt"
+            "s2":"/scr/joiglu/crepi/2023-05-17b/crepi_edits/s2_rawedit_stats.txt"
         },
         "hackersonly":{
             "random_seed":42,
@@ -389,8 +389,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S117Cmb.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S117Cmb.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S117Cmb.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S117Cmb.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -403,8 +403,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S117Cmb_R1_concat.fq.gz",
-                            "../2023-05-17b/crepi_edits/S117Cmb_R2_concat.fq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S117Cmb_R1_concat.fq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S117Cmb_R2_concat.fq.gz"
                         ]
                     }
                 ]
@@ -484,8 +484,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L074Cmd.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L074Cmd.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L074Cmd.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L074Cmd.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -586,8 +586,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S023Cxc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S023Cxc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S023Cxc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S023Cxc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -600,8 +600,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S023Cxc_R1_concat.fq.gz",
-                            "../2023-05-17b/crepi_edits/S023Cxc_R2_concat.fq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S023Cxc_R1_concat.fq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S023Cxc_R2_concat.fq.gz"
                         ]
                     }
                 ]
@@ -688,8 +688,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S125Cma.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S125Cma.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S125Cma.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S125Cma.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -702,8 +702,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S125Cma_R1_concat.fq.gz",
-                            "../2023-05-17b/crepi_edits/S125Cma_R2_concat.fq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S125Cma_R1_concat.fq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S125Cma_R2_concat.fq.gz"
                         ]
                     }
                 ]
@@ -783,8 +783,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L043Cxc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L043Cxc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L043Cxc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L043Cxc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -878,8 +878,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L064Cxa.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L064Cxa.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L064Cxa.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L064Cxa.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -973,8 +973,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L059Cmd.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L059Cmd.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L059Cmd.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L059Cmd.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -1068,8 +1068,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S116Cmb.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S116Cmb.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S116Cmb.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S116Cmb.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -1163,8 +1163,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S119Cmc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S119Cmc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S119Cmc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S119Cmc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -1258,8 +1258,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L098Cxd.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L098Cxd.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L098Cxd.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L098Cxd.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -1353,8 +1353,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S016Cxc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S016Cxc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S016Cxc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S016Cxc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -1448,8 +1448,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L059Cmc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L059Cmc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L059Cmc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L059Cmc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -1543,8 +1543,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L074Cxc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L074Cxc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L074Cxc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L074Cxc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -1638,8 +1638,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L088Cma.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L088Cma.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L088Cma.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L088Cma.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -1733,8 +1733,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S116Cma.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S116Cma.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S116Cma.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S116Cma.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -1828,8 +1828,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S083Cxb.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S083Cxb.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S083Cxb.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S083Cxb.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -1923,8 +1923,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L064Cxb.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L064Cxb.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L064Cxb.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L064Cxb.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -2018,8 +2018,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S001Cmc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S001Cmc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S001Cmc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S001Cmc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -2113,8 +2113,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/N048Cma.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/N048Cma.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/N048Cma.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/N048Cma.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -2208,8 +2208,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S002Cma.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S002Cma.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S002Cma.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S002Cma.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -2303,8 +2303,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L090Cma.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L090Cma.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L090Cma.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L090Cma.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -2398,8 +2398,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L088Cmb.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L088Cmb.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L088Cmb.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L088Cmb.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -2493,8 +2493,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S001Cmb.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S001Cmb.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S001Cmb.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S001Cmb.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -2588,8 +2588,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S002Cmc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S002Cmc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S002Cmc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S002Cmc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -2683,8 +2683,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L098Cxc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L098Cxc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L098Cxc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L098Cxc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -2778,8 +2778,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S006Cxb.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S006Cxb.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S006Cxb.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S006Cxb.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -2873,8 +2873,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L131Cmb.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L131Cmb.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L131Cmb.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L131Cmb.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -2968,8 +2968,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/N048Cmb.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/N048Cmb.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/N048Cmb.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/N048Cmb.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -3063,8 +3063,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S118Cmc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S118Cmc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S118Cmc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S118Cmc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -3158,8 +3158,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S127Cma.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S127Cma.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S127Cma.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S127Cma.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -3253,8 +3253,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S012Cxb.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S012Cxb.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S012Cxb.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S012Cxb.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -3348,8 +3348,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L061Cmc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L061Cmc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L061Cmc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L061Cmc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -3443,8 +3443,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S005Cma.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S005Cma.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S005Cma.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S005Cma.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -3538,8 +3538,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S118Cma.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S118Cma.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S118Cma.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S118Cma.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -3633,8 +3633,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L047Cxc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L047Cxc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L047Cxc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L047Cxc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -3728,8 +3728,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S003Cmd.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S003Cmd.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S003Cmd.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S003Cmd.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -3830,8 +3830,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S027Cxa.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S027Cxa.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S027Cxa.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S027Cxa.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -3844,8 +3844,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S027Cxa_R1_concat.fq.gz",
-                            "../2023-05-17b/crepi_edits/S027Cxa_R2_concat.fq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S027Cxa_R1_concat.fq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S027Cxa_R2_concat.fq.gz"
                         ]
                     }
                 ]
@@ -3925,8 +3925,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L074Cmf.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L074Cmf.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L074Cmf.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L074Cmf.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -4020,8 +4020,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L090Cmc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L090Cmc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L090Cmc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L090Cmc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -4115,8 +4115,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L059Cmb.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L059Cmb.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L059Cmb.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L059Cmb.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -4210,8 +4210,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S119Cma.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S119Cma.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S119Cma.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S119Cma.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -4305,8 +4305,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S006Cxa.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S006Cxa.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S006Cxa.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S006Cxa.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -4400,8 +4400,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L019Cxb.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L019Cxb.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L019Cxb.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L019Cxb.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -4502,8 +4502,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S004Cmb.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S004Cmb.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S004Cmb.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S004Cmb.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -4516,8 +4516,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S004Cmb_R1_concat.fq.gz",
-                            "../2023-05-17b/crepi_edits/S004Cmb_R2_concat.fq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S004Cmb_R1_concat.fq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S004Cmb_R2_concat.fq.gz"
                         ]
                     }
                 ]
@@ -4597,8 +4597,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S019Cxc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S019Cxc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S019Cxc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S019Cxc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -4692,8 +4692,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S005Cmb.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S005Cmb.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S005Cmb.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S005Cmb.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -4787,8 +4787,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S002Cme.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S002Cme.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S002Cme.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S002Cme.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -4882,8 +4882,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L043Cxb.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L043Cxb.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L043Cxb.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L043Cxb.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -4977,8 +4977,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S117Cma.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S117Cma.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S117Cma.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S117Cma.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -5072,8 +5072,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S009Cxa.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S009Cxa.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S009Cxa.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S009Cxa.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -5167,8 +5167,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S022Cxa.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S022Cxa.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S022Cxa.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S022Cxa.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -5262,8 +5262,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S108Cxc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S108Cxc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S108Cxc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S108Cxc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -5357,8 +5357,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L089Cma.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L089Cma.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L089Cma.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L089Cma.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -5452,8 +5452,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L090Cmb.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L090Cmb.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L090Cmb.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L090Cmb.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -5547,8 +5547,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S011Cxf.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S011Cxf.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S011Cxf.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S011Cxf.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -5642,8 +5642,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S011Cxa.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S011Cxa.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S011Cxa.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S011Cxa.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -5737,8 +5737,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S003Cma.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S003Cma.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S003Cma.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S003Cma.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -5832,8 +5832,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S061Cmb.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S061Cmb.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S061Cmb.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S061Cmb.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -5927,8 +5927,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L043Cxd.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L043Cxd.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L043Cxd.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L043Cxd.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -6022,8 +6022,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L089Cxd.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L089Cxd.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L089Cxd.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L089Cxd.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -6119,8 +6119,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S019Cxd.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S019Cxd.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S019Cxd.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S019Cxd.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -6216,8 +6216,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S027Cxe.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S027Cxe.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S027Cxe.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S027Cxe.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -6313,8 +6313,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L115Cxc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L115Cxc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L115Cxc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L115Cxc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -6410,8 +6410,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S022Cxb.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S022Cxb.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S022Cxb.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S022Cxb.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -6507,8 +6507,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L061Cmb.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L061Cmb.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L061Cmb.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L061Cmb.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -6604,8 +6604,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L131Cma.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L131Cma.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L131Cma.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L131Cma.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -6701,8 +6701,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S003Cmc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S003Cmc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S003Cmc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S003Cmc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -6798,8 +6798,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L087Cxa.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L087Cxa.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L087Cxa.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L087Cxa.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -6895,8 +6895,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L019Cxa.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L019Cxa.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L019Cxa.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L019Cxa.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -6992,8 +6992,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/T165Cxa.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/T165Cxa.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/T165Cxa.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/T165Cxa.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -7089,8 +7089,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S011Cxh.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S011Cxh.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S011Cxh.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S011Cxh.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -7186,8 +7186,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/N048Cmc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/N048Cmc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/N048Cmc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/N048Cmc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -7283,8 +7283,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S016Cxb.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S016Cxb.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S016Cxb.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S016Cxb.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -7380,8 +7380,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S126Cma.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S126Cma.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S126Cma.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S126Cma.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -7478,8 +7478,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S004Cma.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S004Cma.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S004Cma.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S004Cma.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -7575,8 +7575,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S027Cxd.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S027Cxd.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S027Cxd.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S027Cxd.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -7672,8 +7672,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L088Cmc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L088Cmc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L088Cmc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L088Cmc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -7769,8 +7769,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L074Cme.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L074Cme.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L074Cme.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L074Cme.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -7864,8 +7864,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L134Cma.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L134Cma.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L134Cma.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L134Cma.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -7959,8 +7959,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S031Cmc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S031Cmc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S031Cmc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S031Cmc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -8054,8 +8054,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L089Cxc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L089Cxc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L089Cxc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L089Cxc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -8149,8 +8149,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S001Cma.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S001Cma.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S001Cma.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S001Cma.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -8244,8 +8244,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S012Cxa.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S012Cxa.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S012Cxa.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S012Cxa.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -8339,8 +8339,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L087Cma.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L087Cma.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L087Cma.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L087Cma.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -8434,8 +8434,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L074Cma.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L074Cma.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L074Cma.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L074Cma.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -8529,8 +8529,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/N044Cx2.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/N044Cx2.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/N044Cx2.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/N044Cx2.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -8631,8 +8631,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S125Cmc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S125Cmc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S125Cmc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S125Cmc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -8645,8 +8645,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S125Cmc_R1_concat.fq.gz",
-                            "../2023-05-17b/crepi_edits/S125Cmc_R2_concat.fq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S125Cmc_R1_concat.fq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S125Cmc_R2_concat.fq.gz"
                         ]
                     }
                 ]
@@ -8726,8 +8726,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L089Cmc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L089Cmc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L089Cmc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L089Cmc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -8821,8 +8821,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S020Cxd.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S020Cxd.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S020Cxd.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S020Cxd.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -8916,8 +8916,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S023Cxd.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S023Cxd.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S023Cxd.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S023Cxd.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -9011,8 +9011,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S061Cma.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S061Cma.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S061Cma.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S061Cma.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -9106,8 +9106,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S020Cxc.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S020Cxc.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S020Cxc.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S020Cxc.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -9201,8 +9201,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L065Cxa.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L065Cxa.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L065Cxa.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L065Cxa.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -9296,8 +9296,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L074Cxb.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L074Cxb.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L074Cxb.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L074Cxb.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -9391,8 +9391,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/L089Cmb.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/L089Cmb.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L089Cmb.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/L089Cmb.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -9486,8 +9486,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "../2023-05-17b/crepi_edits/S031Cma.trimmed_R1_.fastq.gz",
-                            "../2023-05-17b/crepi_edits/S031Cma.trimmed_R2_.fastq.gz"
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S031Cma.trimmed_R1_.fastq.gz",
+                            "/scr/joiglu/crepi/2023-05-17b/crepi_edits/S031Cma.trimmed_R2_.fastq.gz"
                         ]
                     }
                 ],
