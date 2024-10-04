@@ -1,0 +1,108 @@
+---
+title: "Preparing ddRAD loci for subsequent analyses"
+author: "J. Ignacio Lucas Lledó"
+date: "`r Sys.Date()`"
+output:
+   html_document:
+      toc: true
+bibliography: '../../doc/references.bib'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Extraction of consensus FASTA from ddRAD loci
+According to the analysis in `2023-05-17b`, I choose `ipyrad`'s output
+corresponding to a clustering threshold of 0.95. I first generate FASTA
+files for every locus, with different alleles of the same individual as
+different sequences. That is, I will start by distributing allelic
+sequences found in `../2023-05-17b/crepi95_outfiles/crepi95.alleles`
+in locus-specific FASTA files. 
+
+```{bash}
+ALLELES=../2023-05-17b/crepi95_outfiles/crepi95.alleles
+if [ ! -e summary_alleles.txt ]; then
+   echo -e "Locus\tLength\tNumSeqs\tNumVar\tNumInfor" > summary_alleles.txt
+   if [ ! -d alleles ]; then mkdir alleles; fi
+   gawk '(/^[^\/]/){
+      SEQ[$1] = $2
+      N++
+      LEN = length($2)
+   }(/^\//){
+      split($0, A, /\|/)
+      N1 = gsub(/*/, "*", A[1])
+      N2 = gsub(/-/, "-", A[1])
+      FASTAOUT = sprintf("alleles/loc%05i.fa", A[2])
+      for (s in SEQ) print ">" s "\n" SEQ[s] >FASTAOUT
+      print sprintf("loc%05i.fa", A[2]) "\t" LEN "\t" N "\t" N1 + N2 + 0 "\t" N1 >>"summary_alleles.txt"
+      delete SEQ
+      N = 0
+   }' $ALLELES
+fi
+```
+
+```{r}
+suppressMessages(library(kableExtra))
+Alleles <- read.table('summary_alleles.txt', header = TRUE)
+NumInd <- as.data.frame(table(Alleles$NumSeqs / 2), stringsAsFactors = FALSE)
+names(NumInd) <- c('NumInd', 'NumLoci')
+NumInd$NumInd <- as.integer(NumInd$NumInd)
+NumInd <- NumInd[order(NumInd$NumInd, decreasing = TRUE),]
+NumInd$CumSum <- cumsum(NumInd$NumLoci)
+plot(NumInd$NumInd, NumInd$CumSum,
+     xlim = c(max(NumInd$NumInd), min(NumInd$NumInd)), type = 'l', log = 'y',
+     xlab = 'Minimum number of individuals',
+     ylab = 'Accumulated number of loci',
+     main = 'Number of loci with at least so many individuals')
+kable(NumInd, row.names = FALSE,
+      col.names = c('Number of individuals', 'Number of loci', 'Cumulative Sum')) %>% kable_styling(full_width = FALSE)
+```
+
+I use the `cons` program from EMBOSS to get the consensus sequence from every
+locus.
+
+```{bash}
+if [ ! -e consensus.fa ]; then
+   if [ ! -d tmp ]; then mkdir tmp; fi
+   for l in $(ls -1 alleles); do
+      cons -sequence alleles/$l -outseq tmp/$l -name ${l:0:8} 2> /dev/null
+   done
+   cat tmp/*.fa > consensus.fa
+   rm -r tmp
+fi
+```
+
+The file `consensus.fa` contains all loci, irrespective of how few
+samples have been sequenced there. It can be used as a reference to
+map original reads in FASTQ files, in order to generate the BAM files
+corresponding to these loci. Mapping failures would reduce the coverage,
+with respect to what is observed in the `alleles` folder. But in general
+I would expect the mapping to generate similar alignments, with the
+advantage of sequence quality information, from which to estimate
+genotype likelihoods.
+
+## What's next
+In order to use the alignments for an extended Bayesian skyline plot,
+I need to be able to assign population labels to individuals. One
+option is to stick to the lake. But we know there is some more structure.
+If I want to determine the structure of genetic variation before assuming
+populations, I need a decent common matrix of genotypes.
+
+One good reason not to have a complete matrix of genotypes is that
+many reads were wasted in `ipyrad` due to low-coverage. We had set
+the `mindepth_majrule` to 4, which excludes from the analysis any
+sample-specific cluster with less than 4 reads. This makes sense for
+the purpose of knowing genotypes, but it's a waste of information in
+the context of genotype likelihoods.
+
+One possibility is to run `ipyrad` again with `mindepth_majrule` set to
+1. But we would lose the base-quality information with which genotype
+likelihoods can be estimated, and we would miss a lot of heterozygous
+genotypes. It may be worth trying, for the methods to be more consistent.
+But it would be as having in every locus a mixture of haploid and diploid
+individuals, without knowing which homozygotes are the haploid ones.
+
+The strategy of re-mapping the raw reads to all cluster consensus seems
+more promissing. That way, we would get BAM files, suitable to work with
+ANGSD.

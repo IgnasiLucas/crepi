@@ -1,5 +1,11 @@
+(Note the inverse chronological order: more recent first)
 
+# 2024-10-03
+Preparation of ipyrad's results from 2023-05-17b for subsequent use
+of the *de novo* assembly. Several goals:
 
+1. Make FASTA files with the alleles output for every locus.
+2. Extract a consensus sequence from every locus.
 
 # 2024-07-10
 Deprecated. It was run with an untrusted assembly from two different
@@ -33,11 +39,11 @@ the highest coverage.
 Extraction of *cox1* and *lsrDNA* genes from all samples.
 
 # 2023-05-17b
-Attempt to run `ipyrad` in *de novo* mode. This will be run in Garnatxa.
+Ipyrad was run in Garnatxa with different clustering thresholds, between
+0.94 and 0.98. I reccommend using results for clustering threshold 0.95.
 
 # 2023-05-17
-This is the `ipyrad` run to demultiplex the FASTQ files. Currently running
-to correct a mistake made in the original `crepidostomum` project folder.
+This is the `ipyrad` run to demultiplex the FASTQ files.
 
 # 2023-05-12
 This is the attempt to assemble the reference genome of *Crepidostomum farionis*.
@@ -46,3 +52,4 @@ Mar had to repeat the assembly with only Illumina and PacBio data.
 
 It seems to be work in progress. Not sure if it is reproducible from the
 `README.Rmd`. 
+
