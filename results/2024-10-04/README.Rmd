@@ -1,0 +1,105 @@
+---
+title: "Mapping of raw reads to RAD loci"
+author: "J. Ignacio Lucas Lledó"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Mapping reads to RAD loci
+
+```{bash}
+FASTQDIR=../2023-05-17b/crepi_edits
+if [ ! -e radloci.fa.fai ]; then
+   if [ ! -e radloci.fa ]; then
+      cp ../2024-10-03/consensus.fa ./radloci.fa
+   fi
+   samtools faidx radloci.fa
+fi
+if [ ! -e radloci.fa.bwt.2bit.64 ]; then
+   bwa-mem2 index radloci.fa &> /dev/null
+fi
+if [ ! -e samples.txt ]; then
+   gawk '(NR > 1){
+      gsub(/"/,"",$3)
+      print substr($3,1,7)
+   }' ../../data/IDs/Crepido_fish_IDs_all_data_2021Dec.txt | \
+   sort | uniq > samples.txt
+fi
+
+if [ ! -d BAM ]; then mkdir BAM; fi
+for SAMPLE in $(cat samples.txt); do
+   if [ ! -e BAM/${SAMPLE}.bam ]; then
+      if [ ! -e BAM/${SAMPLE}.sam ]; then
+         bwa-mem2 mem -t 12 radloci.fa \
+            $FASTQDIR/${SAMPLE}.trimmed_R1_.fastq.gz \
+            $FASTQDIR/${SAMPLE}.trimmed_R2_.fastq.gz \
+            -R "@RG\tID:${SAMPLE}\tSM:${SAMPLE}" 1> BAM/${SAMPLE}.sam 2>> bwamem2.log
+      fi
+      # Exclude (-F) unmapped reads (4) and secondary alignments (256). Include only proper pairs.
+      samtools view -F 260 -f 2 -u BAM/${SAMPLE}.sam | \
+      samtools sort > BAM/${SAMPLE}.bam
+      samtools index BAM/${SAMPLE}.bam
+      if [ -e BAM/${SAMPLE}.sam ]; then rm BAM/${SAMPLE}.sam; fi
+   fi
+done
+```
+
+## Summary of results
+I want to reproduce a figure like the first one in `2024-10-03`, with current
+mappings, to show the number of loci where at least *N* individuals have any
+coverage.
+
+```{bash}
+if [ ! -e coverage_matrix.txt ]; then
+   for i in $(cat samples.txt); do
+      echo $i > z_$i.txt
+      samtools view BAM/$i.bam | cut -f 3 | uniq | \
+      gawk 'BEGIN{
+         EXPECTED = 0
+      }{
+         CURRENT = substr($1, 4, 8) + 0
+         for (i = EXPECTED; i < CURRENT; i++) {
+            print 0
+         }
+         print 1
+         EXPECTED = CURRENT + 1
+      }END{
+         for (i = EXPECTED; i <= 76849; i++) {
+            print 0
+         }
+      }' >> z_$i.txt
+   done
+   echo "" > rownames.txt
+   for i in $(seq 0 76849); do
+      printf "loc%05i\n" $i >> rownames.txt
+   done
+   paste rownames.txt z_* > coverage_matrix.txt
+   rm rownames.txt z_*
+fi
+```
+
+```{r}
+covMat <- read.table('coverage_matrix.txt')
+PerLocus <- rowSums(covMat)
+PerLocusTab <- as.data.frame(table(PerLocus), stringsAsFactors = FALSE)
+names(PerLocusTab) <- c('NumInd', 'NumLoci')
+PerLocusTab$NumInd <- as.integer(PerLocusTab$NumInd)
+PerLocusTab <- PerLocusTab[order(PerLocusTab$NumInd, decreasing = TRUE),]
+PerLocusTab$CumSum <- cumsum(PerLocusTab$NumLoci)
+plot(PerLocusTab$NumInd, PerLocusTab$CumSum,
+     xlim = c(max(PerLocusTab$NumInd), min(PerLocusTab$NumInd)), type = 'l',
+     xlab = 'Minimum number of individuals',
+     ylab = 'Accumulated number of loci',
+     main = 'Number of loci with at least so many individuals')
+```
+
+## Conclusions
+Most loci are not covered yet in more than 60 individuals (out of 96), but therer
+are more than 20000 loci covered at least by one read in more than 80 individuals,
+and that's the low-coverage kind of data that ANGSD can help us with. Let's run it,
+in a new folder.
