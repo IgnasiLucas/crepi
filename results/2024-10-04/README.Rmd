@@ -97,9 +97,35 @@ plot(PerLocusTab$NumInd, PerLocusTab$CumSum,
      ylab = 'Accumulated number of loci',
      main = 'Number of loci with at least so many individuals')
 ```
+## May we remove any individual from analysis?
+
+```{r}
+barplot(table(PerLocus), xlab = 'Individuals covered', ylab = 'Number of loci')
+plot(ecdf(colSums(covMat)), xlab = 'Number of loci covered', ylab = 'Cumulative fraction of individuals', main = 'ECDF Number of loci per sample')
+```
+
+There are a few samples with less than 30000 loci covered:
+`r names(which(colSums(covMat) < 30000))`.
+There are also `r sum(rowSums(covMat) == 0)` loci not covered by any read in any sample. These
+are strange: mapping failure? Below I create a list of *bad guys* to be removed from analysis
+and a list of *good loci* with at least 5 samples. I need it for ANGSD, with the colon after
+the name of the locus.
+
+```{r}
+write.table(names(which(colSums(covMat) < 30000)),
+            file = 'BadGuys.txt', quote = FALSE,
+            col.names = FALSE, row.names = FALSE)
+covMat2 <- covMat[, colSums(covMat) >= 30000]
+write.table(paste0(names(which(rowSums(covMat2) >= 5)), ":"),
+            file = 'GoodLoci.txt', quote = FALSE,
+            col.names = FALSE, row.names = FALSE)
+covMat2 <- covMat2[rowSums(covMat2) >= 5,]
+```
 
 ## Conclusions
 Most loci are not covered yet in more than 60 individuals (out of 96), but therer
 are more than 20000 loci covered at least by one read in more than 80 individuals,
 and that's the low-coverage kind of data that ANGSD can help us with. Let's run it,
 in a new folder.
+
+I selected a subset of `r dim(covMat2)[2]` individuals and `r dim(covMat2)[1]` loci.
