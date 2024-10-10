@@ -1,0 +1,214 @@
+---
+title: "Population structure from RAD loci with ANGSD"
+author: "J. Ignacio Lucas Lledó"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Here I want to determine the population structure of *Crepidostomum*
+samples using SNPs from mapping to RAD loci. Only samples from the
+Arctic region are available, because the few Alpine samples sequenced
+do not have enough data. Because the reference used are *de novo*
+assembled RAD loci, distances among SNPs are very short within a locus
+and completely unknown among loci. Thus, instead of using `ngsLD` to
+prune sites affected by linkage disequilibrium, I can simply select one
+SNP from each locus.
+
+The following script was run in Garnatxa to generate genotype likelihoods:
+
+```{bash, eval=FALSE}
+#!/bin/bash
+#SBATCH --job-name=angsd1
+#SBATCH --output=angsd1.log
+#SBATCH --nodes=1
+#SBATCH --ntasks=3
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=5G
+#SBATCH --qos=short
+#SBATCH --time=1-00:00:00
+
+module load anaconda
+mamba activate bio
+module load angsd
+
+cd /scr/joiglu/crepi/2024-10-05
+
+BAM=BAM
+ASM=radloci.fa
+EXCLUDE=BadGuys.txt
+GOODLOCI=GoodLoci.txt
+
+if [ ! -e ARCTIC.list ]; then
+   ls -1 $BAM/*.bam | grep -E "L|S" | grep -v -F -f $EXCLUDE > ARCTIC.list
+fi
+if [ ! -d Likes1 ]; then mkdir Likes1; fi
+for REGION in ARCTIC; do
+   MININD=$(( $(cat $REGION.list | wc -l) / 2))
+   if [ ! -e Likes1/${REGION}.beagle.gz ]; then
+      angsd -bam ${REGION}.list \
+            -ref $ASM \
+            -rf $GOODLOCI \
+            -out Likes1/${REGION} \
+            -only_proper_pairs 1 \
+            -baq 1 \
+            -setMinDepth 20 \
+            -minInd $MININD \
+            -GL 2 \
+            -doGlf 2 \
+            -doIBS 1 \
+            -doCounts 1 \
+            -doCov 1 \
+            -makeMatrix 1 \
+            -doMajorMinor 1 \
+            -doMaf 1 \
+            -SNP_pval 1e-6 \
+            -minMapQ 30 \
+            -minQ 20 \
+            -minMaf 0.05 \
+            -nThreads 8 \
+            1> Likes1/${REGION}.angsd.log \
+            2> Likes1/${REGION}.angsd.err &
+   fi
+done
+wait
+```
+
+## Selection of one SNP per RAD locus
+
+How do I select one SNP from every locus? I am supposed to select them
+randomly, with respect to their minor allele frequency. Within a locus,
+different SNPs could be covered in a different number of individuals, if
+some reads are shorter (they were trimmed). I think it makes sense to
+choose SNPs among those with the largest number of individuals with data.
+The file `Likes1/ARCTIC.mafs.gz` includes the number of individuals from
+which minor allele frequencies were estimated in every SNP. Let's use it.
+
+```{r}
+if (! file.exists('Sites/ARCTIC_snp.sites')){
+   library(readr)
+   MAF <- read_tsv('Likes1/ARCTIC.mafs.gz', show_col_types = FALSE)
+   Sites <- do.call(
+      rbind,
+      lapply(split(MAF, MAF$chromo),
+             function(x){
+                x2 <- x[x$nInd == max(x$nInd),]
+                return(x2[sample(dim(x2)[1], 1), c('chromo', 'position')])
+             })
+   )
+   write.table(Sites, file = 'Sites/ARCTIC_snp.sites',
+               quote = FALSE, sep = '\t', row.names = FALSE,
+               col.names = FALSE)
+}
+```
+
+## Genotype likelihoods of only selected sites
+
+The following script was run in Garnatxa:
+
+```{bash, eval=FALSE}
+#!/bin/bash
+#SBATCH --job-name=angsd2
+#SBATCH --output=angsd2.log
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=5G
+#SBATCH --qos=short
+#SBATCH --time=1-00:00:00
+
+module load anaconda
+mamba activate bio
+module load angsd
+
+cd /scr/joiglu/crepi/2024-10-05
+
+BAM=BAM
+ASM=radloci.fa
+
+if [ ! -d Likes2 ]; then mkdir Likes2; fi
+for REGION in ARCTIC; do
+   if [ ! -e Sites/${REGION}_snp.sites.bin ]; then
+      sed -i 's/:/\t/' Sites/${REGION}_snp.sites
+      angsd sites index Sites/${REGION}_snp.sites 2> Sites/${REGION}_snp.sites.log
+   fi
+   if [ ! -e Sites/${REGION}_contigs.txt ]; then
+      cut -f 1 Sites/${REGION}_snp.sites | sort | uniq > Sites/${REGION}_contigs.txt
+   fi
+   if [ ! -e Likes2/${REGION}.beagle.gz ]; then
+      angsd -bam ${REGION}.list \
+            -ref $ASM \
+            -sites Sites/${REGION}_snp.sites \
+            -rf Sites/${REGION}_contigs.txt \
+            -out Likes2/${REGION} \
+            -only_proper_pairs 1 \
+            -baq 1 \
+            -setMinDepth 20 \
+            -GL 2 \
+            -doGlf 2 \
+            -doIBS 1 \
+            -doCounts 1 \
+            -doCov 1 \
+            -makeMatrix 1 \
+            -doMajorMinor 1 \
+            -doMaf 1 \
+            -SNP_pval 2e-10 \
+            -minMapQ 30 \
+            -minQ 20 \
+            -minMaf 0.05 \
+            -nThreads 8 \
+            1> Likes2/${REGION}.angsd.log \
+            2> Likes2/${REGION}.angsd.err &
+   fi
+done
+wait
+
+if [ ! -d PCangsd ]; then mkdir PCangsd; fi
+for REGION in ARCTIC; do
+   if [ ! -e PCangsd/${REGION}.cov ]; then
+      pcangsd --beagle Likes2/${REGION}.beagle.gz \
+              --out PCangsd/${REGION} \
+              --threads 8 \
+              1> PCangsd/${REGION}.stdout \
+              2> PCangsd/${REGION}.stderr &
+   fi
+done
+wait
+
+if [ ! -d NGSadmix ]; then mkdir NGSadmix; fi
+for REGION in ARCTIC; do
+   for K in 2 3 4 5 6; do
+      if [ ! -e NGSadmix/${REGION}.K${K}.qopt ]; then
+         /home/joiglu/software/NGSTOOLS/angsd/misc/NGSadmix -likes Likes2/${REGION}.beagle.gz \
+                  -K $K \
+                  -P 8 \
+                  -outfiles NGSadmix/${REGION}.K${K} \
+                  -minMaf 0.05 \
+                  -maxiter 8000 \
+                  1> NGSadmix/${REGION}.NGSadmix.K${K}.log \
+                  2> NGSadmix/${REGION}.NGSadmix.K${K}.err &
+      fi
+   done
+   wait
+done
+
+for REGION in ARCTIC; do
+   for K in 2 3 4 5 6; do
+      if [ ! -e NGSadmix/${REGION}.K${K}.eval ]; then
+         evalAdmix -beagle Likes2/$REGION.beagle.gz \
+                   -fname NGSadmix/$REGION.K$K.fopt.gz \
+                   -qname NGSadmix/$REGION.K$K.qopt \
+                   -o NGSadmix/$REGION.K$K.eval \
+                   1> NGSadmix/$REGION.K$K.eval.log \
+                   2> NGSadmix/$REGION.K$K.eval.err &
+      fi
+   done
+   wait
+done
+```
+
+
+
