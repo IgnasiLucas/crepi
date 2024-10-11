@@ -1,0 +1,9 @@
+Input: lname=Likes2/ARCTIC.beagle.gz nPop=5, fname=(null) qname=(null) outfiles=NGSadmix/ARCTIC.K5
+Setup: seed=1728573673 nThreads=8 method=1
+Convergence: maxIter=8000 tol=0.000010 tolLike50=0.100000 dymBound=0
+Filters: misTol=0.050000 minMaf=0.050000 minLrt=0.000000 minInd=0
+Input file has dim: nsites=40991 nind=90
+Input file has dim (AFTER filtering): nsites=40991 nind=90
+	[ALL done] cpu-time used =  557.59 sec
+	[ALL done] walltime used =  220.00 sec
+best like=-2211199.526958 after 1450 iterations
