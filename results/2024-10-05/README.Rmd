@@ -305,6 +305,8 @@ Results <- data.frame(
    Lake   = Lake
 )
 kable(Results, digits = 4) %>% kable_styling()
+write.table(Results, file = 'summary.txt', quote = FALSE, sep = '\t',
+            row.names = FALSE)
 ```
 
 ```{r sessionInfo}
