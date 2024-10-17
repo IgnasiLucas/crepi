@@ -157,32 +157,46 @@ versus species 2 from Suopatjavri; males versus females in species 1
 from Langfjordvatn; and males versus females in species 2 from
 Suopatjavri.
 
-```{r 2DSFSplot, fig.width=40, fig.height=170, message=FALSE, eval=FALSE}
+```{r 2DSFSplot, fig.width=5, fig.height=15, message=FALSE, eval=TRUE}
 Pop1 <- c('Langfjordvatn', 'Langfjordvatn.f.sp1', 'Suopatjavri.f.sp2')
 Pop2 <- c('Suopatjavri',   'Langfjordvatn.m.sp1', 'Suopatjavri.m.sp2')
 SFS2DFiles <- c('2D_SFS/Langfjordvatn.Suopatjavri.ml',
                 '2D_SFS/Langfjordvatn.f.sp1.Langfjordvatn.m.sp1.ml',
                 '2D_SFS/Suopatjavri.f.sp2.Suopatjavri.m.sp2.ml')
+numInd <- sapply(c(Pop1, Pop2),
+                 function(x) {
+                    length(scan(paste0(x, '.list'),
+                                what = 'character',
+                                quiet = TRUE))
+                 })
 SFS2D <- lapply(1:length(SFS2DFiles),
                 function(x) {
                    pop1 <- Pop1[x]
                    pop2 <- Pop2[x]
-                   matrix(scan(SFS2DFiles[x]),
+                   matrix(scan(SFS2DFiles[x], quiet = TRUE),
                           ncol = 2 * numInd[pop2] + 1,
                           nrow = 2 * numInd[pop1] + 1,
                           byrow = TRUE)
                 })
 
-
-par(mfrow = c(17, 4), mar = c(5.5, 5.5, 5, 2))
+MainLab <- c('Between species and lakes',
+             'C. farionis in Langfjordvatn',
+             'C. pseudofarionis in Suopatjavri')
+XLabels <- c('C. farionis in Langfjordvatn',
+             'C. farionis on female fish',
+             'C. pseudofarionis on female fish')
+YLabels <- c('C. pseudofarionis in Suopatjavri',
+             'C. farionis on male fish',
+             'C. pseudofarionis on male fish')
+par(mfrow = c(3, 1), mar = c(5.5, 5.5, 5, 2))
 devnull <- lapply(1:length(SFS2D), function(z) {
    image(x = 0:(dim(SFS2D[[z]])[1] - 1),
          y = 0:(dim(SFS2D[[z]])[2] - 1),
          log(SFS2D[[z]]),
-         main = gsub('(2D_SFS/|.ml)', '', SFS2DFiles[z]),
-         xlab = Pop1[z],
-         ylab = Pop2[z],
-         cex.main = 3, cex.lab = 3, cex.axis = 3)
+         main = MainLab[z],
+         xlab = XLabels[z],
+         ylab = YLabels[z],
+         cex.main = 2, cex.lab = 2, cex.axis = 2)
 })
 
 par(mfrow = c(1, 1), mar = c(5.1, 4.1, 4.1, 2.1))
@@ -214,29 +228,40 @@ for j in $(seq 1 $(( ${#POPS[@]} - 1 )) ); do
 done
 ```
 
-```{bash summary, eval=FALSE}
-AREG=(Bie.C.confusus Bri.C.alpinus Bri.C.fatioi Lan.D Lan.L Lan.P Suo.L Suo.P Thu.C.acrinasus Thu.C.profundus Thu.C.steinmanni Wal.C.duplex)
+```{bash summary, eval=TRUE}
 if [ ! -e summaryFST.txt ]; then
    echo -e "Pop1\tPop2\tFST.unweighted\tFST.weighted" > summaryFST.txt
-   for j in $(seq 1 $(( ${#AREG[@]} - 1 )) ); do
-      for i in $(seq 0 $(( j - 1 )) ); do
-         if [ -e FST/${AREG[i]}.${AREG[j]}.fst.idx ]; then
-            echo -e ${AREG[i]}"\t"${AREG[j]}"\t"\
-                 $(realSFS fst stats FST/${AREG[i]}.${AREG[j]}.fst.idx) >> summaryFST.txt
-         else
-            echo -e ${AREG[i]}"\t"${AREG[j]}"\tNA NA" >> summaryFST.txt
-         fi
-      done
-   done
+   if [ -e FST/Langfjordvatn.Suopatjavri.fst.idx ]; then
+      LC_ALL=C printf "%s\t%s\t%.6f\t%.6f\n" \
+      "C. farionis (Lan)" "C. pseudofarionis (Suo)" \
+      $(realSFS fst stats FST/Langfjordvatn.Suopatjavri.fst.idx 2> /dev/null) >> summaryFST.txt
+   else
+      echo -e "C. farionis (Lan)\tC. pseudofarionis (Suo)\tNA\tNA" >> summaryFST.txt
+   fi
+   
+   if [ -e FST/Langfjordvatn.f.sp1.Langfjordvatn.m.sp1.fst.idx ]; then
+      LC_ALL=C printf "%s\t%s\t%.6f\t%.6f\n" \
+      "C. farionis on females (Lan)" "C. farionis on males (Lan)" \
+      $(realSFS fst stats FST/Langfjordvatn.f.sp1.Langfjordvatn.m.sp1.fst.idx 2> /dev/null) >> summaryFST.txt
+   else
+      echo -e "C. farionis on females (Lan)\tC. farionis on males (Lan)\tNA\tNA" >> summaryFST.txt
+   fi
+   
+   if [ -e FST/Suopatjavri.f.sp2.Suopatjavri.m.sp2.fst.idx ]; then
+      LC_ALL=C printf "%s\t%s\t%.6f\t%.6f\n" \
+      "C. pseudofarionis on females (Suo)" "C. pseudofarionis on males (Suo)" \
+      $(realSFS fst stats FST/Suopatjavri.f.sp2.Suopatjavri.m.sp2.fst.idx 2> /dev/null) >> summaryFST.txt
+   else
+      echo -e "C. pseudofarionis on females (Suo)\tC. pseudofarionis on males (Suo)\tNA\tNA" >> summaryFST.txt
+   fi
 fi
-
 ```
 
-```{r showFSTs, eval=FALSE}
+```{r showFSTs, eval=TRUE}
 library(kableExtra)
-fsts <- read.table('summaryFST.txt', header = TRUE)
+fsts <- read.table('summaryFST.txt', header = TRUE, sep = '\t')
 kable(fsts) %>% kable_styling()
-ggplot(fsts, aes(x = FST.unweighted, y = FST.weighted)) + geom_point()
+#ggplot(fsts, aes(x = FST.unweighted, y = FST.weighted)) + geom_point()
 ```
 
 ## Session Information
