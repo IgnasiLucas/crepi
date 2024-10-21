@@ -1,5 +1,15 @@
 (Note the inverse chronological order: more recent first)
 
+# 2024-10-18
+Mar suspects the individual from which the Illumina reads were
+sequenced for the assembly of the reference genome could be
+hybrid. One straight-forward way to check is to map those reads
+to the RAD loci and repeat the whole analysis with that additional
+individual. I will call that individual E716xxx.
+
+The analysis suggests this individual is 90% *C. farionis*, but
+nearly 10% *C. pseudofarionis*. 
+
 # 2024-10-10
 Estimation of SFS and FSTs. Because we only have samples from
 the two Arctic lakes, the only interesting FST is between

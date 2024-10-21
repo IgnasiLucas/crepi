@@ -1,0 +1,57 @@
+Input: lname=Likes2/ARCTIC.beagle.gz nPop=3, fname=(null) qname=(null) outfiles=NGSadmix/K3
+Setup: seed=1729527002 nThreads=8 method=1
+Convergence: maxIter=8000 tol=0.000010 tolLike50=0.100000 dymBound=0
+Filters: misTol=0.050000 minMaf=0.050000 minLrt=0.000000 minInd=0
+Input file has dim: nsites=40679 nind=91
+Input file has dim (AFTER filtering): nsites=40679 nind=91
+iter[start] like is=4771107.656410
+iter[50] like is=-2269138.241393 thres=0.008063
+iter[100] like is=-2268194.561247 thres=0.005981
+iter[150] like is=-2267708.183884 thres=0.001685
+iter[200] like is=-2267500.024318 thres=0.005669
+iter[250] like is=-2267433.689921 thres=0.000379
+iter[300] like is=-2267405.035386 thres=0.000133
+iter[350] like is=-2267395.379528 thres=0.000163
+iter[400] like is=-2267382.695999 thres=0.000634
+iter[450] like is=-2267368.497305 thres=0.000118
+iter[500] like is=-2267361.539534 thres=0.000344
+iter[550] like is=-2267353.188283 thres=0.000753
+iter[600] like is=-2267339.420770 thres=0.000155
+iter[650] like is=-2267335.408019 thres=0.000067
+iter[700] like is=-2267333.319463 thres=0.000790
+iter[750] like is=-2267331.316985 thres=0.000270
+iter[800] like is=-2267329.450825 thres=0.000064
+iter[850] like is=-2267328.520193 thres=0.000008
+iter[900] like is=-2267327.622858 thres=0.000366
+iter[950] like is=-2267318.855523 thres=0.000443
+iter[1000] like is=-2267297.408056 thres=0.000892
+iter[1050] like is=-2267282.628683 thres=0.000682
+iter[1100] like is=-2267257.619552 thres=0.001394
+iter[1150] like is=-2267218.569996 thres=0.000372
+iter[1200] like is=-2267153.410162 thres=0.001699
+iter[1250] like is=-2267138.351146 thres=0.000091
+iter[1300] like is=-2267135.727873 thres=0.000232
+iter[1350] like is=-2267134.019433 thres=0.000118
+iter[1400] like is=-2267125.522085 thres=0.001309
+iter[1450] like is=-2267079.563004 thres=0.000848
+iter[1500] like is=-2267020.976756 thres=0.001217
+iter[1550] like is=-2266977.791475 thres=0.000233
+iter[1600] like is=-2266959.198777 thres=0.000725
+iter[1650] like is=-2266912.048392 thres=0.003949
+iter[1700] like is=-2266887.965813 thres=0.000505
+iter[1750] like is=-2266876.678288 thres=0.000423
+iter[1800] like is=-2266866.099541 thres=0.000134
+iter[1850] like is=-2266858.573135 thres=0.000088
+iter[1900] like is=-2266854.593082 thres=0.000098
+iter[1950] like is=-2266852.380555 thres=0.000138
+iter[2000] like is=-2266851.382573 thres=0.000042
+iter[2050] like is=-2266851.009313 thres=0.000008
+iter[2100] like is=-2266850.887931 thres=0.000002
+iter[2150] like is=-2266850.840667 thres=0.000000
+Convergence achived because log likelihooditer difference for 50 iteraction is less than 0.100000
+best like=-2266850.840667 after 2150 iterations
+	-> Dumpedfiles are: NGSadmix/K3.log
+	-> Dumpedfiles are: NGSadmix/K3.qopt
+	-> Dumpedfiles are: NGSadmix/K3.fopt.gz
+	[ALL done] cpu-time used =  409.20 sec
+	[ALL done] walltime used =  66.00 sec
