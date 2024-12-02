@@ -1,0 +1,30 @@
+# BUSCO version is: 5.4.5 
+# The lineage dataset is: metazoa_odb10 (Creation date: 2024-01-08, number of genomes: 65, number of BUSCOs: 954)
+# Summarized benchmarking in BUSCO notation for file /nata/mar/crepidostomum2/results/2023-05-12/ABYSS_assembly/k100-kc2/farionis-scaffolds.fa
+# BUSCO was run in mode: euk_genome_met
+# Gene predictor used: metaeuk
+
+	***** Results: *****
+
+	C:23.2%[S:22.7%,D:0.5%],F:33.3%,M:43.5%,n:954	   
+	222	Complete BUSCOs (C)			   
+	217	Complete and single-copy BUSCOs (S)	   
+	5	Complete and duplicated BUSCOs (D)	   
+	318	Fragmented BUSCOs (F)			   
+	414	Missing BUSCOs (M)			   
+	954	Total BUSCO groups searched		   
+
+Assembly Statistics:
+	4933222	Number of scaffolds
+	4980882	Number of contigs
+	2408854185	Total length
+	0.094%	Percent gaps
+	2 KB	Scaffold N50
+	1 KB	Contigs N50
+
+
+Dependencies and versions:
+	hmmsearch: 3.3
+	bbtools: 39.01
+	metaeuk: b94867bc46a027fbcbd79747fa376c254f5ac820
+	busco: 5.4.5

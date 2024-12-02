@@ -1,0 +1,6 @@
+2024-09-23 16:54:38 DEBUG:busco.run_BUSCO	Command line: /usr/local/bin/busco -i k110-kc2/farionis-scaffolds.fa -l metazoa_odb10 -o BUSCO/k110-kc2/ -m genome --cpu 48
+2024-09-23 16:54:38 INFO:busco.run_BUSCO	***** Start a BUSCO v5.4.5 analysis, current time: 09/23/2024 16:54:38 *****
+2024-09-23 16:54:38 DEBUG:busco.ConfigManager	Getting config file
+2024-09-23 16:54:38 INFO:busco.ConfigManager	Configuring BUSCO with local environment
+2024-09-23 16:54:38 INFO:busco.BuscoConfig	Mode is genome
+2024-09-23 16:54:38 INFO:busco.BuscoDownloadManager	Downloading information on latest versions of BUSCO data...

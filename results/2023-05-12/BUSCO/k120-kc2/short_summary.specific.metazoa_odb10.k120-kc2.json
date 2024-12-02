@@ -1,0 +1,63 @@
+{
+    "parameters": {
+        "out_path": "/nata/mar/crepidostomum2/results/2023-05-12/ABYSS_assembly",
+        "cpu": "12",
+        "force": "False",
+        "restart": "False",
+        "quiet": "False",
+        "download_path": "/nata/mar/crepidostomum2/results/2023-05-12/ABYSS_assembly/busco_downloads",
+        "datasets_version": "odb10",
+        "offline": "False",
+        "download_base_url": "https://busco-data.ezlab.org/v5/data/",
+        "auto-lineage": "False",
+        "auto-lineage-prok": "False",
+        "auto-lineage-euk": "False",
+        "update-data": "False",
+        "use_augustus": "False",
+        "batch_mode": "False",
+        "tar": "False",
+        "in": "/nata/mar/crepidostomum2/results/2023-05-12/ABYSS_assembly/k120-kc2/farionis-scaffolds.fa",
+        "out": "BUSCO/k120-kc2",
+        "mode": "euk_genome_met",
+        "lineage_dataset": "/nata/mar/crepidostomum2/results/2023-05-12/ABYSS_assembly/busco_downloads/lineages/metazoa_odb10",
+        "main_out": "/nata/mar/crepidostomum2/results/2023-05-12/ABYSS_assembly/BUSCO/k120-kc2",
+        "lineage_results_dir": "run_metazoa_odb10",
+        "domain": "eukaryota",
+        "max_intron": "130000",
+        "max_seq_len": "160000",
+        "orthodb_version": "10.1",
+        "metaeuk_parameters": "",
+        "metaeuk_rerun_parameters": "",
+        "contig_break": "10",
+        "scaffold_composition": "False",
+        "gene_predictor": "metaeuk"
+    },
+    "lineage_dataset": {
+        "name": "metazoa_odb10",
+        "creation_date": "2024-01-08",
+        "number_of_buscos": "954",
+        "number_of_species": "65"
+    },
+    "versions": {
+        "hmmsearch": 3.3,
+        "bbtools": "39.01",
+        "metaeuk": "b94867bc46a027fbcbd79747fa376c254f5ac820",
+        "busco": "5.4.5"
+    },
+    "results": {
+        "one_line_summary": "C:5.7%[S:5.7%,D:0.0%],F:22.3%,M:72.0%,n:954",
+        "Complete": 5.7,
+        "Single copy": 5.7,
+        "Multi copy": 0.0,
+        "Fragmented": 22.3,
+        "Missing": 72.0,
+        "n_markers": 954,
+        "domain": "eukaryota",
+        "Number of scaffolds": "4415425",
+        "Number of contigs": "4445426",
+        "Total length": "1504813869",
+        "Percent gaps": "0.108%",
+        "Scaffold N50": "368",
+        "Contigs N50": "365"
+    }
+}
