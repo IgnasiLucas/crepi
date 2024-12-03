@@ -1,0 +1,96 @@
+---
+title: "StairwayPlot for *Crepidostomum* spp populations"
+author: "Mar Llaberia-Robledillo"
+date: "`r Sys.Date()`"
+output: 
+  html_document: 
+    toc: TRUE
+bibliography: '../../doc/references.bib'
+---
+
+### Download the scripts for Stairway Plot (@LiuXu2020)
+
+```{bash GetScripts}
+if [ ! -e stairway_plot_v2.1.2.zip ]; then
+  wget https://github.com/xiaoming-liu/stairway-plot-v2/raw/master/stairway_plot_v2.1.2.zip
+  unzip stairway_plot_v2.1.2.zip
+fi
+
+if [ ! -d stairway_plot_es ]; then
+  cp -r stairway_plot_v2.1.2/* ./
+  rm -r stairway_plot_v2.1.2
+fi
+```
+
+The scripts are written in Java, so the program has to be run in Java 
+(Java v1.7 or higher). So, what you have to do is modify the *blueprint* 
+text file that they provide you based on your data.
+
+The files and the program must be in the same folder/directory, and the 
+program will create the folders based on the text files that you modify 
+according to your populations. In our case, we have 6 populations 
+(Lakes sampled) and two population "extra" (according to the regions), 
+to test with this program.
+
+The input file is the SFS of each population, given by ANGSD in `2024-10-10/SFS`.
+
+```{bash}
+if [ ! -e Suopatjavri.list ]; then cp /nata/joiglu/crepidostomum2/results/2024-10-10/Suopatjavri.list ./; fi
+if [ ! -e Langfjordvatn.list ]; then cp /nata/joiglu/crepidostomum2/results/2024-10-10/Langfjordvatn.list ./; fi
+```
+
+```{bash eval=FALSE}
+for i in Langfjordvatn Suopatjavri; do
+  if [ ! -e Stair_${i}.blueprint ]; then
+    cp two-epoch_fold.blueprint Stair_${i}.blueprint
+  fi
+  NSEQ=$(( $(cat ${i}.list | wc -l) * 2 ))
+  # To match the name of the file with the sfs
+  SFSNAME=${i}
+  NUMSITES=$( gawk '{ sum += $1 } END { print sum }' ../2024-10-10/SFS/$SFSNAME.sfs | \
+              awk '{$0 = sprintf ("%.f", $0) ;print}' )
+  SFS=$(cat ../2024-10-10/SFS/$SFSNAME.sfs | cut -f 2-$(( $(cat ${i}.list | wc -l) + 1 )) -d " ")
+  RAND1=$(( (${NSEQ} - 2) / 4 ))
+  RAND2=$(( (${NSEQ} - 2) / 2 ))
+  RAND3=$(( ((${NSEQ} - 2) * 3) / 4 ))
+  RAND4=$(( ${NSEQ} - 2 ))
+  # Modification of the blueprint by population specifics
+  sed -i "/popid:/c popid: Stair_${i}" Stair_${i}.blueprint
+  sed -i "/nseq:/c nseq: ${NSEQ}" Stair_${i}.blueprint
+  sed -i "/L:/c L: ${NUMSITES}" Stair_${i}.blueprint
+  sed -i "/SFS:/c SFS: ${SFS}" Stair_${i}.blueprint
+  sed -i "/smallest_size_of_SFS_bin_used_for_estimation:/c smallest_size_of_SFS_bin_used_for_estimation: 2" Stair_${i}.blueprint 
+  sed -i "/nrand:/c nrand: ${RAND1} ${RAND2} ${RAND3} ${RAND4}" Stair_${i}.blueprint
+  sed -i "/project_dir:/c project_dir: Stair_${i}" Stair_${i}.blueprint
+  sed -i "/mu:/c mu: 2.8e-9" Stair_${i}.blueprint
+  sed -i "/year_per_generation:/c year_per_generation: 1" Stair_${i}.blueprint
+  sed -i "/plot_title:/c plot_title: Stair_${i}_PLOT" Stair_${i}.blueprint
+  
+done
+
+for i in Langfjordvatn Suopatjavri; do 
+  if [ ! -e Stair_${i}.blueprint.sh ]; then
+    java -cp stairway_plot_es Stairbuilder Stair_${i}.blueprint
+  fi
+done
+```
+
+### Executing the plots
+
+```{bash}
+for i in Langfjordvatn Suopatjavri; do
+  if [ ! -e Stair_${i}/Stair_${i}_PLOT.final.summary.pdf ]; then
+    bash Stair_${i}.blueprint.sh &
+  fi
+done
+wait
+```
+
+#### Resulting plots
+
+The program output is the plot, so unfortunately, you cannot modify it. But here are the results:
+
+![](path)
+![](path)
+
+#### References

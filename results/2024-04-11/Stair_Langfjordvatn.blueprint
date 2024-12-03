@@ -1,0 +1,25 @@
+#example blueprint file
+#input setting
+popid: Stair_Langfjordvatn
+nseq: 68
+L: 1581550
+whether_folded: true # whethr the SFS is folded (true or false)
+SFS: 48885.192797 60611.629798 49614.979143 35464.880585 27345.966147 19033.836946 15404.671319 11010.304144 9339.711657 6891.711717 5796.279888 4667.147424 3809.522389 3399.720986 2923.854971 2946.447822 2250.130353 1844.019162 2006.512643 1679.747858 1332.275620 1729.363770 1721.485380 1116.247271 1394.809160 1581.950579 1404.662097 1522.173907 1678.648795 1644.840969 1895.411683 2115.546872 2425.849845 6230.205174
+smallest_size_of_SFS_bin_used_for_estimation: 2
+#largest_size_of_SFS_bin_used_for_estimation: 15 # default is nseq/2 for folded SFS
+pct_training: 0.67 # percentage of sites for training
+nrand: 16 33 49 66
+project_dir: Stair_Langfjordvatn
+stairway_plot_dir: stairway_plot_es # directory to the stairway plot files
+ninput: 200 # number of input files to be created for each estimation
+#random_seed: 6
+#output setting
+mu: 2.8e-9
+year_per_generation: 1
+#plot setting
+plot_title: Stair_Langfjordvatn_PLOT
+xrange: 0.1,10000 # Time (1k year) range; format: xmin,xmax; "0,0" for default
+yrange: 0,0 # Ne (1k individual) range; format: xmin,xmax; "0,0" for default
+xspacing: 2 # X axis spacing
+yspacing: 2 # Y axis spacing
+fontsize: 12 # Font size

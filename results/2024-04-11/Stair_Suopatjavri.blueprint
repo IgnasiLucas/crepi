@@ -1,0 +1,25 @@
+#example blueprint file
+#input setting
+popid: Stair_Suopatjavri
+nseq: 82
+L: 1192860
+whether_folded: true # whethr the SFS is folded (true or false)
+SFS: 38252.874917 44177.114517 37720.748987 30027.367801 23686.630690 18516.360811 15344.332414 12936.442113 9820.919630 8983.676130 7249.306351 6475.781945 5223.869442 4131.612115 4479.690321 3276.184091 3097.892954 2701.970244 2039.383862 2105.962402 2090.189230 1493.052517 1534.835542 1621.192254 1080.298997 1354.246643 1119.407335 959.136061 1207.644414 660.990225 984.695657 1129.889589 846.433428 1013.892404 778.404022 1147.331720 950.415721 1203.040332 1453.037829 1426.255406 3029.318891
+smallest_size_of_SFS_bin_used_for_estimation: 2
+#largest_size_of_SFS_bin_used_for_estimation: 15 # default is nseq/2 for folded SFS
+pct_training: 0.67 # percentage of sites for training
+nrand: 20 40 60 80
+project_dir: Stair_Suopatjavri
+stairway_plot_dir: stairway_plot_es # directory to the stairway plot files
+ninput: 200 # number of input files to be created for each estimation
+#random_seed: 6
+#output setting
+mu: 2.8e-9
+year_per_generation: 1
+#plot setting
+plot_title: Stair_Suopatjavri_PLOT
+xrange: 0.1,10000 # Time (1k year) range; format: xmin,xmax; "0,0" for default
+yrange: 0,0 # Ne (1k individual) range; format: xmin,xmax; "0,0" for default
+xspacing: 2 # X axis spacing
+yspacing: 2 # Y axis spacing
+fontsize: 12 # Font size
