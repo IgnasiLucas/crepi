@@ -1,0 +1,40 @@
+
+
+processing file: README.Rmd
+running: bash  -c "BAM=../2023-05-18/BAM
+ASM=../../data/RefGenomes/farionis-scaffolds.fa
+BADSAMPLES=/nata/mar/crepidostomum/results/2023-05-23/VeryBad.txt
+## Contigs to keep 
+#CTK=GoodContigs.txt
+
+if [ ! -e ARCTIC.list ]; then
+   ls -1 \$BAM/*.bam | grep -E \"L|S\" | grep -v -F -f \$BADSAMPLES | grep -v -E 'LR' > ARCTIC.list
+fi
+
+if [ ! -d Likes1 ]; then mkdir Likes1; fi
+#MININD=\$(( \$(cat ARCTIC.list | wc -l) / 2 ))
+MININD=45
+  if [ ! -e Likes1/ARCTIC.beagle.gz ]; then
+    angsd -bam ARCTIC.list \\
+          -ref \$ASM \\
+          -out Likes1/ARCTIC \\
+          -only_proper_pairs 1 \\
+          -baq 1 \\
+          -setMinDepth 20 \\
+          -minInd \$MININD \\
+          -GL 2 \\
+          -doGlf 2 \\
+          -doIBS 1 \\
+          -doCounts 1 \\
+          -doCov 1 \\
+          -makeMatrix 1 \\
+          -doMajorMinor 1 \\
+          -doMaf 1 \\
+          -SNP_pval 1e-6 \\
+          -minMapQ 30 \\
+          -minQ 20 \\
+          -minMaf 0.05 \\
+          -nThreads 24 \\
+          1> Likes1/ARCTIC.angsd.log \\
+          2> Likes1/ARCTIC.angsd.err
+fi"

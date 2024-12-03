@@ -1,0 +1,7 @@
+> rmarkdown::render('README.Rmd', output_file='README.html')
+1/12                
+2/12 [coverage]     
+3/12                
+4/12 [coveragePlots]
+5/12                
+6/12 [angsd]        
