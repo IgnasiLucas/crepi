@@ -1,0 +1,48 @@
+---
+title: "Count FASTQ reads used per sample"
+author: "Mar Llaberia & J. Ignacio Lucas Lledó"
+date: "`r Sys.Date()`"
+---
+
+```{bash}
+FASTQ=../2023-05-17/crepi_edits
+if [ ! -e sampleList.txt ]; then
+   ls -1 $FASTQ/*.trimmed_R1_.fastq.gz > sampleList.txt
+fi
+
+if [ ! -e totalReads.txt ]; then
+   echo -e "FASTQ\tNumReads" > totalReads.txt
+   i=1
+   for file in $(cat sampleList.txt); do
+      NUM=$(( $(gunzip -c $file | wc -l) / 4 ))
+      echo -e "$file\t$NUM" > tmp$i.txt &
+      i=$(( i + 1 ))
+   done
+   wait
+   cat tmp*.txt >> totalReads.txt
+   rm tmp*
+fi
+```
+
+```{r stats}
+library(kableExtra)
+counts <- read.table('totalReads.txt', header = TRUE)
+#kable(counts) %>% kable_styling(full_width = FALSE)
+sum(counts$NumReads)
+mean(counts$NumReads)
+sd(counts$NumReads)
+barplot(sort(counts$NumReads, decreasing = TRUE))
+plot(density(counts$NumReads))
+```
+
+## Percentage of mapping to the REF GEN
+```{bash}
+
+
+
+```
+## Session information
+
+```{r sessionInfo}
+sessionInfo()
+```
