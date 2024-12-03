@@ -125,6 +125,13 @@ coverage distribution, quite arbitrarily. The file `BadContigs.txt`
 contains the identifiers of the 503 (of over 3 million) contigs with
 the highest coverage.
 
+# 2024-01-20
+Phylogenetic reconstruction with the 28S marker.
+
+# 2024-01-19
+Phylogenetic reconstruction of the *Crepidostomum* genus from COI sequences,
+including best representatives of the haplotypes in our ddRAD samples.
+
 # 2024-01-18
 Haplotype network with COI.
 

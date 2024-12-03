@@ -1,0 +1,145 @@
+
+RAxML-NG v. 1.2.1 released on 22.12.2023 by The Exelixis Lab.
+Developed by: Alexey M. Kozlov and Alexandros Stamatakis.
+Contributors: Diego Darriba, Tomas Flouri, Benoit Morel, Sarah Lutteropp, Ben Bettisworth, Julia Haag, Anastasis Togkousidis.
+Latest version: https://github.com/amkozlov/raxml-ng
+Questions/problems/suggestions? Please visit: https://groups.google.com/forum/#!forum/raxml
+
+System: Intel(R) Xeon(R) CPU E5-4620 0 @ 2.20GHz, 32 cores, 251 GB RAM
+
+RAxML-NG was called at 20-Oct-2024 13:46:03 as follows:
+
+raxml-ng --msa RAxML/round02/AlignTree_Mafft.alg --model GTR+R4 --prefix RAxML/round02/T2 --threads 48 --redo
+
+Analysis options:
+  run mode: ML tree search
+  start tree(s): random (10) + parsimony (10)
+  random seed: 1729424763
+  tip-inner: OFF
+  pattern compression: ON
+  per-rate scalers: OFF
+  site repeats: ON
+  logLH epsilon: general: 10.000000, brlen-triplet: 1000.000000
+  fast spr radius: AUTO
+  spr subtree cutoff: 1.000000
+  fast CLV updates: ON
+  branch lengths: proportional (ML estimate, algorithm: NR-FAST)
+  SIMD kernels: AVX
+  parallelization: coarse-grained (auto), PTHREADS (48 threads), thread pinning: OFF
+
+WARNING: Running in REDO mode: existing checkpoints are ignored, and all result files will be overwritten!
+
+[00:00:00] Reading alignment from file: RAxML/round02/AlignTree_Mafft.alg
+[00:00:00] Loaded alignment with 22 taxa and 647 sites
+
+WARNING: Fully undetermined columns found: 1
+
+WARNING: Sequences MW368680_C._farionis_RU and MT217147_C._farionis_RU are exactly identical!
+WARNING: Sequences MW368680_C._farionis_RU and KY513135_C._farionis_NO are exactly identical!
+WARNING: Duplicate sequences found: 2
+
+NOTE: Reduced alignment (with duplicates and gap-only sites/taxa removed) 
+NOTE: was saved to: /nata/mar/crepidostomum2/results/2024-01-20/RAxML/round02/T2.raxml.reduced.phy
+
+Alignment comprises 1 partitions and 126 patterns
+
+Partition 0: noname
+Model: GTR+FO+R4
+Alignment sites / patterns: 646 / 126
+Gaps: 3.30 %
+Invariant sites: 81.58 %
+
+
+NOTE: Binary MSA file created: RAxML/round02/T2.raxml.rba
+
+Parallelization scheme autoconfig: 16 worker(s) x 3 thread(s)
+
+[00:00:00] Generating 10 random starting tree(s) with 22 taxa
+[00:00:00] Generating 10 parsimony starting tree(s) with 22 taxa
+Parallel parsimony with 48 threads
+Parallel reduction/worker buffer size: 1 KB  / 0 KB
+
+[00:00:00] Data distribution: max. partitions/sites/weight per thread: 1 / 42 / 672
+[00:00:00] Data distribution: max. searches per worker: 2
+
+Starting ML tree search with 20 distinct starting trees
+
+[00:00:00 -3613.989265] Initial branch length optimization
+[00:00:00 -2974.378580] Model parameter optimization (eps = 10.000000)
+[00:00:00 -2463.727167] AUTODETECT spr round 1 (radius: 5)
+[00:00:00 -2048.409517] AUTODETECT spr round 2 (radius: 10)
+[00:00:00 -2045.339129] AUTODETECT spr round 3 (radius: 15)
+[00:00:00 -2043.473666] AUTODETECT spr round 4 (radius: 20)
+[00:00:01 -2042.551359] SPR radius for FAST iterations: 20 (autodetect)
+[00:00:01 -2042.551359] Model parameter optimization (eps = 3.000000)
+[00:00:01 -2014.032392] FAST spr round 1 (radius: 20)
+[00:00:01] [worker #7] ML tree search #8, logLikelihood: -1892.354957
+[00:00:01 -1898.831406] FAST spr round 2 (radius: 20)
+[00:00:01 -1896.719493] Model parameter optimization (eps = 1.000000)
+[00:00:02 -1892.367436] SLOW spr round 1 (radius: 5)
+[00:00:02 -1892.367354] SLOW spr round 2 (radius: 10)
+[00:00:02 -1892.367325] SLOW spr round 3 (radius: 15)
+[00:00:02 -1892.367310] SLOW spr round 4 (radius: 20)
+[00:00:02 -1892.367310] Model parameter optimization (eps = 0.100000)
+[00:00:02] [worker #4] ML tree search #5, logLikelihood: -1892.360290
+
+[00:00:02] [worker #0] ML tree search #1, logLikelihood: -1892.366473
+
+[00:00:02 -2789.254095] Initial branch length optimization
+[00:00:02 -2004.733433] Model parameter optimization (eps = 10.000000)
+[00:00:02] [worker #3] ML tree search #4, logLikelihood: -1892.365164
+[00:00:02] [worker #10] ML tree search #11, logLikelihood: -1892.357039
+[00:00:02] [worker #6] ML tree search #7, logLikelihood: -1892.626280
+[00:00:03] [worker #13] ML tree search #14, logLikelihood: -1892.357113
+[00:00:03] [worker #15] ML tree search #16, logLikelihood: -1892.359212
+[00:00:03] [worker #2] ML tree search #3, logLikelihood: -1892.650302
+[00:00:03] [worker #8] ML tree search #9, logLikelihood: -1892.659076
+[00:00:03] [worker #14] ML tree search #15, logLikelihood: -1892.355202
+[00:00:03] [worker #11] ML tree search #12, logLikelihood: -1892.357862
+[00:00:03] [worker #9] ML tree search #10, logLikelihood: -1892.660722
+[00:00:03] [worker #1] ML tree search #2, logLikelihood: -1892.662196
+[00:00:03] [worker #12] ML tree search #13, logLikelihood: -1892.358698
+[00:00:03] [worker #5] ML tree search #6, logLikelihood: -1892.624277
+[00:00:05 -1892.394251] AUTODETECT spr round 1 (radius: 5)
+[00:00:05 -1892.393151] SPR radius for FAST iterations: 5 (autodetect)
+[00:00:05 -1892.393151] Model parameter optimization (eps = 3.000000)
+[00:00:05 -1892.368116] FAST spr round 1 (radius: 5)
+[00:00:05 -1892.368108] Model parameter optimization (eps = 1.000000)
+[00:00:05 -1892.365665] SLOW spr round 1 (radius: 5)
+[00:00:05 -1892.365657] SLOW spr round 2 (radius: 10)
+[00:00:05 -1892.365657] SLOW spr round 3 (radius: 15)
+[00:00:05] [worker #3] ML tree search #20, logLikelihood: -1892.351786
+[00:00:05 -1892.365657] SLOW spr round 4 (radius: 20)
+[00:00:05 -1892.365657] Model parameter optimization (eps = 0.100000)
+
+[00:00:05] [worker #0] ML tree search #17, logLikelihood: -1892.363778
+
+[00:00:05] [worker #1] ML tree search #18, logLikelihood: -1892.361139
+[00:00:05] [worker #2] ML tree search #19, logLikelihood: -1892.357585
+
+Optimized model parameters:
+
+   Partition 0: noname
+   Rate heterogeneity: FREE (4 cats, mean),  weights&rates: (0.452289,0.990050) (0.000452,0.250604) (0.476955,0.000989) (0.070304,7.846253) 
+   Base frequencies (ML): 0.161257 0.234180 0.326596 0.277967 
+   Substitution rates (ML): 0.852021 4.780579 3.434345 0.092233 6.621174 1.000000 
+
+
+Final LogLikelihood: -1892.351786
+
+AIC score: 3894.703571 / AICc score: 3905.144249 / BIC score: 4140.597544
+Free parameters (model + branch lengths): 55
+
+WARNING: Best ML tree contains 3 near-zero branches!
+
+Best ML tree with collapsed near-zero branches saved to: /nata/mar/crepidostomum2/results/2024-01-20/RAxML/round02/T2.raxml.bestTreeCollapsed
+Best ML tree saved to: /nata/mar/crepidostomum2/results/2024-01-20/RAxML/round02/T2.raxml.bestTree
+All ML trees saved to: /nata/mar/crepidostomum2/results/2024-01-20/RAxML/round02/T2.raxml.mlTrees
+Optimized model saved to: /nata/mar/crepidostomum2/results/2024-01-20/RAxML/round02/T2.raxml.bestModel
+
+Execution log saved to: /nata/mar/crepidostomum2/results/2024-01-20/RAxML/round02/T2.raxml.log
+
+Analysis started: 20-Oct-2024 13:46:03 / finished: 20-Oct-2024 13:46:09
+
+Elapsed time: 5.868 seconds
+

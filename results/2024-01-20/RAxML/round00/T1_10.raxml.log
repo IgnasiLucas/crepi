@@ -1,0 +1,264 @@
+
+RAxML-NG v. 1.2.1 released on 22.12.2023 by The Exelixis Lab.
+Developed by: Alexey M. Kozlov and Alexandros Stamatakis.
+Contributors: Diego Darriba, Tomas Flouri, Benoit Morel, Sarah Lutteropp, Ben Bettisworth, Julia Haag, Anastasis Togkousidis.
+Latest version: https://github.com/amkozlov/raxml-ng
+Questions/problems/suggestions? Please visit: https://groups.google.com/forum/#!forum/raxml
+
+System: Intel(R) Xeon(R) CPU E5-4620 0 @ 2.20GHz, 32 cores, 251 GB RAM
+
+RAxML-NG was called at 16-Oct-2024 16:11:23 as follows:
+
+raxml-ng --all --msa AlignTree_Mafft.alg --model GTR+G --prefix T1_10 --bs-trees 10 --threads 48
+
+Analysis options:
+  run mode: ML tree search + bootstrapping (Felsenstein Bootstrap)
+  start tree(s): random (10) + parsimony (10)
+  bootstrap replicates: parsimony (10)
+  random seed: 1729087883
+  tip-inner: OFF
+  pattern compression: ON
+  per-rate scalers: OFF
+  site repeats: ON
+  logLH epsilon: general: 10.000000, brlen-triplet: 1000.000000
+  fast spr radius: AUTO
+  spr subtree cutoff: 1.000000
+  fast CLV updates: ON
+  branch lengths: proportional (ML estimate, algorithm: NR-FAST)
+  SIMD kernels: AVX
+  parallelization: coarse-grained (auto), PTHREADS (48 threads), thread pinning: OFF
+
+[00:00:00] Reading alignment from file: AlignTree_Mafft.alg
+[00:00:00] Loaded alignment with 207 taxa and 3001 sites
+
+WARNING: Sequences MT196339_C._metoecus_JA and MT196334_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196353_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196330_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196349_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196331_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196323_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196345_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196328_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196342_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196347_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196350_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196351_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196324_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196337_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196352_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196354_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196343_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196332_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196344_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196338_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196325_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196333_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196341_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196348_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196327_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196329_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196336_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196340_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196335_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196346_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196339_C._metoecus_JA and MT196326_C._metoecus_JA are exactly identical!
+WARNING: Sequences MT196358_C._metoecus_RU and MT196357_C._metoecus_RU are exactly identical!
+WARNING: Sequences MT196358_C._metoecus_RU and MT196356_C._metoecus_RU are exactly identical!
+WARNING: Sequences MT196358_C._metoecus_RU and MT196355_C._metoecus_RU are exactly identical!
+WARNING: Sequences MN524583_C._auriculatum_ and MN524582_C._auriculatum_ are exactly identical!
+WARNING: Sequences MN524583_C._auriculatum_ and MN524584_C._auriculatum_ are exactly identical!
+WARNING: Sequences MN524583_C._auriculatum_ and MN524585_C._auriculatum_ are exactly identical!
+WARNING: Sequences MN524583_C._auriculatum_ and MN524581_C._auriculatum_ are exactly identical!
+WARNING: Sequences MK818605_C._metoecus_RU and MK818602_C._metoecus_RU are exactly identical!
+WARNING: Sequences MK818605_C._metoecus_RU and MK818606_C._metoecus_RU are exactly identical!
+WARNING: Sequences MK818605_C._metoecus_RU and MK818603_C._metoecus_RU are exactly identical!
+WARNING: Sequences MK818605_C._metoecus_RU and MK818608_C._metoecus_RU are exactly identical!
+WARNING: Sequences MK818605_C._metoecus_RU and MK818607_C._metoecus_RU are exactly identical!
+WARNING: Sequences MK818605_C._metoecus_RU and MK818604_C._metoecus_RU are exactly identical!
+WARNING: Sequences MW368680_C._farionis_RU and MW368677_C._farionis_RU are exactly identical!
+WARNING: Sequences MW368680_C._farionis_RU and MW368682_C._farionis_RU are exactly identical!
+WARNING: Sequences MW368680_C._farionis_RU and MW368672_C._farionis_RU are exactly identical!
+WARNING: Sequences MW368680_C._farionis_RU and MW368685_C._farionis_RU are exactly identical!
+WARNING: Sequences MW368680_C._farionis_RU and MW368676_C._farionis_RU are exactly identical!
+WARNING: Sequences MW368680_C._farionis_RU and MW368684_C._farionis_RU are exactly identical!
+WARNING: Sequences MW368680_C._farionis_RU and MW368675_C._farionis_RU are exactly identical!
+WARNING: Sequences MW368680_C._farionis_RU and MW368683_C._farionis_RU are exactly identical!
+WARNING: Sequences MW368680_C._farionis_RU and MW368688_C._farionis_RU are exactly identical!
+WARNING: Sequences MW368680_C._farionis_RU and MW368687_C._farionis_RU are exactly identical!
+WARNING: Sequences MW368680_C._farionis_RU and MW368673_C._farionis_RU are exactly identical!
+WARNING: Sequences MW368680_C._farionis_RU and MW368679_C._farionis_RU are exactly identical!
+WARNING: Sequences MW368680_C._farionis_RU and MW368678_C._farionis_RU are exactly identical!
+WARNING: Sequences MW368680_C._farionis_RU and MW368686_C._farionis_RU are exactly identical!
+WARNING: Sequences MW368680_C._farionis_RU and MW368674_C._farionis_RU are exactly identical!
+WARNING: Sequences MK818626_C._nemachilus_RU and MK818628_C._nemachilus_RU are exactly identical!
+WARNING: Sequences MK818626_C._nemachilus_RU and MK818622_C._nemachilus_RU are exactly identical!
+WARNING: Sequences MK818626_C._nemachilus_RU and MK818627_C._nemachilus_RU are exactly identical!
+WARNING: Sequences MK818626_C._nemachilus_RU and MK818624_C._nemachilus_RU are exactly identical!
+WARNING: Sequences MK818626_C._nemachilus_RU and MK818623_C._nemachilus_RU are exactly identical!
+WARNING: Sequences MK818626_C._nemachilus_RU and MK818625_C._nemachilus_RU are exactly identical!
+WARNING: Sequences MK818610_C._metoecus_RU and MK818613_C._metoecus_RU are exactly identical!
+WARNING: Sequences MK818610_C._metoecus_RU and MK818616_C._metoecus_RU are exactly identical!
+WARNING: Sequences MK818610_C._metoecus_RU and MK818596_C._metoecus_RU are exactly identical!
+WARNING: Sequences MK818610_C._metoecus_RU and MK818597_C._metoecus_RU are exactly identical!
+WARNING: Sequences MK818610_C._metoecus_RU and MK818599_C._metoecus_RU are exactly identical!
+WARNING: Sequences MK818610_C._metoecus_RU and MK818595_C._metoecus_RU are exactly identical!
+WARNING: Sequences MK818610_C._metoecus_RU and MK818612_C._metoecus_RU are exactly identical!
+WARNING: Sequences MK818610_C._metoecus_RU and MK818598_C._metoecus_RU are exactly identical!
+WARNING: Sequences MK818610_C._metoecus_RU and MK818600_C._metoecus_RU are exactly identical!
+WARNING: Sequences MK818610_C._metoecus_RU and MK818594_C._metoecus_RU are exactly identical!
+WARNING: Sequences MN826678_C._chaenogobii_ and MN826679_C._chaenogobii_ are exactly identical!
+WARNING: Sequences MH143091_C._oschmarini_RU and MH143093_C._oschmarini_LI are exactly identical!
+WARNING: Sequences MH143091_C._oschmarini_RU and MH143090_C._oschmarini_RU are exactly identical!
+WARNING: Sequences MH143091_C._oschmarini_RU and MH143092_C._oschmarini_LI are exactly identical!
+WARNING: Sequences MH159989_C._oschmarini_RU and MH159991_C._oschmarini_RU are exactly identical!
+WARNING: Sequences MN524579_C._auriculatum_ and MN524580_C._auriculatum_ are exactly identical!
+WARNING: Sequences MH159992_C._oschmarini_RU and MH159990_C._oschmarini_RU are exactly identical!
+WARNING: Sequences MT230576_C._farionis_JA and MT230580_C._farionis_JA are exactly identical!
+WARNING: Sequences MT230576_C._farionis_JA and MT230578_C._farionis_JA are exactly identical!
+WARNING: Sequences MT230576_C._farionis_JA and MT230579_C._farionis_JA are exactly identical!
+WARNING: Sequences MT230576_C._farionis_JA and MT230577_C._farionis_JA are exactly identical!
+WARNING: Sequences MT230576_C._farionis_JA and MT230581_C._farionis_JA are exactly identical!
+WARNING: Sequences MK818618_C._nemachilus_RU and MK818621_C._nemachilus_RU are exactly identical!
+WARNING: Sequences MK818618_C._nemachilus_RU and MK818619_C._nemachilus_RU are exactly identical!
+WARNING: Sequences MK818590_C._chaenogobii_RU and MK818589_C._chaenogobii_RU are exactly identical!
+WARNING: Sequences MK818590_C._chaenogobii_RU and MK818592_C._chaenogobii_RU are exactly identical!
+WARNING: Sequences MK818590_C._chaenogobii_RU and MK818591_C._chaenogobii_RU are exactly identical!
+WARNING: Sequences MN750364_C._auriculatum_US and MN750365_C._auriculatum_US are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821378_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821384_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821379_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821381_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821388_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821373_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821376_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821397_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821375_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821394_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821389_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821396_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821377_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821395_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821374_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821383_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821393_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821382_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821392_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821371_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821372_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821398_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821380_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821385_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821391_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821390_C._auriculatum_ and FR821387_C._auriculatum_ are exactly identical!
+WARNING: Sequences FR821407_C._metoecus_ and FR821408_C._nemachilus_ are exactly identical!
+WARNING: Sequences FR821407_C._metoecus_ and FR821406_C._metoecus_ are exactly identical!
+WARNING: Sequences KY513146_C._metoecus_NO and KY513147_C._metoecus_NO are exactly identical!
+WARNING: Sequences KY513146_C._metoecus_NO and KY513142_C._metoecus_NO are exactly identical!
+WARNING: Sequences KY513146_C._metoecus_NO and KY513143_C._metoecus_NO are exactly identical!
+WARNING: Sequences KY513146_C._metoecus_NO and KY513144_C._metoecus_NO are exactly identical!
+WARNING: Sequences KY513146_C._metoecus_NO and KY513145_C._metoecus_NO are exactly identical!
+WARNING: Sequences KY513146_C._metoecus_NO and FR821409_C._nemachilus_ are exactly identical!
+WARNING: Sequences KY513146_C._metoecus_NO and KY513141_C._metoecus_NO are exactly identical!
+WARNING: Sequences KY513146_C._metoecus_NO and FR821405_C._metoecus_ are exactly identical!
+WARNING: Sequences KY513146_C._metoecus_NO and KY513148_C._metoecus_NO are exactly identical!
+WARNING: Sequences KY513146_C._metoecus_NO and KY513140_C._metoecus_NO are exactly identical!
+WARNING: Sequences KY513138_C._farionis_NO and FR821399_C._farionis_ are exactly identical!
+WARNING: Sequences KY513138_C._farionis_NO and FR821401_C._farionis_ are exactly identical!
+WARNING: Sequences KY513138_C._farionis_NO and KY513136_C._farionis_NO are exactly identical!
+WARNING: Sequences KY513138_C._farionis_NO and KY513139_C._farionis_NO are exactly identical!
+WARNING: Sequences KY513138_C._farionis_NO and FR821400_C._farionis_ are exactly identical!
+WARNING: Sequences KY513138_C._farionis_NO and FR821403_C._farionis_ are exactly identical!
+WARNING: Sequences KY513138_C._farionis_NO and KY513137_C._farionis_NO are exactly identical!
+WARNING: Sequences KY513138_C._farionis_NO and FR821404_C._farionis_ are exactly identical!
+WARNING: Duplicate sequences found: 139
+
+NOTE: Reduced alignment (with duplicates and gap-only sites/taxa removed) 
+NOTE: was saved to: /nata/mar/crepidostomum2/results/2024-01-20/RAxML/round00/T1_10.raxml.reduced.phy
+
+Alignment comprises 1 partitions and 555 patterns
+
+Partition 0: noname
+Model: GTR+FO+G4m
+Alignment sites / patterns: 3001 / 555
+Gaps: 57.43 %
+Invariant sites: 87.74 %
+
+
+NOTE: Binary MSA file created: T1_10.raxml.rba
+
+Parallelization scheme autoconfig: 16 worker(s) x 3 thread(s)
+
+[00:00:00] Generating 10 random starting tree(s) with 207 taxa
+[00:00:00] Generating 10 parsimony starting tree(s) with 207 taxa
+Parallel parsimony with 48 threads
+Parallel reduction/worker buffer size: 1 KB  / 0 KB
+
+[00:00:00] Data distribution: max. partitions/sites/weight per thread: 1 / 185 / 2960
+[00:00:00] Data distribution: max. searches per worker: 3
+
+Starting ML tree search with 20 distinct starting trees
+
+[00:00:23] [worker #11] ML tree search #12, logLikelihood: -6900.059557
+[00:00:25] [worker #13] ML tree search #14, logLikelihood: -6901.488578
+[00:00:25] [worker #10] ML tree search #11, logLikelihood: -6900.368839
+[00:00:25] [worker #14] ML tree search #15, logLikelihood: -6900.363090
+[00:00:26] [worker #15] ML tree search #16, logLikelihood: -6901.486398
+[00:00:28] [worker #12] ML tree search #13, logLikelihood: -6900.367592
+[00:00:33] [worker #5] ML tree search #6, logLikelihood: -7056.526437
+[00:00:34] [worker #8] ML tree search #9, logLikelihood: -7604.612831
+[00:00:34] [worker #7] ML tree search #8, logLikelihood: -6929.520553
+[00:00:35] [worker #9] ML tree search #10, logLikelihood: -7091.478327
+[00:00:38] [worker #3] ML tree search #4, logLikelihood: -6929.887158
+[00:00:38] [worker #1] ML tree search #2, logLikelihood: -6900.365707
+[00:00:41] [worker #2] ML tree search #3, logLikelihood: -7054.803604
+[00:00:41] [worker #0] ML tree search #1, logLikelihood: -6902.009037
+[00:00:42] [worker #6] ML tree search #7, logLikelihood: -6900.359490
+[00:00:43] [worker #4] ML tree search #5, logLikelihood: -6900.359390
+[00:01:00] [worker #1] ML tree search #18, logLikelihood: -6900.368226
+[00:01:04] [worker #3] ML tree search #20, logLikelihood: -6900.363878
+[00:01:04] [worker #0] ML tree search #17, logLikelihood: -6900.048736
+[00:01:11] [worker #2] ML tree search #19, logLikelihood: -6907.290256
+
+[00:01:11] ML tree search completed, best tree logLH: -6900.048736
+
+[00:01:11] Starting bootstrapping analysis with 10 replicates.
+
+[00:01:26] [worker #7] Bootstrap tree #8, logLikelihood: -6707.181520
+[00:01:28] [worker #5] Bootstrap tree #6, logLikelihood: -6919.268696
+[00:01:28] [worker #6] Bootstrap tree #7, logLikelihood: -6975.914093
+[00:01:30] [worker #9] Bootstrap tree #10, logLikelihood: -6921.782219
+[00:01:30] [worker #1] Bootstrap tree #2, logLikelihood: -6967.011585
+[00:01:31] [worker #3] Bootstrap tree #4, logLikelihood: -6975.921391
+[00:01:31] [worker #4] Bootstrap tree #5, logLikelihood: -6673.869525
+[00:01:33] [worker #2] Bootstrap tree #3, logLikelihood: -6837.002755
+[00:01:33] [worker #8] Bootstrap tree #9, logLikelihood: -6983.137215
+[00:01:34] [worker #0] Bootstrap tree #1, logLikelihood: -6684.010585
+
+Optimized model parameters:
+
+   Partition 0: noname
+   Rate heterogeneity: GAMMA (4 cats, mean),  alpha: 0.225318 (ML),  weights&rates: (0.250000,0.001154) (0.250000,0.049538) (0.250000,0.446469) (0.250000,3.502839) 
+   Base frequencies (ML): 0.236596 0.212116 0.290744 0.260543 
+   Substitution rates (ML): 0.922877 2.742641 1.616398 0.549529 3.305832 1.000000 
+
+
+Final LogLikelihood: -6900.048736
+
+AIC score: 14640.097472 / AICc score: 14777.167239 / BIC score: 17162.911827
+Free parameters (model + branch lengths): 420
+
+WARNING: Best ML tree contains 167 near-zero branches!
+
+Best ML tree with collapsed near-zero branches saved to: /nata/mar/crepidostomum2/results/2024-01-20/RAxML/round00/T1_10.raxml.bestTreeCollapsed
+Best ML tree saved to: /nata/mar/crepidostomum2/results/2024-01-20/RAxML/round00/T1_10.raxml.bestTree
+All ML trees saved to: /nata/mar/crepidostomum2/results/2024-01-20/RAxML/round00/T1_10.raxml.mlTrees
+Best ML tree with Felsenstein bootstrap (FBP) support values saved to: /nata/mar/crepidostomum2/results/2024-01-20/RAxML/round00/T1_10.raxml.support
+Optimized model saved to: /nata/mar/crepidostomum2/results/2024-01-20/RAxML/round00/T1_10.raxml.bestModel
+Bootstrap trees saved to: /nata/mar/crepidostomum2/results/2024-01-20/RAxML/round00/T1_10.raxml.bootstraps
+
+Execution log saved to: /nata/mar/crepidostomum2/results/2024-01-20/RAxML/round00/T1_10.raxml.log
+
+Analysis started: 16-Oct-2024 16:11:23 / finished: 16-Oct-2024 16:12:57
+
+Elapsed time: 94.597 seconds
+
