@@ -125,6 +125,15 @@ coverage distribution, quite arbitrarily. The file `BadContigs.txt`
 contains the identifiers of the 503 (of over 3 million) contigs with
 the highest coverage.
 
+# 2024-03-11b
+Another placeholder for the ANGSD analysis of genetic structure. This time, the
+`README.Rmd` skips a coverage analyses.
+
+# 2024-03-11
+Attempt to determine the genetic structure of the sampels with ANGSD, departing
+from the BAM files in `2023-05-18/BAM`, which are mappings to the large, non-hybrid,
+assembly, with almost 6 million contigs. The analyses is not completed.
+
 # 2024-01-20
 Phylogenetic reconstruction with the 28S marker.
 
