@@ -125,6 +125,15 @@ coverage distribution, quite arbitrarily. The file `BadContigs.txt`
 contains the identifiers of the 503 (of over 3 million) contigs with
 the highest coverage.
 
+# 2024-05-07
+Count the number of reads in FASTQ files.
+
+# 2024-04-11
+Stairway plot analysis.
+
+# 2024-04-10
+Creation of an alignment input for BEAST.
+
 # 2024-03-11b
 Another placeholder for the ANGSD analysis of genetic structure. This time, the
 `README.Rmd` skips a coverage analyses.
