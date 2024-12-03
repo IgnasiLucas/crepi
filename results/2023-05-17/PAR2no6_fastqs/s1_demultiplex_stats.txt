@@ -1,0 +1,57 @@
+raw_file                               total_reads    cut_found  bar_matched
+PAR2no6_L8_R1_11.fastq                    10284150     10284150      9972299
+PAR2no6_L8_R2_11.fastq                    10284150     10284150      9972299
+PAR2no6_L8_R1_13.fastq                    11805902     11805902     11387846
+PAR2no6_L8_R2_13.fastq                    11805902     11805902     11387846
+
+sample_name                            total_reads
+L074Cme                                    1528314
+L088Cmc                                     756482
+L098Hxa                                     667145
+L131Hxb                                     621586
+N028Hxb                                     811071
+N048Cmc                                     965701
+S004Cma                                    1700496
+S011Cxh                                     727149
+S016Cxb                                     799390
+S027Cxd                                    1983558
+S126Cma                                     703629
+T001Hmb                                     923249
+T001Hmc                                    1341390
+T080Pxa                                     768626
+T086Pxc                                     756089
+T097Pxd                                     973156
+T107Pxa                                     757062
+T111Hxc                                     770944
+T124Hxc                                     770182
+T197Hxc                                     825315
+T198Hxb                                     680942
+T199Pxc                                     801787
+W003Hxc                                     726882
+
+sample_name                               true_bar       obs_bar     N_records
+L074Cme-technical-replicate-0               CCGCTC        CCGCTC       1528314
+L088Cmc-technical-replicate-0               AGAGCA        AGAGCA        756482
+L098Hxa-technical-replicate-0               GCAGGA        GCAGGA        667145
+L131Hxb-technical-replicate-0               ATGAAT        ATGAAT        621586
+N028Hxb-technical-replicate-0               TGACCG        TGACCG        811071
+N048Cmc-technical-replicate-0               CATTCA        CATTCA        965701
+S004Cma-technical-replicate-0               TCTGGT        TCTGGT        826103
+S004Cma-technical-replicate-1               GAGAGT        GAGAGT        874393
+S011Cxh-technical-replicate-0               CTAACG        CTAACG        727149
+S016Cxb-technical-replicate-0               TTCGTT        TTCGTT        799390
+S027Cxd-technical-replicate-0               CAGCAG        CAGCAG       1983558
+S126Cma-technical-replicate-0               AAGACC        AAGACC        703629
+T001Hmb-technical-replicate-0               GGTCGG        GGTCGG        923249
+T001Hmc-technical-replicate-0               GTATGC        GTATGC       1341390
+T080Pxa-technical-replicate-0               ACCTAA        ACCTAA        768626
+T086Pxc-technical-replicate-0               GTCTAG        GTCTAG        756089
+T097Pxd-technical-replicate-0               GACGAT        GACGAT        973156
+T107Pxa-technical-replicate-0               TGCTTC        TGCTTC        757062
+T111Hxc-technical-replicate-0               CGAATA        CGAATA        770944
+T124Hxc-technical-replicate-0               TATTAG        TATTAG        770182
+T197Hxc-technical-replicate-0               AGGCTA        AGGCTA        825315
+T198Hxb-technical-replicate-0               CCTACT        CCTACT        680942
+T199Pxc-technical-replicate-0               TTGCGC        TTGCGC        801787
+W003Hxc-technical-replicate-0               AATGGC        AATGGC        726882
+no_match                                         _             _        729907

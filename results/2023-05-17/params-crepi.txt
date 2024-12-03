@@ -1,0 +1,31 @@
+------- ipyrad params file (v.0.9.96)-------------------------------------------
+crepi                          ## [0] [assembly_name]: Assembly name. Used to name output directories for assembly steps
+/nata/mar/crepidostomum2/results/2023-05-17 ## [1] [project_dir]: Project dir (made in curdir if not present)
+Merged: PAR2no10, PAR2no11, PAR2no12, PAR2no13, PAR2no14, PAR2no15, PAR2no16, PAR2no1, PAR2no2, PAR2no3, PAR2no4, PAR2no5, PAR2no6, PAR2no7, PAR2no8, PAR2no9 ## [2] [raw_fastq_path]: Location of raw non-demultiplexed fastq files
+Merged: PAR2no10, PAR2no11, PAR2no12, PAR2no13, PAR2no14, PAR2no15, PAR2no16, PAR2no1, PAR2no2, PAR2no3, PAR2no4, PAR2no5, PAR2no6, PAR2no7, PAR2no8, PAR2no9 ## [3] [barcodes_path]: Location of barcodes file
+Merged: PAR2no10, PAR2no11, PAR2no12, PAR2no13, PAR2no14, PAR2no15, PAR2no16, PAR2no1, PAR2no2, PAR2no3, PAR2no4, PAR2no5, PAR2no6, PAR2no7, PAR2no8, PAR2no9 ## [4] [sorted_fastq_path]: Location of demultiplexed/sorted fastq files
+reference    ## [5] [assembly_method]
+                               ## [6] [reference_sequence]: Location of reference sequence file
+pairddrad                      ## [7] [datatype]: Datatype (see docs): rad, gbs, ddrad, etc.
+CATG, TAA                      ## [8] [restriction_overhang]: Restriction overhang (cut1,) or (cut1, cut2)
+4            ## [9] [max_low_qual_bases]
+33          ## [10] [phred_Qscore_offset]
+6           ## [11] [mindepth_statistical]
+4           ## [12] [mindepth_majrule]
+1000        ## [13] [maxdepth]
+0.93        ## [14] [clust_threshold]
+0                              ## [15] [max_barcode_mismatch]: Max number of allowable mismatches in barcodes
+2                              ## [16] [filter_adapters]: Filter for adapters/primers (1 or 2=stricter)
+35          ## [17] [filter_min_trim_len]
+2           ## [18] [max_alleles_consens]
+0.05        ## [19] [max_Ns_consens]
+0.05        ## [20] [max_Hs_consens]
+10          ## [21] [min_samples_locus]
+0.1         ## [22] [max_SNPs_locus]
+8           ## [23] [max_Indels_locus]
+0.5         ## [24] [max_shared_Hs_locus]
+0, 0, 0, 0  ## [25] [trim_reads]
+0, 0, 0, 0  ## [26] [trim_loci]
+*           ## [27] [output_formats]
+ipopmap.txt ## [28] [pop_assign_file]
+                               ## [29] [reference_as_filter]: Reads mapped to this reference are removed in step 3
