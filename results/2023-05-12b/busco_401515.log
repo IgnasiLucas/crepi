@@ -1,0 +1,24 @@
+2024-09-25 09:48:38 DEBUG:busco.run_BUSCO	Command line: /usr/local/bin/busco -i 500/ragtag.scaffold.fasta -l metazoa_odb10 -o BUSCO/500/ -m genome --download_path ../ABYSS_assembly/busco_downloads --cpu 12
+2024-09-25 09:48:38 INFO:busco.run_BUSCO	***** Start a BUSCO v5.4.5 analysis, current time: 09/25/2024 09:48:38 *****
+2024-09-25 09:48:38 DEBUG:busco.ConfigManager	Getting config file
+2024-09-25 09:48:38 INFO:busco.ConfigManager	Configuring BUSCO with local environment
+2024-09-25 09:48:38 INFO:busco.BuscoConfig	Mode is genome
+2024-09-25 09:48:38 ERROR:busco.BuscoRunner	Input /nata/mar/crepidostomum2/results/2023-05-12/500/ragtag.scaffold.fasta does not exist
+2024-09-25 09:48:38 DEBUG:busco.BuscoRunner	Input /nata/mar/crepidostomum2/results/2023-05-12/500/ragtag.scaffold.fasta does not exist
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/busco/run_BUSCO.py", line 70, in run
+    self.load_config()
+  File "/usr/local/lib/python3.10/dist-packages/busco/run_BUSCO.py", line 62, in load_config
+    self.config_manager.load_busco_config_main()
+  File "/usr/local/lib/python3.10/dist-packages/busco/BuscoLogger.py", line 62, in wrapped_func
+    self.retval = func(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/busco/ConfigManager.py", line 56, in load_busco_config_main
+    self.config_main.validate()
+  File "/usr/local/lib/python3.10/dist-packages/busco/BuscoConfig.py", line 529, in validate
+    self._check_required_input_exists()
+  File "/usr/local/lib/python3.10/dist-packages/busco/BuscoConfig.py", line 718, in _check_required_input_exists
+    raise BatchFatalError(
+busco.Exceptions.BatchFatalError: Input /nata/mar/crepidostomum2/results/2023-05-12/500/ragtag.scaffold.fasta does not exist
+2024-09-25 09:48:38 ERROR:busco.BuscoRunner	BUSCO analysis failed!
+2024-09-25 09:48:38 ERROR:busco.BuscoRunner	Check the logs, read the user guide (https://busco.ezlab.org/busco_userguide.html), and check the BUSCO issue board on https://gitlab.com/ezlab/busco/issues
+

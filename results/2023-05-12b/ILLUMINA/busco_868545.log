@@ -1,0 +1,1 @@
+2024-06-28 08:53:12 DEBUG:busco.run_BUSCO	Command line: /usr/local/bin/busco -i farionis2-scaffolds.fa -l metazoa_odb ../BASE_BUSCO/ -o ./BUSCO -m genome --cpu 48

@@ -1,0 +1,198 @@
+---
+title: "Draft assembly of Crepidostomum"
+author: "Mar Llaberia-Robledillo"
+date: "2023-05-11"
+output:
+  html_document:
+    toc: true
+bibliography: '../../doc/references.bib'
+---
+
+## A short introduction 
+
+Our goal here is to get a first draft of the Crepidostomum genome. To do this, we have different types of
+data that we have previously processed:
+
+   - Nanopore Minion. We have done the basecalling: Ex68_3
+
+   - PacBio. Confused data: take a good look at it. According to Isa, she also got hold of two individuals
+            of Crepidostomum, but they are not the same as those of Nanopore. And they are not parasites
+            of Coregonus, but of Arctic charr.
+
+
+   - Illumina Shot Gun. Two compressed .fastq.gz files for Crepidostomum. A single individual: Ex71_6.
+
+
+As for mount options, I have mainly two
+
+2. Do two genome drafts: first with the Nanopore MinIon data and then with the PacBio data. In this way 
+we could determine which are the data that present a better coverage and use them as a "base".
+3. Make a single genome draft with all the data, without distinction by individual. This is made possible
+by flye's option to collapse the similar regions of haplotypes. Less optimal due to the loss of quality
+or accuracy of the genome draft.
+
+So, first of all, flye is executed with the nanopore and pacbio rawdata, that is, to make a hybrid
+assembly of both types of long sequences. I will take the PacBio data as base first, and next, Nanopore data as base. Finally, a polish is done with the Illumina data.
+
+# Assembly with FLYE
+
+### Hybrid assembly with both PacBio and Nanopore 
+
+NOTE: flye: error: argument --pacbio-hifi: not allowed with argument --nano-hq
+Flye does not acceot the two arguments in the same run. Lucky for us, the author
+resolved this issue in his Github:
+https://github.com/fenderglass/Flye/issues/98
+
+```{bash}
+## Solution from the author in GitHub
+
+#flye --pacbio-raw $PBREADS $ONTREADS --iterations 0 --out-dir $OUTPUTDIR  --genome-size 3.5g --threads $THREADS
+#flye --pacbio-raw $PBREADS --resume-from polishing --out-dir $OUTPUTDIR  --genome-size 3.5g --threads $THREADS
+```
+
+```{bash}
+if [ ! -d flye ]; then mkdir flye; fi
+
+NANO="../2023-04-19/CRP/*.fastq"
+PACBIO="../../data/PacBio/fastqs/demultiplex.bc1018_BAK8B_OA--bc1018_BAK8B_OA.hifi_reads.fastq.gz"
+
+OUT="flye/PB_ONT"
+
+if [ ! -d ./flye/PB_ONT ]; then
+  flye --pacbio-raw $PACBIO $NANO -o $OUT -t 16 --iterations 0
+  flye --pacbio-raw $PACBIO -o $OUT -t 16 --resume-from polishing
+fi
+
+OUT1="flye/ONT_PB"
+
+if [ ! -d ./flye/ONT_PB ]; then
+  flye --nano-raw $NANO $PACBIO -o $OUT1 -t 16 --iterations 0
+  flye --nano-raw $NANO -o $OUT1 -t 16 --resume-from polishing
+fi
+
+```
+
+## Assess draft genome quality (BUSCO)
+
+We are going to asses the quality of the draft genomes, first for --pacbio-raw option as base and the other for 
+--nano-raw option as base.
+
+lineage that Jeremy uses: metazoa_odb10
+
+
+```{bash }
+DRAFT='flye/PB_ONT/assembly.fasta'
+
+if [ ! -d pacbio ]; then
+  busco -i $DRAFT -l metazoa_odb10 -o pacbio -m genome --cpu 16
+fi
+
+DRAFT1='flye/ONT_PB/assembly.fasta'
+if [ ! -d nano ]; then
+  .busco -i $DRAFT1 -l metazoa_odb10 -o nano -m genome --cpu 16
+fi
+```
+
+## Summaries
+### Distribution of contig lengths
+
+```{r summaries}
+nanoAssembly <- read.table('flye/ONT_PB/assembly_info.txt',
+                           col.names = c('contig', 'length', 'cov', 'circ',
+                                         'repeat', 'mult', 'skip', 'skip'),
+                           colClasses = c('character', 'numeric', 'numeric',
+                                          'factor', 'factor', 'numeric',
+                                          'NULL', 'NULL'))
+pacbioAssembly <- read.table('flye/PB_ONT/assembly_info.txt',
+                             col.names = c('contig', 'length', 'cov', 'circ',
+                                           'repeat', 'mult', 'skip', 'skip'),
+                             colClasses = c('character', 'numeric', 'numeric',
+                                            'factor', 'factor', 'numeric',
+                                            'NULL', 'NULL'))
+stopifnot(! is.unsorted(rev(pacbioAssembly$length)))
+stopifnot(! is.unsorted(rev(nanoAssembly$length)))
+nanoAssembly$sum <- cumsum(nanoAssembly$length)
+pacbioAssembly$sum <- cumsum(pacbioAssembly$length)
+nanoSize <- sum(pacbioAssembly$length)
+pacbioSize <- sum(pacbioAssembly$length)
+nanoN50  <- which(nanoAssembly$sum >= 0.5 * nanoSize)[1]
+pacbioN50 <- which(pacbioAssembly$sum >= 0.5 * pacbioSize)[1]
+barplot(nanoAssembly$length, col = 'gray', border = 'gray',
+        xlim = c(1,7000), ylim = c(0, 250000),
+        xlab = 'Ordered contigs', ylab = 'Contig length (bp)')
+abline(v = nanoN50, col = 'red', lty = 2)
+par(new = TRUE)
+barplot(pacbioAssembly$length, col = 'black', axes = FALSE,
+        xlim = c(1,7000), ylim = c(0, 250000),)
+abline(v = pacbioN50, col = 'green', lty = 2)
+```
+
+The decreasingly ordered lengths of contigs of both assemblies suggest that the
+assembly made with Oxford Nanopore data (in gray above) is much better: contigs
+and total assembly length are much longer than in the PacBio assembly.
+
+### *Peaks* of coverage depth
+
+```{r peakdepth}
+plot(density(nanoAssembly$cov), xlim = c(0, 30), col = 'darkred',
+     main = 'Density of mean coverage per contig',
+     xlab = 'Mean coverage', ylab = 'Density')
+lines(density(pacbioAssembly$cov), col = 'darkgreen')
+legend('topright', col = c('darkred','darkgreen'), lty=1,
+       legend = c('Oxford Nanopore', 'PacBio'))
+```
+
+Both assemblies show two peaks of coverage depth, at almost 5 and at almost 20.
+Approximately 34% of contigs, but less than 15% of the assembly length, seem
+to be represented over 4 times more than most of the genome. A factor of 4 in
+coverage differences among genome portions does not have an obvious explanation.
+The *octoploid* fraction has a slightly higher GC content (not shown), possibly
+indicating a different nature (just "repetitive") of those sequences. But, the
+overlap in GC content distributions of the two genomic components is large. By
+the way, @Petkeviciute2008 shows a species of *Crepidostomum* has 6 pairs of
+chromosomes ($n=6$).
+
+Contigs with a mean coverage higher than 25 should probably be excluded from
+any analysis.
+
+### BUSCO analysis
+
+```{r removable}
+write.table(nanoAssembly[nanoAssembly$cov > 25, 'contig'],
+            file = 'overcovered_contigs.txt', row.names = FALSE,
+            col.names = FALSE, quote=FALSE)
+```
+
+```{r moreSummary}
+library('jsonlite')
+library('MetBrewer')
+  nano <- fromJSON('nano/short_summary.specific.metazoa_odb10.nano.json')
+pacbio <- fromJSON('pacbio/short_summary.specific.metazoa_odb10.pacbio.json')
+busco  <- as.matrix(data.frame(
+  OxfordNanopore = c(nano$results$Missing,
+                     nano$results$Fragmented,
+                     nano$results$'Multi copy',
+                     nano$results$'Single copy'),
+  PacBio = c(pacbio$results$Missing,
+             pacbio$results$Fragmented,
+             pacbio$results$'Multi copy',
+             pacbio$results$'Single copy')
+))
+rownames(busco) <- c('Missing', 'Fragmented', 'Multi-copy', 'Single-copy')
+pal <- met.brewer(name = 'Tam', n = 4, type = 'discrete')
+barplot(busco, col = pal, border = pal)
+legend('bottomright', fill = pal,
+       legend = c('Missing', 'Fragmented', 'Multi-copy', 'Single-copy'))
+```
+
+BUSCO results confirm that the assembly made with Oxford Nanopore data
+first is a little better, in that at least a few of the expected genes were
+detected, either as single-copy or fragmented.
+
+## Session information
+
+```{r sessioninfo}
+sessionInfo()
+```
+
+# Bibliography

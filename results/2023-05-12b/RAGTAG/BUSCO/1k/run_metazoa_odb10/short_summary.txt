@@ -1,0 +1,30 @@
+# BUSCO version is: 5.4.5 
+# The lineage dataset is: metazoa_odb10 (Creation date: 2024-01-08, number of genomes: 65, number of BUSCOs: 954)
+# Summarized benchmarking in BUSCO notation for file /nata/mar/crepidostomum2/results/2023-05-12/RAGTAG/1k/ragtag.scaffold.fasta
+# BUSCO was run in mode: euk_genome_met
+# Gene predictor used: metaeuk
+
+	***** Results: *****
+
+	C:2.5%[S:2.5%,D:0.0%],F:8.2%,M:89.3%,n:954	   
+	24	Complete BUSCOs (C)			   
+	24	Complete and single-copy BUSCOs (S)	   
+	0	Complete and duplicated BUSCOs (D)	   
+	78	Fragmented BUSCOs (F)			   
+	852	Missing BUSCOs (M)			   
+	954	Total BUSCO groups searched		   
+
+Assembly Statistics:
+	292630	Number of scaffolds
+	311718	Number of contigs
+	297648200	Total length
+	0.397%	Percent gaps
+	1000	Scaffold N50
+	1000	Contigs N50
+
+
+Dependencies and versions:
+	hmmsearch: 3.3
+	bbtools: 39.01
+	metaeuk: b94867bc46a027fbcbd79747fa376c254f5ac820
+	busco: 5.4.5

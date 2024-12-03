@@ -1,0 +1,10 @@
+[M::mm_idx_gen::0.067*1.04] collected minimizers
+[M::mm_idx_gen::0.100*8.41] sorted minimizers
+[M::main::0.100*8.41] loaded/built the index for 332 target sequence(s)
+[M::mm_mapopt_update::0.107*7.95] mid_occ = 76
+[M::mm_idx_stat] kmer size: 19; skip: 19; is_hpc: 0; #seq: 332
+[M::mm_idx_stat::0.109*7.78] distinct minimizers: 106399 (68.00% are singletons); average occurrences: 1.852; average spacing: 10.010; total length: 1972752
+[M::worker_pipeline::4.520*10.78] mapped 572020 sequences
+[M::main] Version: 2.28-r1209
+[M::main] CMD: minimap2 -x asm5 -t 32 /nata/mar/crepidostomum2/results/2023-05-12/PACBIO/assembly.fasta /nata/mar/crepidostomum2/results/2023-05-12/ABYSS_assembly/k90-kc2/farionis-scaffolds-500.fa
+[M::main] Real time: 4.596 sec; CPU: 48.817 sec; Peak RSS: 0.453 GB

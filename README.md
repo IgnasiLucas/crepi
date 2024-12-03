@@ -135,6 +135,12 @@ Ipyrad was run in Garnatxa with different clustering thresholds, between
 # 2023-05-17
 This is the `ipyrad` run to demultiplex the FASTQ files.
 
+# 2023-05-12b
+[Note: this folder depends on previous folder `2023-04-19`, which is not in the
+current repository!]
+This seems to be a new hybrid assembly, after deciding that, after all, the two
+presumed species may actually be the same one. 
+
 # 2023-05-12
 This is the attempt to assemble the reference genome of *Crepidostomum farionis*.
 After realizing the Nanopore data came from *C. pseudofarionis*,

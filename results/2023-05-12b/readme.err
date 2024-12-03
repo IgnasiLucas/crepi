@@ -1,0 +1,40 @@
+
+
+processing file: README.Rmd
+running: bash  -c '## Solution from the author in GitHub
+
+#flye --pacbio-raw $PBREADS $ONTREADS --iterations 0 --out-dir $OUTPUTDIR  --genome-size 3.5g --threads $THREADS
+#flye --pacbio-raw $PBREADS --resume-from polishing --out-dir $OUTPUTDIR  --genome-size 3.5g --threads $THREADS'
+running: bash  -c 'if [ ! -d flye ]; then mkdir flye; fi
+
+NANO="/nata/mar/crepidostomum/results/2023-04-19/CRP/*.fastq"
+PACBIO="/nata/mar/crepidostomum/data/PacBio/fastqs/demultiplex.bc1018_BAK8B_OA--bc1018_BAK8B_OA.hifi_reads.fastq.gz"
+
+OUT="/nata/mar/crepidostomum/results/2023-05-12/flye/PB_ONT"
+
+if [ ! -d ./flye/PB_ONT ]; then
+  flye --pacbio-raw $PACBIO $NANO -o $OUT -t 16 --iterations 0 
+  flye --pacbio-raw $PACBIO -o $OUT -t 16 --resume-from polishing
+fi
+
+OUT1="/nata/mar/crepidostomum/results/2023-05-12/flye/ONT_PB"
+  
+if [ ! -d ./flye/ONT_PB ]; then
+  flye --nano-raw $NANO $PACBIO -o $OUT1 -t 16 --iterations 0 
+  flye --nano-raw $NANO -o $OUT1 -t 16 --resume-from polishing
+fi
+'
+running: bash  -c "DRAFT='/nata/mar/crepidostomum/results/2023-05-12/flye/PB_ONT/assembly.fasta'
+
+if [ ! -d pacbio ]; then
+  busco -i \$DRAFT -l metazoa_odb10 -o pacbio -m genome --cpu 16 
+fi
+
+DRAFT1='/nata/mar/crepidostomum/results/2023-05-12/flye/ONT_PB/assembly.fasta'
+if [ ! -d nano ]; then
+  busco -i \$DRAFT1 -l metazoa_odb10 -o nano -m genome --cpu 16 
+fi"
+output file: README.knit.md
+
+
+Output created: README.html
