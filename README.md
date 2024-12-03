@@ -125,8 +125,28 @@ coverage distribution, quite arbitrarily. The file `BadContigs.txt`
 contains the identifiers of the 503 (of over 3 million) contigs with
 the highest coverage.
 
+# 2024-01-18
+Haplotype network with COI.
+
+# 2024-01-17
+Phylogeny of *COI*, *lsrDNA* and *ITS2* genes of all samples.
+
+# 2023-10-19
+Attempt to get a mitochondrial contig from the assembly in `2023-05-12/NANO`,
+which is not there any more, with `mitoz`.
+
 # 2023-10-02
-Extraction of *cox1* and *lsrDNA* genes from all samples.
+Extraction of *cox1*, *lsrDNA* and *ITS2* genes from all samples, for
+identification of *Crepidostomum sp*.
+
+# 2023-06-22
+Extraction of marker genes from an assembly supposed to be in `2023-05-12/ABYSS_assembly/k90-kc2`,
+which may have been moved to `2023-05-12/k90-kc2`.
+
+# 2023-05-18
+Mapping of demultiplexed FASTQ reads from 2023-05-17 to a reference genome in
+the `data/RefGenomes` folder that coincides with the assembly in `2023-05-12/k90-kc2`,
+with almost 6 million contigs. The SAM files could be erased.
 
 # 2023-05-17b
 Ipyrad was run in Garnatxa with different clustering thresholds, between

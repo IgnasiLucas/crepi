@@ -1,0 +1,108 @@
+---
+title: "Haplotype Network with COI for *Crepidostomum*"
+author: "Mar Llaberia-Robledillo"
+date: "`r Sys.Date()`"
+output: 
+  html_document: 
+    toc: TRUE
+bibliography: "../../doc/references.bib"
+---
+
+With the filtering of the alignment for phylogeny, it has 
+become short (150 bp), but with a significant decrease in N and gaps.
+
+In the old analysis, we first ran Gblocks here, but later we 
+considered it necessary to run it for phlogeny as well. Since the 
+alignment is now clean, we simply visualize it and move on to the haplotype network.
+
+## Haplotype extraction and plotting 
+We are gonna use the R package geneHapR, by @Zhang2023.
+
+```{r hapnetlist, collapse = TRUE, warning=FALSE, figure.align = "center", fig.height=5, fig.width=12}
+suppressWarnings(library(geneHapR))
+suppressWarnings(library(stringr))
+suppressWarnings(library(Biostrings))
+suppressWarnings(library(ape))
+suppressWarnings(library(DECIPHER))
+suppressWarnings(library(pegas))
+suppressWarnings(library(RColorBrewer))
+suppressWarnings(library(plyr))
+suppressWarnings(library(htmltools))
+
+CrepiCOI <- readDNAStringSet("../2023-10-02/GB/Cox1_Cfar_ASM_align.fa-gb1")
+## Remove thos sequences with les than 50% of data
+CrepiCOI <- CrepiCOI[rowSums(alphabetFrequency(CrepiCOI)[,1:4]) > 100]
+CrepiCOI <- subseq(CrepiCOI, start = 30, end = 140)
+BrowseSeqs(CrepiCOI, htmlFile = "CrepiCOI_HN.html")
+includeHTML("CrepiCOI_HN.html")
+
+hapResults <- seqs2hap(CrepiCOI, na_drop = FALSE)
+hapSummary <- hap_summary(hapResults)
+
+hapList <- as.data.frame(hapSummary[, c("Hap", "freq", "Accession")])
+f <- which(is.na(hapList$freq))
+hapList <- hapList[-c(1:4), ]
+hapList$Accession[1:3] <- str_split(hapList$Accession[1:3], ";")
+hapList$Accession[1][[1]]
+hapList
+
+AccINFO  <- data.frame(lake = substring(names(CrepiCOI), 1, 1))
+AccINFO$lake <- revalue(AccINFO$lake, c("L" = "Langfjordvatn", "S" = "Suohpatjávri"))
+row.names(AccINFO) <- names(CrepiCOI)
+hapNet <- get_hapNet(hapSummary, 
+                     AccINFO = AccINFO)
+
+
+# Not draw alternative links (wis btw?)
+altlink <- attr(hapNet, "alter.links")
+#altlink
+
+hapNet2 <- hapNet
+attr(hapNet2, "alter.links") <- NULL
+attr(hapNet2, "alter.links")
+
+```
+
+```{r haploNet}
+
+Lakes = c("yellow2", "royalblue")
+par(mar = c(1, 5, 5, 1))
+tiff(filename = 'Crepi_Haplo_03.tiff', width = 3200, height = 2800, units = "px", res = 300)
+#png(filename = 'Crepi_Haplo_02.tiff', width = 3200, height = 2800, units = "px", res = 300)
+plotHapNet(hapNet2, 
+           labels = TRUE, backGround = Lakes, 
+           col.link = 1, link.width = 1, 
+           show_color_legend = TRUE, legend = c(1, 8))
+dev.off()
+
+plotHapNet(hapNet2, 
+           labels = TRUE, backGround = Lakes, 
+           col.link = 1, link.width = 1, 
+           show_color_legend = TRUE, legend = c(1, 8))
+```
+
+```{r tests, eval=FALSE, include=FALSE}
+
+plotHapNet(hapNet2,
+           size = "freq", 
+           scale = "log10", 
+           labels = TRUE, backGround = Lakes,
+           show.mutation = 1, 
+           legend=FALSE, cex=1)
+
+plotHapNet(hapNet2,
+           size = "freq", scale.ratio = 1,
+           scale = "log10", 
+           labels = TRUE, backGround = Lakes,
+           xlim = c(-20,10), #ylim = c(-10,10), 
+           col.link = 1, link.width = 1,  pie.lim = c(1, 4),
+           show.mutation = 1, 
+           show_color_legend = TRUE, legend = c(-28, 12), cex=10)
+```
+
+# Session information
+
+```{r sessioninfo}
+sessionInfo()
+```
+
