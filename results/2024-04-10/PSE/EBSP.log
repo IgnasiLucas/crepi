@@ -1,0 +1,15 @@
+#
+#model:
+#
+#<?xml version="1.0" encoding="UTF-8" standalone="no"?><input id="demographic.alltrees" spec="beast.base.evolution.tree.coalescent.CompoundPopulationFunction">
+#    <parameter id="popSizes.alltrees" lower="0.0" name="populationSizes" spec="beast.base.inference.parameter.RealParameter">1.0</parameter>
+#    <populationIndicators id="indicators.alltrees" spec="beast.base.inference.parameter.BooleanParameter">false</populationIndicators>
+#    <itree id="treeIntervals.t:AlignCOI_PSE" spec="beast.base.evolution.tree.TreeIntervals">
+#        <tree id="Tree.t:AlignCOI_PSE" spec="beast.base.evolution.tree.Tree">
+#            <taxonset id="TaxonSet.AlignCOI_PSE" spec="beast.base.evolution.alignment.TaxonSet">
+#            </taxonset>
+#        </tree>
+#    </itree>
+#</input>
+#
+Sample	popsSize0	demographic.alltrees.times.0	demographic.alltrees.times.1	demographic.alltrees.times.2	demographic.alltrees.times.3	demographic.alltrees.times.4	demographic.alltrees.times.5	demographic.alltrees.times.6	demographic.alltrees.times.7	demographic.alltrees.times.8	demographic.alltrees.times.9	demographic.alltrees.times.10	demographic.alltrees.times.11	demographic.alltrees.times.12	demographic.alltrees.times.13	demographic.alltrees.times.14	demographic.alltrees.times.15	demographic.alltrees.times.16	demographic.alltrees.times.17	demographic.alltrees.times.18	demographic.alltrees.times.19	demographic.alltrees.times.20	demographic.alltrees.times.21	demographic.alltrees.times.22	demographic.alltrees.times.23	demographic.alltrees.times.24	demographic.alltrees.times.25	demographic.alltrees.times.26	demographic.alltrees.times.27	demographic.alltrees.times.28	demographic.alltrees.times.29	demographic.alltrees.times.30	demographic.alltrees.times.31	demographic.alltrees.times.32	demographic.alltrees.times.33	demographic.alltrees.times.34	demographic.alltrees.times.35	demographic.alltrees.times.36	demographic.alltrees.times.37	demographic.alltrees.times.38	demographic.alltrees.times.39	demographic.alltrees.times.40	demographic.alltrees.times.41	demographic.alltrees.times.42	demographic.alltrees.times.43	demographic.alltrees.times.44

@@ -1,0 +1,128 @@
+
+                        BEAST v2.7.7, 2002-2024
+             Bayesian Evolutionary Analysis Sampling Trees
+                       Designed and developed by
+ Remco Bouckaert, Alexei J. Drummond, Andrew Rambaut & Marc A. Suchard
+                                    
+                   Centre for Computational Evolution
+                         University of Auckland
+                       r.bouckaert@auckland.ac.nz
+                        alexei@cs.auckland.ac.nz
+                                    
+                   Institute of Evolutionary Biology
+                        University of Edinburgh
+                           a.rambaut@ed.ac.uk
+                                    
+                    David Geffen School of Medicine
+                 University of California, Los Angeles
+                           msuchard@ucla.edu
+                                    
+                      Downloads, Help & Resources:
+                           http://beast2.org/
+                                    
+  Source code distributed under the GNU Lesser General Public License:
+                   http://github.com/CompEvol/beast2
+                                    
+                           BEAST developers:
+   Alex Alekseyenko, Trevor Bedford, Erik Bloomquist, Joseph Heled, 
+ Sebastian Hoehna, Denise Kuehnert, Philippe Lemey, Wai Lok Sibon Li, 
+Gerton Lunter, Sidney Markowitz, Vladimir Minin, Michael Defoin Platel, 
+          Oliver Pybus, Tim Vaughan, Chieh-Hsi Wu, Walter Xie
+                                    
+                               Thanks to:
+          Roald Forsberg, Beth Shapiro and Korbinian Strimmer
+
+Random number seed: 1729162552273
+
+File: PSE.xml seed: 1729162552273 threads: 4
+Loading package BEAST.base v2.7.7 BEAST.app v2.7.7    
+Alignment(AlignCOI_PSE)
+  46 taxa
+  557 sites
+  30 patterns
+
+Starting frequencies: [0.25, 0.25, 0.25, 0.25]
+Filter 1-139
+46 taxa
+139 sites
+8 patterns
+  Using BEAGLE version: 3.2.0 (PRE-RELEASE) resource 0: CPU
+    with instance flags:  PRECISION_DOUBLE COMPUTATION_SYNCH EIGEN_REAL SCALING_MANUAL SCALERS_RAW VECTOR_SSE THREADING_NONE PROCESSOR_CPU FRAMEWORK_CPU
+  Ignoring ambiguities in tree likelihood.
+  Ignoring character uncertainty in tree likelihood.
+  With 8 unique site patterns.
+  Using rescaling scheme : dynamic
+Filter 140-278
+46 taxa
+139 sites
+9 patterns
+  Using BEAGLE version: 3.2.0 (PRE-RELEASE) resource 0: CPU
+    with instance flags:  PRECISION_DOUBLE COMPUTATION_SYNCH EIGEN_REAL SCALING_MANUAL SCALERS_RAW VECTOR_SSE THREADING_NONE PROCESSOR_CPU FRAMEWORK_CPU
+  Ignoring ambiguities in tree likelihood.
+  Ignoring character uncertainty in tree likelihood.
+  With 9 unique site patterns.
+  Using rescaling scheme : dynamic
+Filter 279-417
+46 taxa
+139 sites
+5 patterns
+  Using BEAGLE version: 3.2.0 (PRE-RELEASE) resource 0: CPU
+    with instance flags:  PRECISION_DOUBLE COMPUTATION_SYNCH EIGEN_REAL SCALING_MANUAL SCALERS_RAW VECTOR_SSE THREADING_NONE PROCESSOR_CPU FRAMEWORK_CPU
+  Ignoring ambiguities in tree likelihood.
+  Ignoring character uncertainty in tree likelihood.
+  With 5 unique site patterns.
+  Using rescaling scheme : dynamic
+Filter 418-557
+46 taxa
+140 sites
+20 patterns
+  Using BEAGLE version: 3.2.0 (PRE-RELEASE) resource 0: CPU
+    with instance flags:  PRECISION_DOUBLE COMPUTATION_SYNCH EIGEN_REAL SCALING_MANUAL SCALERS_RAW VECTOR_SSE THREADING_NONE PROCESSOR_CPU FRAMEWORK_CPU
+  Ignoring ambiguities in tree likelihood.
+  Ignoring character uncertainty in tree likelihood.
+  With 20 unique site patterns.
+  Using rescaling scheme : dynamic
+WARNING: no down item specified in UpDownOperator
+===============================================================================
+Citations for this model:
+
+Bouckaert, Remco, Timothy G. Vaughan, Joëlle Barido-Sottani, Sebastián Duchêne, Mathieu Fourment, 
+Alexandra Gavryushkina, Joseph Heled, Graham Jones, Denise Kühnert, Nicola De Maio, Michael Matschiner, 
+Fábio K. Mendes, Nicola F. Müller, Huw A. Ogilvie, Louis du Plessis, Alex Popinga, Andrew Rambaut, 
+David Rasmussen, Igor Siveroni, Marc A. Suchard, Chieh-Hsi Wu, Dong Xie, Chi Zhang, Tanja Stadler, 
+Alexei J. Drummond 
+  BEAST 2.5: An advanced software platform for Bayesian evolutionary analysis. 
+  PLoS computational biology 15, no. 4 (2019): e1006650.
+
+Hasegawa M, Kishino H, Yano T (1985) Dating the human-ape splitting by a
+  molecular clock of mitochondrial DNA. Journal of Molecular Evolution
+  22:160-174.
+
+Douglas J, Zhang R, Bouckaert R. Adaptive dating and fast proposals: Revisiting the phylogenetic relaxed clock model. PLoS computational biology. 2021 Feb 2;17(2):e1008322.
+
+Bouckaert RR. An efficient coalescent epoch model for Bayesian phylogenetic inference. Systematic Biology, syac015, 2022
+
+===============================================================================
+Start likelihood: -1078.5894940595128 
+WARNING: Loggers appear to have different log frequency.
+WARNING: This may cause problems in post-processing based on more than one log files.
+WARNING: Therefore, it is recommended to use the same log frequency
+Hint: note that TreeWithMetaDataLogger with dp="X" prints out trees with decimal places, potentially reducing tree file sizes substantially.
+Writing file PSE/PSE.log
+Writing file PSE/PSE-AlignCOI_PSE.trees
+Writing file PSE/EBSP.log
+         Sample      posterior     likelihood          prior
+Please wait while BEAST takes 50000000 pre-burnin samples
+P(posterior) = -507.96606222098774 (was -491.81557936397064)  **
+	P(prior) = 266.6539086958584 (was 266.6539086958584)
+		P(ExtendedBayesianSkyline.t:AlignCOI_PSE) = 228.6181481736595 (was 228.6181481736595)
+		P(FrequenciesPrior.s:AlignCOI_PSE) = 3.08687876995754 (was 3.08687876995754)
+		P(indicatorsPrior.alltrees) = -1.0596601011415854 (was -1.0596601011415854)
+		P(KappaPrior.s:AlignCOI_PSE) = -2.0705802901538095 (was -2.0705802901538095)
+		P(popSizePrior.alltrees) = 38.327693608436675 (was 38.327693608436675)
+		P(populationMeanPrior.alltrees) = -0.24857146489993795 (was -0.24857146489993795)
+		P(PropInvariantPrior.s:AlignCOI_PSE) = 0.0 (was 0.0)
+	P(likelihood) = -774.6199709168461 (was -758.469488059829)  **
+		P(treeLikelihood.AlignCOI_PSE) = -774.6199709168461 (was -774.6199709168461)
+At sample -25290000
+Likelihood incorrectly calculated: -491.81557936397064 != -507.96606222098774(16.150482857017096) Operator: kernel.BactrianScaleOperator(indicatorScaler.alltrees)

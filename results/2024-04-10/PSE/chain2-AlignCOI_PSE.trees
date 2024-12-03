@@ -1,0 +1,102 @@
+#NEXUS
+
+Begin taxa;
+	Dimensions ntax=46;
+		Taxlabels
+			S001Cma
+			S001Cmb
+			S001Cmc
+			S002Cma
+			S002Cmc
+			S002Cme
+			S003Cma
+			S003Cmc
+			S003Cmd
+			S005Cma
+			S005Cmb
+			S006Cxa
+			S006Cxb
+			S009Cxa
+			S011Cxa
+			S011Cxf
+			S011Cxh
+			S012Cxa
+			S012Cxb
+			S016Cxb
+			S016Cxc
+			S019Cxc
+			S019Cxd
+			S020Cxc
+			S020Cxd
+			S022Cxa
+			S022Cxb
+			S023Cxc
+			S027Cxa
+			S027Cxd
+			S027Cxe
+			S031Cma
+			S083Cxb
+			S108Cxc
+			S116Cma
+			S116Cmb
+			S117Cma
+			S117Cmb
+			S118Cma
+			S118Cmc
+			S119Cma
+			S119Cmc
+			S125Cma
+			S125Cmc
+			S126Cma
+			S127Cma
+			;
+End;
+Begin trees;
+	Translate
+		     1 S001Cma,
+		     2 S001Cmb,
+		     3 S001Cmc,
+		     4 S002Cma,
+		     5 S002Cmc,
+		     6 S002Cme,
+		     7 S003Cma,
+		     8 S003Cmc,
+		     9 S003Cmd,
+		    10 S005Cma,
+		    11 S005Cmb,
+		    12 S006Cxa,
+		    13 S006Cxb,
+		    14 S009Cxa,
+		    15 S011Cxa,
+		    16 S011Cxf,
+		    17 S011Cxh,
+		    18 S012Cxa,
+		    19 S012Cxb,
+		    20 S016Cxb,
+		    21 S016Cxc,
+		    22 S019Cxc,
+		    23 S019Cxd,
+		    24 S020Cxc,
+		    25 S020Cxd,
+		    26 S022Cxa,
+		    27 S022Cxb,
+		    28 S023Cxc,
+		    29 S027Cxa,
+		    30 S027Cxd,
+		    31 S027Cxe,
+		    32 S031Cma,
+		    33 S083Cxb,
+		    34 S108Cxc,
+		    35 S116Cma,
+		    36 S116Cmb,
+		    37 S117Cma,
+		    38 S117Cmb,
+		    39 S118Cma,
+		    40 S118Cmc,
+		    41 S119Cma,
+		    42 S119Cmc,
+		    43 S125Cma,
+		    44 S125Cmc,
+		    45 S126Cma,
+		    46 S127Cma
+;

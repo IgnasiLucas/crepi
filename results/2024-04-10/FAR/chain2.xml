@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><beast beautitemplate='Standard' beautistatus='' namespace="beast.core:beast.evolution.alignment:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.base.evolution.alignment:beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.tree.coalescent:beast.pkgmgmt:beast.base.core:beast.base.inference.util:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood" required="BEAST.base v2.7.7" version="2.7">
+
+    <data
+id="AlignCOI_FAR"
+spec="Alignment"
+name="alignment">
+        <sequence id="seq_L043Cxb1" spec="Sequence" taxon="L043Cxb" totalcount="4" value="TAAGGTTTTTTCTTGGCTTTATATGTTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L043Cxc1" spec="Sequence" taxon="L043Cxc" totalcount="4" value="TAAGGTTTTTTCTTGGCTTTATATGTTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L043Cxd1" spec="Sequence" taxon="L043Cxd" totalcount="4" value="TAAGGTTTTTTCTTGGCTTTATATGTTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L047Cxc1" spec="Sequence" taxon="L047Cxc" totalcount="4" value="NNNNNNNNNNNNNNNNNNNNNNNNNNTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGACACCTGGTTCGTGGTGGCGCATTTCCATTATGTGTTATCTCTAGGATCTTATAGTACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L059Cmb1" spec="Sequence" taxon="L059Cmb" totalcount="4" value="TAAGGTTTTTTCTTGGCTTTATATGTTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L059Cmc1" spec="Sequence" taxon="L059Cmc" totalcount="4" value="NNNNNNNNNNNNNNNNNNNNNNNNNNTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L059Cmd1" spec="Sequence" taxon="L059Cmd" totalcount="4" value="NNNNNNNNNNNNNNNNNNNNNNNNNNTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGATACTTGATTTGTGGTGGCCCATTTTCATTACGTGTTGTCTCTGGGGTCTTACAGGACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L061Cmb1" spec="Sequence" taxon="L061Cmb" totalcount="4" value="TAAGGTTTTTTCTTGGCTTTATATGTTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L061Cmc1" spec="Sequence" taxon="L061Cmc" totalcount="4" value="TAAGGTTTTTTCTTGGCTTTATATGTTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L064Cxa1" spec="Sequence" taxon="L064Cxa" totalcount="4" value="TAAGGTTTTTTCTTGGCTTTATATGTTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L064Cxb1" spec="Sequence" taxon="L064Cxb" totalcount="4" value="TAAGGTTTTTTCTTGGCTTTATATGTTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L065Cxa1" spec="Sequence" taxon="L065Cxa" totalcount="4" value="TAAGGTTTTTTCTTGGCTTTATATGTTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L074Cma1" spec="Sequence" taxon="L074Cma" totalcount="4" value="NNNNNNNNNNNNNNNNNNNNNNNNNNTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L074Cmd1" spec="Sequence" taxon="L074Cmd" totalcount="4" value="NNNNNNNNNNNNNNNNNNNNNNNNNNTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L074Cme1" spec="Sequence" taxon="L074Cme" totalcount="4" value="NNNNNNNNNNNNNNNNNNNNNNNNNNTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L074Cmf1" spec="Sequence" taxon="L074Cmf" totalcount="4" value="TAAGGTTTTTTCTTGGCTTTATATGTTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L074Cxb1" spec="Sequence" taxon="L074Cxb" totalcount="4" value="TCAGGTTTTTTCTTGGCTTTATATGTTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGATACTTGATTTGTGGTGGCCCATTTTCATTACGTGTTGTCTCTGGGGTCTTACAGGACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L074Cxc1" spec="Sequence" taxon="L074Cxc" totalcount="4" value="TAAGGTTTTTTCTTGGCTTTATATGTTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L087Cma1" spec="Sequence" taxon="L087Cma" totalcount="4" value="TAAGGTTTTTTCTTGGCTTTATATGTTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L087Cxa1" spec="Sequence" taxon="L087Cxa" totalcount="4" value="NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGTCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L088Cmb1" spec="Sequence" taxon="L088Cmb" totalcount="4" value="TAAGGTTTTTTCTTGGCTTTATATGTTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L088Cmc1" spec="Sequence" taxon="L088Cmc" totalcount="4" value="TAAGGTTTTTTCTTGGCTTTATATGTTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L089Cma1" spec="Sequence" taxon="L089Cma" totalcount="4" value="TAAGGTTTTTTCTTGGCTTTATATGTTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L089Cmb1" spec="Sequence" taxon="L089Cmb" totalcount="4" value="TAAGGTTTTTTCTTGGCTTTATATGTTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L089Cmc1" spec="Sequence" taxon="L089Cmc" totalcount="4" value="NNNNNNNNNNNNNNNNNNNNNNNNNNTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGACACCTGGTTCGTGGTGGCGCATTTCCATTATGTGTTATCCCTAGGATCTTATAGTACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L089Cxc1" spec="Sequence" taxon="L089Cxc" totalcount="4" value="TAAGGTTTTTTCTTGGCTTTATATGTTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L089Cxd1" spec="Sequence" taxon="L089Cxd" totalcount="4" value="TAAGGTTTTTTCTTGGCTTTATATGTTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L090Cma1" spec="Sequence" taxon="L090Cma" totalcount="4" value="TAAGGTTTTTTCTTGGCTTTATATGTTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L090Cmb1" spec="Sequence" taxon="L090Cmb" totalcount="4" value="NNNNNNNNNNNNNNNNNNNNNNNNNNTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L090Cmc1" spec="Sequence" taxon="L090Cmc" totalcount="4" value="NNNNNNNNNNNNNNNNNNNNNNNNNNTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L098Cxc1" spec="Sequence" taxon="L098Cxc" totalcount="4" value="TAAGGTTTTTTCTTGGCTTTATATGTTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L098Cxd1" spec="Sequence" taxon="L098Cxd" totalcount="4" value="TAAGGTTTTTTCTTGGCTTTATATGTTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGACACCTGGTTCGTGGTGGCGCATTTCCATTATGTGTTATCCTTAGGATCTTACAGTACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L115Cxc1" spec="Sequence" taxon="L115Cxc" totalcount="4" value="NNNNNNNNNNNNNNNNNNNNNNNNNNTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L131Cma1" spec="Sequence" taxon="L131Cma" totalcount="4" value="NNNNNNNNNNNNNNNNNNNNNNNNNNTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+        <sequence id="seq_L134Cma1" spec="Sequence" taxon="L134Cma" totalcount="4" value="NNNNNNNNNNNNNNNNNNNNNNNNNNTAAGAGGGTCTCGTATGCGAGGTTGAGATCCGATTGTGTGATGAATTATAGGCTTCATTGTTCTTTTTACGATTGGCGGTGTGACAGGAATTGTGTTATCTGCTTCTATTTTGGATACTTTGTTACATGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACTGTTGTTATTTCTTTGATTTGGTGATGGCCTATTATAACTGGGTTTAGGCTGAGGAAGTATCTCTTGCAGGGGCATTGGTTCGCCTCTATGGCGGGGTTTA"/>
+    </data>
+
+    <map name="Uniform" >beast.base.inference.distribution.Uniform</map>
+
+    <map name="Exponential" >beast.base.inference.distribution.Exponential</map>
+
+    <map name="LogNormal" >beast.base.inference.distribution.LogNormalDistributionModel</map>
+
+    <map name="Normal" >beast.base.inference.distribution.Normal</map>
+
+    <map name="Beta" >beast.base.inference.distribution.Beta</map>
+
+    <map name="Gamma" >beast.base.inference.distribution.Gamma</map>
+
+    <map name="LaplaceDistribution" >beast.base.inference.distribution.LaplaceDistribution</map>
+
+    <map name="prior" >beast.base.inference.distribution.Prior</map>
+
+    <map name="InverseGamma" >beast.base.inference.distribution.InverseGamma</map>
+
+    <map name="OneOnX" >beast.base.inference.distribution.OneOnX</map>
+
+    <run id="mcmc" spec="MCMC" chainLength="500000000" preBurnin="50000000">
+        <state id="state" spec="State" storeEvery="5000">
+            <tree id="Tree.t:AlignCOI_FAR" spec="beast.base.evolution.tree.Tree" name="stateNode">
+                <taxonset id="TaxonSet.AlignCOI_FAR" spec="TaxonSet">
+                    <alignment idref="AlignCOI_FAR"/>
+                </taxonset>
+            </tree>
+            <parameter id="kappa.s:AlignCOI_FAR" spec="parameter.RealParameter" lower="0.0" name="stateNode">2.0</parameter>
+            <parameter id="freqParameter.s:AlignCOI_FAR" spec="parameter.RealParameter" dimension="4" lower="0.0" name="stateNode" upper="1.0">0.25</parameter>
+            <stateNode id="indicators.alltrees" spec="parameter.BooleanParameter">false</stateNode>
+            <parameter id="populationMean.alltrees" spec="parameter.RealParameter" lower="0.0" name="stateNode">1.0</parameter>
+            <parameter id="popSizes.alltrees" spec="parameter.RealParameter" lower="0.0" name="stateNode">1.0</parameter>
+        </state>
+        <init id="RandomTree.t:AlignCOI_FAR" spec="RandomTree" estimate="false" initial="@Tree.t:AlignCOI_FAR" taxa="@AlignCOI_FAR">
+            <populationModel id="ConstantPopulation0.t:AlignCOI_FAR" spec="ConstantPopulation">
+                <parameter id="randomPopSize.t:AlignCOI_FAR" spec="parameter.RealParameter" name="popSize">1.0</parameter>
+            </populationModel>
+        </init>
+        <distribution id="posterior" spec="CompoundDistribution">
+            <distribution id="prior" spec="CompoundDistribution">
+                <distribution id="ExtendedBayesianSkyline.t:AlignCOI_FAR" spec="Coalescent">
+                    <populationModel id="scaledDemo.t:AlignCOI_FAR" spec="ScaledPopulationFunction">
+                        <population id="demographic.alltrees" spec="CompoundPopulationFunction" populationIndicators="@indicators.alltrees" populationSizes="@popSizes.alltrees">
+                            <itree id="treeIntervals.t:AlignCOI_FAR" spec="beast.base.evolution.tree.TreeIntervals" tree="@Tree.t:AlignCOI_FAR"/>
+                        </population>
+                        <factor id="Function$Constant.0" spec="Function$Constant" value="1.0"/>
+                    </populationModel>
+                    <treeIntervals idref="treeIntervals.t:AlignCOI_FAR"/>
+                </distribution>
+                <prior id="FrequenciesPrior.s:AlignCOI_FAR" name="distribution" x="@freqParameter.s:AlignCOI_FAR">
+                    <distr id="Dirichlet.0" spec="distribution.Dirichlet">
+                        <parameter id="RealParameter.3" spec="parameter.RealParameter" dimension="4" estimate="false" name="alpha">4.0 4.0 4.0 4.0</parameter>
+                    </distr>
+                </prior>
+                <prior id="indicatorsPrior.alltrees" name="distribution">
+                    <x id="indsSun.alltrees" spec="beast.base.evolution.Sum">
+                        <arg idref="indicators.alltrees"/>
+                    </x>
+                    <distr id="Poisson.EBSP" spec="distribution.Poisson">
+                        <parameter id="RealParameter.6" spec="parameter.RealParameter" estimate="false" name="lambda" upper="0.0">0.69314718056</parameter>
+                    </distr>
+                </prior>
+                <prior id="KappaPrior.s:AlignCOI_FAR" name="distribution" x="@kappa.s:AlignCOI_FAR">
+                    <LogNormal id="LogNormalDistributionModel.0" name="distr">
+                        <parameter id="RealParameter.1" spec="parameter.RealParameter" estimate="false" name="M">1.0</parameter>
+                        <parameter id="RealParameter.2" spec="parameter.RealParameter" estimate="false" name="S">1.25</parameter>
+                    </LogNormal>
+                </prior>
+                <prior id="popSizePrior.alltrees" name="distribution" x="@popSizes.alltrees">
+                    <Exponential id="popPriorDist.EBSP" mean="@populationMean.alltrees" name="distr"/>
+                </prior>
+                <prior id="populationMeanPrior.alltrees" name="distribution" x="@populationMean.alltrees">
+                    <Normal id="Normal.0" name="distr">
+                        <parameter id="RealParameter.7" spec="parameter.RealParameter" estimate="false" name="mean">0.1</parameter>
+                        <parameter id="RealParameter.8" spec="parameter.RealParameter" estimate="false" name="sigma">0.5</parameter>
+                    </Normal>
+                </prior>
+            </distribution>
+            <distribution id="likelihood" spec="CompoundDistribution" useThreads="true">
+                <distribution id="treeLikelihood.AlignCOI_FAR" spec="ThreadedTreeLikelihood" data="@AlignCOI_FAR" tree="@Tree.t:AlignCOI_FAR">
+                    <siteModel id="SiteModel.s:AlignCOI_FAR" spec="SiteModel">
+                        <parameter id="mutationRate.s:AlignCOI_FAR" spec="parameter.RealParameter" estimate="false" lower="0.0" name="mutationRate">1.0</parameter>
+                        <parameter id="gammaShape.s:AlignCOI_FAR" spec="parameter.RealParameter" estimate="false" lower="0.1" name="shape">1.0</parameter>
+                        <parameter id="proportionInvariant.s:AlignCOI_FAR" spec="parameter.RealParameter" estimate="false" lower="0.0" name="proportionInvariant" upper="1.0">0.0</parameter>
+                        <substModel id="hky.s:AlignCOI_FAR" spec="HKY" kappa="@kappa.s:AlignCOI_FAR">
+                            <frequencies id="estimatedFreqs.s:AlignCOI_FAR" spec="Frequencies" frequencies="@freqParameter.s:AlignCOI_FAR"/>
+                        </substModel>
+                    </siteModel>
+                    <branchRateModel id="StrictClock.c:AlignCOI_FAR" spec="beast.base.evolution.branchratemodel.StrictClockModel">
+                        <parameter id="clockRate.c:AlignCOI_FAR" spec="parameter.RealParameter" estimate="false" lower="0.0" name="clock.rate">1.0</parameter>
+                    </branchRateModel>
+                </distribution>
+            </distribution>
+        </distribution>
+        <operator id="KappaScaler.s:AlignCOI_FAR" spec="AdaptableOperatorSampler" weight="0.05">
+            <parameter idref="kappa.s:AlignCOI_FAR"/>
+            <operator id="AVMNOperator.AlignCOI_FAR" spec="kernel.AdaptableVarianceMultivariateNormalOperator" allowNonsense="true" beta="0.05" burnin="400" initial="800" weight="0.1">
+                <transformations id="AVMNSumTransform.AlignCOI_FAR" spec="operator.kernel.Transform$LogConstrainedSumTransform">
+                    <f idref="freqParameter.s:AlignCOI_FAR"/>
+                </transformations>
+                <transformations id="AVMNLogTransform.AlignCOI_FAR" spec="operator.kernel.Transform$LogTransform">
+                    <f idref="kappa.s:AlignCOI_FAR"/>
+                </transformations>
+                <transformations id="AVMNNoTransform.AlignCOI_FAR" spec="operator.kernel.Transform$NoTransform">
+                    <f idref="Tree.t:AlignCOI_FAR"/>
+                </transformations>
+            </operator>
+            <operator id="KappaScalerX.s:AlignCOI_FAR" spec="kernel.BactrianScaleOperator" parameter="@kappa.s:AlignCOI_FAR" scaleFactor="0.1" upper="10.0" weight="0.1"/>
+        </operator>
+        <operator id="FrequenciesExchanger.s:AlignCOI_FAR" spec="AdaptableOperatorSampler" weight="0.05">
+            <parameter idref="freqParameter.s:AlignCOI_FAR"/>
+            <operator idref="AVMNOperator.AlignCOI_FAR"/>
+            <operator id="FrequenciesExchangerX.s:AlignCOI_FAR" spec="operator.kernel.BactrianDeltaExchangeOperator" delta="0.01" weight="0.1">
+                <parameter idref="freqParameter.s:AlignCOI_FAR"/>
+            </operator>
+        </operator>
+        <operator id="ExtendedBayesianSkylineBICEPSEpochTop.t:AlignCOI_FAR" spec="EpochFlexOperator" scaleFactor="0.1" tree="@Tree.t:AlignCOI_FAR" weight="2.0"/>
+        <operator id="ExtendedBayesianSkylineBICEPSEpochAll.t:AlignCOI_FAR" spec="EpochFlexOperator" fromOldestTipOnly="false" scaleFactor="0.1" tree="@Tree.t:AlignCOI_FAR" weight="2.0"/>
+        <operator id="ExtendedBayesianSkylineBICEPSTreeFlex.t:AlignCOI_FAR" spec="TreeStretchOperator" scaleFactor="0.01" tree="@Tree.t:AlignCOI_FAR" weight="2.0"/>
+        <operator id="ExtendedBayesianSkylineTreeRootScaler.t:AlignCOI_FAR" spec="kernel.BactrianScaleOperator" rootOnly="true" scaleFactor="0.1" tree="@Tree.t:AlignCOI_FAR" upper="10.0" weight="3.0"/>
+        <operator id="ExtendedBayesianSkylineUniformOperator.t:AlignCOI_FAR" spec="kernel.BactrianNodeOperator" tree="@Tree.t:AlignCOI_FAR" weight="30.0"/>
+        <operator id="ExtendedBayesianSkylineSubtreeSlide.t:AlignCOI_FAR" spec="kernel.BactrianSubtreeSlide" tree="@Tree.t:AlignCOI_FAR" weight="15.0"/>
+        <operator id="ExtendedBayesianSkylineNarrow.t:AlignCOI_FAR" spec="Exchange" tree="@Tree.t:AlignCOI_FAR" weight="15.0"/>
+        <operator id="ExtendedBayesianSkylineWide.t:AlignCOI_FAR" spec="Exchange" isNarrow="false" tree="@Tree.t:AlignCOI_FAR" weight="3.0"/>
+        <operator id="ExtendedBayesianSkylineWilsonBalding.t:AlignCOI_FAR" spec="WilsonBalding" tree="@Tree.t:AlignCOI_FAR" weight="3.0"/>
+        <operator id="bitflip.alltrees" spec="operator.BitFlipOperator" parameter="@indicators.alltrees" weight="30.0"/>
+        <operator id="indicatorSampler.alltrees" spec="SampleOffValues" dist="@popPriorDist.EBSP" indicators="@indicators.alltrees" values="@popSizes.alltrees" weight="15.0"/>
+        <operator id="indicatorScaler.alltrees" spec="kernel.BactrianScaleOperator" degreesOfFreedom="1" indicator="@indicators.alltrees" parameter="@popSizes.alltrees" scaleFactor="0.5" upper="10.0" weight="15.0"/>
+        <operator id="EBSPupDownOperator.alltrees" spec="operator.kernel.BactrianUpDownOperator" scaleFactor="0.7" weight="5.0">
+            <up idref="popSizes.alltrees"/>
+            <up idref="populationMean.alltrees"/>
+        </operator>
+        <logger id="tracelog" spec="Logger" fileName="$(filebase).log" logEvery="1000000" model="@posterior" sanitiseHeaders="true" sort="smart">
+            <log idref="posterior"/>
+            <log idref="likelihood"/>
+            <log idref="prior"/>
+            <log idref="treeLikelihood.AlignCOI_FAR"/>
+            <log id="TreeHeight.t:AlignCOI_FAR" spec="beast.base.evolution.tree.TreeStatLogger" tree="@Tree.t:AlignCOI_FAR"/>
+            <log idref="kappa.s:AlignCOI_FAR"/>
+            <log idref="freqParameter.s:AlignCOI_FAR"/>
+            <log idref="ExtendedBayesianSkyline.t:AlignCOI_FAR"/>
+            <log idref="indicators.alltrees"/>
+            <log idref="populationMean.alltrees"/>
+            <log idref="popSizes.alltrees"/>
+            <log id="sumIndicators" spec="beast.base.evolution.Sum">
+                <arg idref="indicators.alltrees"/>
+            </log>
+        </logger>
+        <logger id="screenlog" spec="Logger" logEvery="1000000">
+            <log idref="posterior"/>
+            <log idref="likelihood"/>
+            <log idref="prior"/>
+        </logger>
+        <logger id="treelog.t:AlignCOI_FAR" spec="Logger" fileName="$(filebase)-$(tree).trees" logEvery="1000000" mode="tree">
+            <log id="TreeWithMetaDataLogger.t:AlignCOI_FAR" spec="beast.base.evolution.TreeWithMetaDataLogger" tree="@Tree.t:AlignCOI_FAR"/>
+        </logger>
+        <logger id="EBSPLogger" spec="Logger" fileName="EBSP.log" logEvery="10000" model="@demographic.alltrees">
+            <log idref="demographic.alltrees"/>
+        </logger>
+        <operatorschedule id="OperatorSchedule" spec="OperatorSchedule"/>
+    </run>
+
+</beast>
