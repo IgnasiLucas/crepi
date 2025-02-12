@@ -155,8 +155,25 @@ pheatmap(m1, color = colorRampPalette(brewer.pal(9, "YlOrRd"))(12),
          legend = TRUE,
          show_rownames = FALSE,
          show_colnames = FALSE,
-         #cellwidth = 2.5, cellheight = 2.5,
+         cellwidth = 2.5, cellheight = 2.5,
          )
+
+dev.off()
+
+Labels <- scan('ARCTIC.list', what = 'character', quiet = TRUE)
+Labels <- gsub('^.*/(.*)\\.bam$', '\\1', Labels)
+m1 <- as.matrix(read.table('Likes2/ARCTIC.ibsMat'))
+#row.names(m1) <- Labels
+#colnames(m1)  <- Labels
+Lake <- substring(Labels, 1, 1)
+paleta <- c(B = 'darkgreen', L = 'yellow', N = 'orange', S = 'blue', T = 'brown', W = 'pink')
+heatmap(m1, symm = TRUE, revC = TRUE, labRow = '', labCol = '',
+        RowSideColors = paleta[Lake], ColSideColors = paleta[Lake])
+png('PLOTS/HEATMAP_ARTIC_SYM.png', width = 3000, height = 3000, units = 'px', res = 500)
+heatmap(m1, symm = TRUE, revC = TRUE, labRow = '', labCol = '',
+        RowSideColors = paleta[Lake], ColSideColors = paleta[Lake], 
+        col = colorRampPalette(brewer.pal(9, "YlOrRd"))(12)))
+#legend(x="left", legend=c("min", "med", "max"), fill= colorRampPalette(brewer.pal(9, "YlOrRd"))(12))
 
 dev.off()
 ```
