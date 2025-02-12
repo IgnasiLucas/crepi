@@ -63,8 +63,6 @@ separates the two species and leaves the four admixed individuals
 near the middle. The second principal component only accounts for
 1.3% of variation. Suopatjavri seems to be more diverse.
 
-
-
 # 2024-10-04
 The `consensus.fa` from `2024-10-03` is renamed to `radloci.fa`,
 indexed and used as a reference to map the ddRAD-seq reads. The

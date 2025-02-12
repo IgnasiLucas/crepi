@@ -29,10 +29,22 @@ suppressWarnings(library(RColorBrewer))
 suppressWarnings(library(plyr))
 suppressWarnings(library(htmltools))
 
-CrepiCOI <- readDNAStringSet("../2023-10-02/GB/Cox1_Cfar_ASM_align.fa-gb1")
-## Remove thos sequences with les than 50% of data
-CrepiCOI <- CrepiCOI[rowSums(alphabetFrequency(CrepiCOI)[,1:4]) > 100]
-CrepiCOI <- subseq(CrepiCOI, start = 30, end = 140)
+CrepiCOI <- readDNAStringSet("../2023-10-02/GB/COI_MW_Cfar_align.fa-gb1")
+CrepiCOI <- CrepiCOI[names(CrepiCOI)[-grep("S031Cmc", names(CrepiCOI))]] #insuff data
+
+## Remove thos sequences with les than 75% of data
+CrepiCOI <- CrepiCOI[which(rowSums(alphabetFrequency(CrepiCOI)[,1:4]) > 160)]
+#writeXStringSet(CrepiCOI, "CrepiCOI.fa")
+CrepiCOI <- subseq(CrepiCOI, start = 37, end = 214)
+# Recortar las posiciones 148 a 155 - Ns
+CrepiCOI <- DNAStringSet(
+  lapply(CrepiCOI, function(seq) {
+    DNAString(paste0(subseq(seq, start = 1, end = 111), subseq(seq, start = 120)))
+  })
+)
+# Guardar el alineamiento recortado
+writeXStringSet(CrepiCOI, "CrepiCOI_trimmed.fa")
+
 BrowseSeqs(CrepiCOI, htmlFile = "CrepiCOI_HN.html")
 includeHTML("CrepiCOI_HN.html")
 
@@ -42,6 +54,7 @@ hapSummary <- hap_summary(hapResults)
 hapList <- as.data.frame(hapSummary[, c("Hap", "freq", "Accession")])
 f <- which(is.na(hapList$freq))
 hapList <- hapList[-c(1:4), ]
+write.table(hapList, file = 'hapList.txt')
 hapList$Accession[1:3] <- str_split(hapList$Accession[1:3], ";")
 hapList$Accession[1][[1]]
 hapList
@@ -67,18 +80,22 @@ attr(hapNet2, "alter.links")
 
 Lakes = c("yellow2", "royalblue")
 par(mar = c(1, 5, 5, 1))
-tiff(filename = 'Crepi_Haplo_03.tiff', width = 3200, height = 2800, units = "px", res = 300)
+tiff(filename = 'Crepi_Haplo_01.tiff', width = 3200, height = 2800, units = "px", res = 300)
 #png(filename = 'Crepi_Haplo_02.tiff', width = 3200, height = 2800, units = "px", res = 300)
-plotHapNet(hapNet2, 
-           labels = TRUE, backGround = Lakes, 
-           col.link = 1, link.width = 1, 
-           show_color_legend = TRUE, legend = c(1, 8))
+plotHapNet(hapNet2,
+            size = "freq", scale.ratio = 0.5,
+            scale = 1, 
+            labels = FALSE, backGround = Lakes,
+            col.link = 1, link.width = 1,  pie.lim = c(1, 4),
+            show.mutation = 2, 
+            show_color_legend = FALSE)
 dev.off()
 
-plotHapNet(hapNet2, 
+plotHapNet(hapNet2, scale.ratio = 0.5,
            labels = TRUE, backGround = Lakes, 
-           col.link = 1, link.width = 1, 
            show_color_legend = TRUE, legend = c(1, 8))
+
+
 ```
 
 ```{r tests, eval=FALSE, include=FALSE}
