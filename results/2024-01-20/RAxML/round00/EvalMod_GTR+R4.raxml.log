@@ -1,0 +1,87 @@
+
+RAxML-NG v. 1.2.1 released on 22.12.2023 by The Exelixis Lab.
+Developed by: Alexey M. Kozlov and Alexandros Stamatakis.
+Contributors: Diego Darriba, Tomas Flouri, Benoit Morel, Sarah Lutteropp, Ben Bettisworth, Julia Haag, Anastasis Togkousidis.
+Latest version: https://github.com/amkozlov/raxml-ng
+Questions/problems/suggestions? Please visit: https://groups.google.com/forum/#!forum/raxml
+
+System: Intel(R) Xeon(R) CPU E5-4620 0 @ 2.20GHz, 32 cores, 251 GB RAM
+
+RAxML-NG was called at 11-Dec-2024 10:05:16 as follows:
+
+raxml-ng --evaluate --msa RAxML/round00/AlignTree_Mafft.alg --tree RAxML/round00/T1_1000.raxml.bestTree --model GTR+R4 --prefix RAxML/round00/EvalMod_GTR+R4
+
+Analysis options:
+  run mode: Evaluate tree likelihood
+  start tree(s): user
+  random seed: 1733907916
+  tip-inner: OFF
+  pattern compression: ON
+  per-rate scalers: OFF
+  site repeats: ON
+  logLH epsilon: general: 10.000000, brlen-triplet: 1000.000000
+  branch lengths: proportional (ML estimate, algorithm: NR-FAST)
+  SIMD kernels: AVX
+  parallelization: coarse-grained (auto), PTHREADS (auto)
+
+[00:00:00] Reading alignment from file: RAxML/round00/AlignTree_Mafft.alg
+[00:00:00] Loaded alignment with 22 taxa and 1020 sites
+
+WARNING: Sequences MW368680_C._farionis_RU and MT217147_C._farionis_RU are exactly identical!
+WARNING: Sequences MW368680_C._farionis_RU and KY513135_C._farionis_NO are exactly identical!
+WARNING: Duplicate sequences found: 2
+
+NOTE: Reduced alignment (with duplicates and gap-only sites/taxa removed) 
+NOTE: was saved to: /nata/mar/crepidostomum2/results/2024-01-20/RAxML/round00/EvalMod_GTR+R4.raxml.reduced.phy
+
+Alignment comprises 1 partitions and 170 patterns
+
+Partition 0: noname
+Model: GTR+FO+R4
+Alignment sites / patterns: 1020 / 170
+Gaps: 3.39 %
+Invariant sites: 83.82 %
+
+
+NOTE: Binary MSA file created: RAxML/round00/EvalMod_GTR+R4.raxml.rba
+
+Parallelization scheme autoconfig: 1 worker(s) x 3 thread(s)
+
+[00:00:00] Loading user starting tree(s) from: RAxML/round00/T1_1000.raxml.bestTree
+Parallel reduction/worker buffer size: 1 KB  / 0 KB
+
+[00:00:00] Data distribution: max. partitions/sites/weight per thread: 1 / 57 / 912
+[00:00:00] Data distribution: max. searches per worker: 1
+
+Evaluating 1 trees
+
+[00:00:00] Tree #1, initial LogLikelihood: -3030.680452
+
+[00:00:00 -3030.680452] Initial branch length optimization
+[00:00:00 -3029.558018] Model parameter optimization (eps = 10.000000)
+
+[00:00:01] Tree #1, final logLikelihood: -2877.372978
+
+
+Optimized model parameters:
+
+   Partition 0: noname
+   Rate heterogeneity: FREE (4 cats, mean),  weights&rates: (0.309687,1.761783) (0.321971,0.000933) (0.321971,0.000933) (0.046371,9.786284) 
+   Base frequencies (ML): 0.203902 0.217726 0.315194 0.263178 
+   Substitution rates (ML): 0.509973 3.563361 2.731201 0.178910 6.849152 1.000000 
+
+
+Final LogLikelihood: -2877.372978
+
+AIC score: 5864.745957 / AICc score: 5871.135998 / BIC score: 6135.761642
+Free parameters (model + branch lengths): 55
+
+Best ML tree saved to: /nata/mar/crepidostomum2/results/2024-01-20/RAxML/round00/EvalMod_GTR+R4.raxml.bestTree
+Optimized model saved to: /nata/mar/crepidostomum2/results/2024-01-20/RAxML/round00/EvalMod_GTR+R4.raxml.bestModel
+
+Execution log saved to: /nata/mar/crepidostomum2/results/2024-01-20/RAxML/round00/EvalMod_GTR+R4.raxml.log
+
+Analysis started: 11-Dec-2024 10:05:16 / finished: 11-Dec-2024 10:05:18
+
+Elapsed time: 1.405 seconds
+

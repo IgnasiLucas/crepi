@@ -14,10 +14,10 @@ haplotype network in 2024-01-17.
 if [ ! -d Samp28S_farionis ]; then mkdir Samp28S_farionis; fi
 for i in $(cat ../2024-01-19/farionis.txt); do
   if [ ! -e Samp28S_farionis/${i}_28S.fa ]; then
-    BAM=../2023-10-02/BAM_lsrDNA_Cfar/${i}.bam
-    samtools consensus -r lsrDNA_Cfar $BAM -A --P-het 0 \
+    BAM=../2023-10-02/BAM_lsrDNA_MT_Cpse/${i}.bam
+    samtools consensus -r lsrDNA_MT_Cpse $BAM -A --P-het 0 \
                          -l 2000 -a --show-del yes --show-ins no | \
-    sed "s/>lsrDNA_Cfar/>${i}/" >> Samp28S_farionis/${i}_28S.fa
+    sed "s/>lsrDNA_MT_Cpse/>${i}/" >> Samp28S_farionis/${i}_28S.fa
   fi
 done
 if [ ! -e farSamp28S.fa ]; then cat Samp28S_farionis/*.fa > farSamp28S.fa; fi
@@ -25,10 +25,10 @@ if [ ! -e farSamp28S.fa ]; then cat Samp28S_farionis/*.fa > farSamp28S.fa; fi
 if [ ! -d Samp28S_pseudo ]; then mkdir Samp28S_pseudo; fi
 for i in $(cat ../2024-01-19/pseudo.txt); do
   if [ ! -e Samp28S_pseudo/${i}_28S.fa ]; then
-    BAM=../2023-10-02/BAM_lsrDNA_Cfar/${i}.bam
-    samtools consensus -r lsrDNA_Cfar $BAM -A --P-het 0 \
+    BAM=../2023-10-02/BAM_lsrDNA_MT_Cpse/${i}.bam
+    samtools consensus -r lsrDNA_MT_Cpse $BAM -A --P-het 0 \
                          -l 2000 -a --show-del yes --show-ins no | \
-    sed "s/>lsrDNA_Cfar/>${i}/" >> Samp28S_pseudo/${i}_28S.fa
+    sed "s/>lsrDNA_MT_Cpse/>${i}/" >> Samp28S_pseudo/${i}_28S.fa
   fi
 done
 if [ ! -e pseSamp28S.fa ]; then cat Samp28S_pseudo/*.fa > pseSamp28S.fa; fi
@@ -314,7 +314,7 @@ writeXStringSet(Sequences_tree, "Seq28S_tree.fa")
 ## Our sequences are so much longer than the ENA sequences, so first we align them with mafft, 
 ## and then we trim the alignment before execute RAxML
 
-FOLDER=RAxML/round02
+FOLDER=RAxML/round00
 if [ ! -d RAxML ]; then mkdir RAxML; fi
 if [ ! -d $FOLDER ]; then mkdir $FOLDER; fi
 if [ ! -e $FOLDER/AlignTree_Mafft_01.alg ]; then
@@ -324,17 +324,17 @@ fi
 
 ## Trimm the alignment
 ```{r, collapse = TRUE}
-if (file.exists("RAxML/round02/AlignTree_Mafft.alg") == FALSE) {
-  Align <- readDNAStringSet("RAxML/round02/AlignTree_Mafft_01.alg")
-  BrowseSeqs(Align)
-  BrowseSeqs(subseq(Align, start = 170, end = 1190))
-  Align <- subseq(Align, start = 458, end = 1104)
-  writeXStringSet(Align, "RAxML/round02/AlignTree_Mafft.alg")
+if (file.exists("RAxML/round00/AlignTree_Mafft.alg") == FALSE) {
+  Align <- readDNAStringSet("RAxML/round00/AlignTree_Mafft_01.alg")
+  #BrowseSeqs(Align)
+  #BrowseSeqs(subseq(Align, start = 100, end = 1119))
+  Align <- subseq(Align, start = 100, end = 1119)
+  writeXStringSet(Align, "RAxML/round00/AlignTree_Mafft.alg")
 }
 ```
 
 ```{bash, collapse = TRUE}
-FOLDER=RAxML/round02
+FOLDER=RAxML/round00
 
 if [ ! -e T1_1000.raxml.support ]; then 
   raxml-ng --all --msa $FOLDER/AlignTree_Mafft.alg --model GTR+G --prefix $FOLDER/T1_1000 --bs-trees 1000 --threads 48
@@ -347,7 +347,7 @@ fi
 ```
 
 ```{bash}
-FOLDER=RAxML/round02
+FOLDER=RAxML/round00
 # Which model yields the highest log-likelihood? 
 grep "logLikelihood" $FOLDER/EvalMod*
 ## The model is GTR+R4, but
@@ -356,7 +356,7 @@ grep "AIC" $FOLDER/EvalMod*
 ```
 
 ```{bash, collapse = TRUE, eval = FALSE}
-FOLDER=RAxML/round02
+FOLDER=RAxML/round00
 ## Finally run a tree Search
 raxml-ng --msa $FOLDER/AlignTree_Mafft.alg --model GTR+R4 --prefix $FOLDER/T2 --threads 48 --redo
 
