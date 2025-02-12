@@ -1,0 +1,254 @@
+---
+title: "Extraction of **COI** and **lsrDNA** of all samples for identification of Crepidsotomum sp"
+author: "Mar Llaberia-Robledillo"
+date: "2023-10-02"
+output:
+  html_document:
+    toc: TRUE
+--- 
+
+# Introduction
+
+We can use two sequences as querys to extract the genes from our
+samples. The first is to download one COI and lsrDNA sequences 
+from GenBank. The second is to use the extracted genes from the 
+draft genome we assembled.
+
+Additionally, we construct two phylogenetic trees to see the
+relationships between the samples.
+
+## Getting the sequences from GenBank
+Since we expect to have *C. farionis* in our samples, we used its
+available markers for COI and lrsDNA. 
+
+```{bash, collapse=TRUE}
+# From ENA:
+if [ ! -d markers ];then mkdir markers; fi
+if [ ! -e acc_COI.txt ]; then
+   PORTAL="https://www.ebi.ac.uk/ena/portal/api/search?"
+   RESULT="result=sequence&"
+   QUERY="query=accession=MW729433&"
+   FIELDS="fields=accession%2Cscientific_name&"
+   FORMAT="format=tsv"
+   curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT | \
+   cut -f 1 | tail -n +2 > acc_COI.txt
+fi
+BROWSER="https://www.ebi.ac.uk/ena/browser/api/fasta/"
+ACCESSION=$(gawk -v ORS="," '{print}' acc_COI.txt | sed 's/.$//' | cut -d ',' -f 1)
+if [ ! -e markers/$ACCESSION.fa ]; then 
+  curl -s $BROWSER$ACCESSION > markers/$ACCESSION.fa
+  sed -i "/>/c >${ACCESSION}_Cfarionis_COI" markers/${ACCESSION}.fa
+fi
+
+if [ ! -e acc_28S.txt ]; then
+   PORTAL="https://www.ebi.ac.uk/ena/portal/api/search?"
+   RESULT="result=sequence&"
+   QUERY="query=accession=MW368674&"
+   FIELDS="fields=accession%2Cscientific_name&"
+   FORMAT="format=tsv"
+   curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT | \
+   cut -f 1 | tail -n +2 > acc_28S.txt
+fi
+BROWSER="https://www.ebi.ac.uk/ena/browser/api/fasta/"
+ACCESSION=$(gawk -v ORS="," '{print}' acc_28S.txt | sed 's/.$//' | cut -d ',' -f 1)
+if [ ! -e markers/$ACCESSION.fa ]; then 
+  curl -s $BROWSER$ACCESSION > markers/$ACCESSION.fa
+  sed -i "/>/c >${ACCESSION}_Cfarionis_28S" markers/${ACCESSION}.fa
+fi
+ rm *.txt
+```
+
+```{r}
+library(Biostrings)
+RefISA_K <- readDNAStringSet("../../data/SeqCox1_Crepido_spp_Kristine.fas")
+if (!dir.exists("markers")) {dir.create("markers")}
+writeXStringSet(RefISA_K["ExKD25_21_TA2003_AC_Cfar"], "markers/ExKD25_21_TA2003_AC_Cfar.fa")
+writeXStringSet(RefISA_K["ExKD8_7_TA2018_BT_Cpse"], "markers/ExKD8_7_TA2018_BT_Cpse.fa")
+```
+
+# Mapping of ddRAD-seq reads to *cox1* and *lsrDNA* genes
+
+I'm going to test several COI markers obtained from GenBank, Isabel or our assemblies. We don't know if 
+there are three species in our samples, so I'm going to test the COI from C. farionis and 
+C. pseudofarionis. Since the same gene can not be mapped at the same time, I need to create a specific 
+folder for each marker. At the end, I'm gonna leave the code in README, but without executation, only 
+keeping the chosen marker. 
+
+## Creating the REF file 
+List of COI sequences for C. farionis and C. pseudofarionis
+* COI_Cfar - ExKD25_21_TA2003_AC_Cfar (Isa)
+* COI_Cpse - ExKD8_7_TA2018_BT_Cpse (Isa)
+* COI_MW - GenBank sequence from Russia 
+* Cox1_Cpse_ONT - Cox1 extracted from the assembly of C.pseudofarionis 
+* Cox1_Cfar_ASM - Cox1 extracted from the assembly of C.farionis
+
+```{bash}
+if [ ! -e markers/COI_Cfar.fa ]; then cat markers/ExKD25_21_TA2003_AC_Cfar.fa > markers/COI_Cfar.fa \
+      && sed -i '1s/.*/>COI_Cfar/' markers/COI_Cfar.fa; fi
+if [ ! -e markers/COI_Cpse.fa ]; then cat markers/ExKD8_7_TA2018_BT_Cpse.fa > markers/COI_Cpse.fa \
+      && sed -i '1s/.*/>COI_Cpse/' markers/COI_Cpse.fa; fi
+if [ ! -e markers/COI_MW.fa ]; then cat markers/MW729433.fa > markers/COI_MW.fa \
+      && sed -i '1s/.*/>COI_MW/' markers/COI_MW.fa; fi
+if [ ! -e markers/Cox1_Cfar_ASM.fa ]; then cat ../2023-06-22/Cox1Ref.fa > markers/Cox1_Cfar_ASM.fa \
+      && sed -i '1s/.*/>Cox1_Cfar_ASM/' markers/Cox1_Cfar_ASM.fa; fi
+if [ ! -e markers/Cox1_Cpse_ONT.fa ]; then cat Cox1_Cpse_ONT_Ref.fa > markers/Cox1_Cpse_ONT.fa \
+      && sed -i '1s/.*/>Cox1_Cpse_ONT/' markers/Cox1_Cpse_ONT.fa; fi
+
+if [ ! -e markers/lsrDNA_MW.fa ]; then cat markers/MW368674.fa > markers/lsrDNA_MW.fa \
+      && sed -i '1s/.*/>lsrDNA_MW/' markers/lsrDNA_MW.fa; fi
+if [ ! -e markers/lsrDNA_Cfar.fa ]; then cat ../2023-06-22/lsrDNARef.fa > markers/lsrDNA_Cfar.fa \
+      && sed -i '1s/.*/>lsrDNA_Cfar/' markers/lsrDNA_Cfar.fa; fi
+
+```
+
+```{bash}
+
+PATHFQ=../2023-05-17/crepi_edits
+
+for REF in COI_Cfar COI_Cpse COI_MW Cox1_Cfar_ASM Cox1_Cpse_ONT lsrDNA_MW lsrDNA_Cfar; do
+  if [ ! -d BAM_$REF ]; then mkdir BAM_$REF; fi
+  if [ ! -e markers/$REF.0123 ]; then
+     bwa-mem2 index markers/${REF}.fa
+  fi
+
+  #bwa-mem2 index $COX
+  for i in $(ls $PATHFQ/*.trimmed_R1_.fastq.gz); do
+     SAMPLE=$(basename $i .trimmed_R1_.fastq.gz)
+     if [ ! -e BAM_$REF/${SAMPLE}.bam ]; then
+        if [ ! -e BAM_$REF/${SAMPLE}.sam ]; then
+           # I skip "pairing" (-P) and avoid "mate rescue" (-S), to map forward
+           # and reverse reads independently.
+           bwa-mem2 mem -t 24 -P -S markers/${REF}.fa ${PATHFQ}/${SAMPLE}.trimmed_R1_.fastq.gz \
+                                   ${PATHFQ}/${SAMPLE}.trimmed_R2_.fastq.gz \
+                        -R "@RG\tID:${SAMPLE}\tSM:${SAMPLE}" > BAM_$REF/${SAMPLE}.sam &
+        fi
+        wait
+        # We expect very few reads to map on cox1 or lsrDNA, and don't need to
+        # save the rest in the bam. Thus, I filter the umapped reads.
+        samtools view -q 20 -F 4 -u BAM_$REF/${SAMPLE}.sam | \
+        samtools sort > BAM_$REF/${SAMPLE}.bam
+        samtools index BAM_$REF/${SAMPLE}.bam
+        rm BAM_$REF/${SAMPLE}.sam
+     fi
+  done
+done
+```
+
+## Extract a consensus sequences for each BAM file 
+List of COI sequences for C. farionis and C. pseudofarionis
+* COI_Cfar - ExKD25_21_TA2003_AC_Cfar (Isa)
+* COI_Cpse - ExKD8_7_TA2018_BT_Cpse (Isa)
+* COI_MW - GenBank sequence from Russia 
+* Cox1_Cpse_ONT - Cox1 extracted from the assembly of C.pseudofarionis 
+* Cox_Cfar_ASM - Cox1 extracted from the assembly of C.farionis
+* lsrDNA_MW.fa - GenBank sequence from Russia
+* lsrDNA_Cfar.fa - lsrDNA extracted from the assembly of C.farionis
+
+
+```{bash}
+
+for REF in COI_Cfar COI_Cpse COI_MW Cox1_Cfar_ASM Cox1_Cpse_ONT lsrDNA_MW lsrDNA_Cfar; do
+  if [ ! -e ${REF}_align.fa ]; then
+    for bam in $(ls -1 BAM_$REF/*.bam); do
+      SAMPLE=$(basename -s .bam $bam)
+      samtools consensus -r $REF $bam -A --P-het 0 \
+                         -l 2000 -a --show-del yes --show-ins no | \
+      sed "s/>${REF}/>${SAMPLE}/" | \
+      sed "s/*/-/g" >> ${REF}_align.fa
+    done
+  fi
+done
+
+```
+
+## Visualization 
+No need to align it since samtools keep the previous alignment. But, I remove
+those samples that not interest us for now, that is, the bad samples with many
+Ns and that all of them belongs to the Alpine region.
+
+The samples are: T165Cxa, N048Cma, N048Cmb, N048Cmc, N044Cx2
+
+```{r eval=FALSE}
+library('DECIPHER')
+library('htmltools')
+
+COI_Cfar <- readDNAStringSet('COI_Cfar_align.fa')[grep("L|S", names(readDNAStringSet('COI_Cfar_align.fa')))]
+BrowseSeqs(COI_Cfar, htmlFile = 'COI_Cfar_align.html')
+#includeHTML('COI_Cfar_align.html')
+
+COI_Cpse <- readDNAStringSet('COI_Cpse_align.fa')[grep("L|S", names(readDNAStringSet('COI_Cpse_align.fa')))]
+BrowseSeqs(COI_Cpse, htmlFile = 'COI_Cpse_align.html')
+
+COI_MW <- readDNAStringSet('COI_MW_align.fa')[grep("L|S", names(readDNAStringSet('COI_MW_align.fa')))]
+BrowseSeqs(COI_MW, htmlFile = 'COI_MW_align.html')
+
+Cox1_Cfar_ASM <- readDNAStringSet('Cox1_Cfar_ASM_align.fa')[grep("L|S", names(readDNAStringSet('Cox1_Cfar_ASM_align.fa')))]
+BrowseSeqs(Cox1_Cfar_ASM, htmlFile = 'Cox1_Cfar_ASM_align.html')
+
+Cox1_Cpse_ONT <- readDNAStringSet('Cox1_Cpse_ONT_align.fa')[grep("L|S", names(readDNAStringSet('Cox1_Cpse_ONT_align.fa')))]
+BrowseSeqs(Cox1_Cpse_ONT, htmlFile = 'Cox1_Cpse_ONT_align.html')
+
+lsrDNA_MW <- readDNAStringSet('lsrDNA_MW_align.fa')[grep("L|S", names(readDNAStringSet('lsrDNA_MW_align.fa')))]
+BrowseSeqs(lsrDNA_MW, htmlFile = 'lsrDNA_MW_align.html')
+
+lsrDNA_Cfar <- readDNAStringSet('lsrDNA_Cfar_align.fa')[grep("L|S", names(readDNAStringSet('lsrDNA_Cfar_align.fa')))]
+BrowseSeqs(lsrDNA_Cfar, htmlFile = 'lsrDNA_Cfar_align.html')
+```
+
+
+## Phylogenetic reconstruction
+
+```{bash eval=FALSE}
+if [ ! -d RAxML ]; then mkdir RAxML; fi
+```
+
+```{r eval=FALSE}
+writeXStringSet(readDNAStringSet('COI_Cfar_align.fa')[grep("L|S", names(readDNAStringSet('COI_Cfar_align.fa')))], "GB/COI_Cfar_align.fa")
+writeXStringSet(readDNAStringSet('COI_Cpse_align.fa')[grep("L|S", names(readDNAStringSet('COI_Cpse_align.fa')))], "GB/COI_Cpse_align.fa")
+writeXStringSet(readDNAStringSet('COI_MW_align.fa')[grep("L|S", names(readDNAStringSet('COI_MW_align.fa')))], "GB/COI_MW_align.fa")
+writeXStringSet(readDNAStringSet('Cox1_Cfar_ASM_align.fa')[grep("L|S", names(readDNAStringSet('Cox1_Cfar_ASM_align.fa')))], "GB/Cox1_Cfar_ASM_align.fa")
+writeXStringSet(readDNAStringSet('Cox1_Cpse_ONT_align.fa')[grep("L|S", names(readDNAStringSet('Cox1_Cpse_ONT_align.fa')))], "GB/Cox1_Cpse_ONT_align.fa")
+writeXStringSet(readDNAStringSet('lsrDNA_MW_align.fa')[grep("L|S", names(readDNAStringSet('lsrDNA_MW_align.fa')))], "GB/lsrDNA_MW_align.fa")
+writeXStringSet(readDNAStringSet('lsrDNA_Cfar_align.fa')[grep("L|S", names(readDNAStringSet('lsrDNA_Cfar_align.fa')))], "GB/lsrDNA_Cfar_align.fa")
+```
+
+```{bash eval = FALSE}
+for A in COI_Cfar_align.fa; do
+  BASENAME=$(basename -s .fa $A)
+  gawk '(/^>/){
+     print $0
+  }(/^[^>]/){
+     gsub(/N/, "-", $1)
+     print $1
+  }' $A > GB/${BASENAME}_noN.fasta
+done
+```
+
+Filter and trim the alignments with Gblocks 
+```{bash eval=FALSE}
+for COI in COI_Cfar_align.fa COI_Cfar_align.fa COI_Cpse_align.fa COI_MW_align.fa Cox1_Cfar_ASM_align.fa Cox1_Cpse_ONT_align.fa; then 
+  if [ ! -e GB/$COI-gb1 ]; then
+     Gblocks GB/$COI -t=d -b1=46 -b2=60 -b4=10 -e=-gb1 -d=y -v=1000 -b3=10 -b5=h
+  fi
+done
+
+for lsrDNA in lsrDNA_MW_align.fa lsrDNA_Cfar_align.fa; then 
+  if [ ! -e GB/$lsrDNA-gb1 ]; then
+     Gblocks GB/$lsrDNA -t=d -b1=59 -b2=91 -b4=10 -e=-gb1 -d=y -v=1000 -b3=50 -b5=h
+  fi
+done
+
+```
+
+Since all the markers of COI maps aprox. the same name of sequences, 
+that are very low in all cases, we choose the marker extracted of our 
+reference genome of *C.farionis* (short reads). For lsrDNA, the sequences 
+aligned with the markers are so much more long, and the mapping is again 
+very similar between the markers tested, so we choose the lsrDNA extracted 
+of the *C.farionis* assembly. 
+
+```{r sessionInfo}
+sessionInfo()
+```
+
+

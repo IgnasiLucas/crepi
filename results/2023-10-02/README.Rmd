@@ -1,0 +1,198 @@
+---
+title: "Extraction of **COI**, **lsrDNA** ans **ITS2** of all samples for identification of Crepidsotomum sp"
+author: "Mar Llaberia-Robledillo"
+date: "2023-10-02"
+output:
+  html_document:
+    toc: TRUE
+--- 
+
+# Introduction
+
+We can use two sequences as querys to extract the genes from our
+samples. The first is to download one COI and lsrDNA sequences 
+from GenBank. The second is to use the extracted genes from the 
+draft genome we assembled.
+
+Additionally, we construct two phylogenetic trees to see the
+relationships between the samples.
+
+## Getting the sequences from GenBank
+I'm going to test several COI markers obtained from GenBank and Isabel. We don't know if 
+there are more than one species in our samples, so I'm going to test the COI from C. farionis and 
+C. pseudofarionis. Since the same gene can not be mapped at the same time, I need to create a specific 
+folder for each marker. At the end, I'm gonna leave the code in README, but without executation, only 
+keeping the chosen marker.
+
+```{bash, collapse=TRUE}
+# From NCBI:
+if [ ! -d markers ]; then mkdir markers; fi
+for ACCESSION in MW729433 OL763881 MT080780 MW368672 OP580487 MT080786 MT080758 MT080768; do
+  BROWSER="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id="
+  TYPE="&rettype=fasta&retmode=text"
+  if [ ! -e markers/$ACCESSION.fa ]; then
+    curl -s $BROWSER$ACCESSION$TYPE -o markers/${ACCESSION}.fa
+  fi
+done
+```
+
+```{r message=FALSE, results = 'hide'}
+suppressMessages(suppressWarnings(library(Biostrings)))
+suppressMessages(suppressWarnings(library(DECIPHER)))
+RefISA_K <- readDNAStringSet("../../data/SeqCox1_Crepido_spp_Kristine.fas")
+RefISA_K <- subseq(AlignSeqs(RefISA_K[c(2:4,7,10:13)]), 40, 880)
+if (!dir.exists("markers")) {dir.create("markers")}
+writeXStringSet(RefISA_K["ExKD25_21_TA2003_AC_Cfar"], "markers/COI_Cfar.fa")
+writeXStringSet(RefISA_K["ExKD22_8_TA1059_BT_Cpse"], "markers/COI_Cpse.fa")
+```
+```{bash}
+cd markers
+sed -i '1s/.*/>COI_Cfar/' COI_Cfar.fa
+sed -i '1s/.*/>COI_Cpse/' COI_Cpse.fa
+cd ..
+```
+## Abreviations for the sequences 
+ 
+```{bash}
+cd markers
+#Cox1
+if [ ! -e COI_MW_Cfar.fa ]; then mv MW729433.fa COI_MW_Cfar.fa && sed -i '1s/.*/>COI_MW_Cfar/' COI_MW_Cfar.fa; fi #far Vainutis
+if [ ! -e COI_OL_Cfar.fa ]; then mv OL763881.fa COI_OL_Cfar.fa && sed -i '1s/.*/>COI_OL_Cfar/' COI_OL_Cfar.fa; fi #far Atopkin
+
+#28S
+if [ ! -e lsrDNA_MT_Cfar.fa ]; then mv MT080780.fa lsrDNA_MT_Cfar.fa && sed -i '1s/.*/>lsrDNA_MT_Cfar/' lsrDNA_MT_Cfar.fa; fi #far Faltynkova
+if [ ! -e lsrDNA_MW_Cfar.fa ]; then mv MW368672.fa lsrDNA_MW_Cfar.fa && sed -i '1s/.*/>lsrDNA_MW_Cfar/' lsrDNA_MW_Cfar.fa; fi #far Vainutis
+
+if [ ! -e lsrDNA_OP_Cpse.fa ]; then mv OP580487.fa lsrDNA_OP_Cpse.fa && sed -i '1s/.*/>lsrDNA_OP_Cpse/' lsrDNA_OP_Cpse.fa; fi #far Rochart
+if [ ! -e lsrDNA_MT_Cpse.fa ]; then mv MT080786.fa lsrDNA_MT_Cpse.fa && sed -i '1s/.*/>lsrDNA_MT_Cpse/' lsrDNA_MT_Cpse.fa; fi #pse Faltynkova
+
+#ITS2
+if [ ! -e ITS2_MT_Cfar.fa ]; then mv MT080758.fa ITS2_MT_Cfar.fa && sed -i '1s/.*/>ITS2_MT_Cfar/' ITS2_MT_Cfar.fa; fi #far Faltynkova
+if [ ! -e ITS2_MT_Cpse.fa ]; then mv MT080768.fa ITS2_MT_Cpse.fa && sed -i '1s/.*/>ITS2_MT_Cpse/' ITS2_MT_Cpse.fa; fi #far Faltynkova
+
+cd ..
+```
+
+List of COI sequences for C. farionis and C. pseudofarionis
+* COI_MW_Cfar - MW729433 from Russia C.far
+* COI_OL_Cfa - OL763881 from Russia C.far
+* COI_Cfar - ExKD25_21_TA2003_AC_Cfar (Isa)
+* COI_Cpse - ExKD8_7_TA2018_BT_Cpse (Isa)
+
+List of 28S sequences for C. farionis and C. pseudofarionis
+* lsrDNA_MT_Cfar - MT080780 from Russia C.far
+* lsrDNA_MW_Cfar - MW368672 from Russia C.far
+* lsrDNA_OP_Cpse - OP580487 from Russia C.pse
+* lsrDNA_MT_Cpse - MT080786 from Russia C.pse
+
+List of ITS2 sequences for C. farionis and C. pseudofarionis
+* ITS2_MT_Cfar - MT080758 from Russia C.far
+* ITS2_MT_Cpse - MT080768 from Russia C.pse
+
+# Mapping of ddRAD-seq reads to *cox1* and *lsrDNA* genes
+
+```{bash}
+
+PATHFQ=../2023-05-17/crepi_edits
+
+for REF in COI_MW_Cfar COI_OL_Cfar COI_Cfar COI_Cpse lsrDNA_MT_Cfar lsrDNA_MW_Cfar lsrDNA_OP_Cpse lsrDNA_MT_Cpse ITS2_MT_Cfar ITS2_MT_Cpse; do
+  if [ ! -d BAM_$REF ]; then mkdir BAM_$REF; fi
+  if [ ! -e markers/$REF.0123 ]; then
+     bwa-mem2 index markers/${REF}.fa
+  fi
+
+  #bwa-mem2 index $COX
+  for i in $(ls $PATHFQ/*.trimmed_R1_.fastq.gz); do
+     SAMPLE=$(basename $i .trimmed_R1_.fastq.gz)
+     if [ ! -e BAM_$REF/${SAMPLE}.bam ]; then
+        if [ ! -e BAM_$REF/${SAMPLE}.sam ]; then
+           # I skip "pairing" (-P) and avoid "mate rescue" (-S), to map forward
+           # and reverse reads independently.
+           bwa-mem2 mem -t 24 -P -S markers/${REF}.fa ${PATHFQ}/${SAMPLE}.trimmed_R1_.fastq.gz \
+                                   ${PATHFQ}/${SAMPLE}.trimmed_R2_.fastq.gz \
+                        -R "@RG\tID:${SAMPLE}\tSM:${SAMPLE}" > BAM_$REF/${SAMPLE}.sam &
+        fi
+        wait
+        # We expect very few reads to map on cox1 or lsrDNA, and don't need to
+        # save the rest in the bam. Thus, I filter the umapped reads.
+        samtools view -q 20 -F 4 -u BAM_$REF/${SAMPLE}.sam | \
+        samtools sort > BAM_$REF/${SAMPLE}.bam
+        samtools index BAM_$REF/${SAMPLE}.bam
+        rm BAM_$REF/${SAMPLE}.sam
+     fi
+  done
+done
+```
+
+## Extract a consensus sequences for each BAM file 
+First of all, I remove those samples that not interest us, the bad samples with many
+Ns and low data, and all of them belongs to the Alpine region.
+
+The samples are: T165Cxa, N048Cma, N048Cmb, N048Cmc, N044Cx2
+
+```{bash}
+for sample in N048Cmc N048Cma N048Cmb N044Cx2 T165Cxa; do
+  find ./ -name "${sample}.bam.bai" | xargs rm
+  find ./ -name "${sample}.bam" | xargs rm
+done 
+```
+
+```{bash}
+if [ ! -d GB ]; then mkdir GB; fi
+for REF in COI_MW_Cfar COI_OL_Cfar COI_Cfar COI_Cpse lsrDNA_MT_Cfar lsrDNA_MW_Cfar lsrDNA_OP_Cpse lsrDNA_MT_Cpse ITS2_MT_Cfar ITS2_MT_Cpse; do
+  if [ ! -e GB/${REF}_align.fa ]; then
+    for bam in $(ls -1 BAM_$REF/*.bam); do
+      SAMPLE=$(basename -s .bam $bam)
+      samtools consensus -r $REF $bam -A --P-het 0 \
+                         -l 2000 -a --show-del yes --show-ins no | \
+      sed "s/>${REF}/>${SAMPLE}/" | \
+      sed "s/*/-/g" >> GB/${REF}_align.fa
+    done
+  fi
+done
+
+```
+
+
+## Phylogenetic reconstruction
+
+Filter and trim the alignments with Gblocks 
+```{bash eval=FALSE}
+for COI in COI_MW_Cfar_align.fa COI_OL_Cfa_align.fa COI_Cfar_align.fa COI_Cpse_align.fa; then 
+  if [ ! -e GB/$COI-gb1 ]; then
+     Gblocks GB/$COI -t=d -b1=46 -b2=60 -b4=10 -e=-gb1 -d=y -v=1000 -b3=10 -b5=h
+  fi
+done
+
+for lsrDNA in lsrDNA_MT_Cfar_align.fa lsrDNA_MW_Cfar_align.fa lsrDNA_OP_Cpse_align.fa lsrDNA_MT_Cpse_align.fa ; then 
+  if [ ! -e GB/$lsrDNA-gb1 ]; then
+     Gblocks GB/$lsrDNA -t=d -b1=65 -b2=91 -b4=10 -e=-gb1 -d=y -v=1500 -b3=50 -b5=h
+  fi
+done
+
+for ITS in ITS2_MT_Cfar_align.fa ITS2_MT_Cpse_align.fa; then 
+  if [ ! -e GB/$ITS-gb1 ]; then
+     Gblocks GB/$ITS -t=d -b1=59 -b2=80 -b4=10 -e=-gb1 -d=y -v=1000 -b3=10 -b5=h
+  fi
+done
+```
+
+# Conclusions
+Since all the markers of COI maps aprox. the same name of sequences, 
+that are very low in all cases, we choose the marker from GenBank, 
+COI_MW_Cfar - MW729433 from Russia. 
+For lsrDNA, the sequences aligned with the markers are so much more long, 
+and the mapping is again very similar across the markers tested, so we 
+choose the marker form GenBank lsrDNA_MT_Cpse - MT080786 from Iceland, the
+one with the longest fragments extracted. 
+
+For ITS2, the sequences aligned with the markers are so empty, and the 
+number of base pairs once aligned, was very low. Still, we choose he 
+marker from GenBank ITS2_MT_Cpse - MT080768 from Iceland
+
+
+```{r sessionInfo}
+sessionInfo()
+```
+
+
