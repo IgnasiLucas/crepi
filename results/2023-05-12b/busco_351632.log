@@ -1,1 +1,0 @@
-2024-09-25 07:57:08 DEBUG:busco.run_BUSCO	Command line: /usr/local/bin/busco -i -l metazoa_odb10 -o BUSCO/k-kc/ -m genome --download_path --cpu 12
