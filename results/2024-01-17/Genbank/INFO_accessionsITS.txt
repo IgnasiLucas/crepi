@@ -1,0 +1,33 @@
+accession	scientific_name	host	country	tax_id
+KF356370	Crepidostomum illinoiense	Hiodon alosoides	USA:Red Lake River,Minnesota	985750
+MH143084	Crepidostomum sp. 1 VS-2018	Pisidium casertanum	Norway:Lake Sagelvvatn	2421442
+MH143085	Crepidostomum sp. 1 VS-2018	Pisidium casertanum	Norway:Lake Sagelvvatn	2421442
+KF356360	Crepidostomum affine	Aplodinotus grunniens	USA:Pearl River,Mississippi	1429158
+MH143081	Crepidostomum sp. 1 VS-2018	Pisidium casertanum	Norway:Lake Sagelvvatn	2421442
+MH143087	Crepidostomum sp. 2 VS-2018	Pisidium casertanum	Norway:Lake Sagelvvatn	2421443
+MH143089	Crepidostomum sp. 2 VS-2018	Pisidium casertanum	Norway:Lake Sagelvvatn	2421443
+MH143088	Crepidostomum sp. 2 VS-2018	Pisidium casertanum	Norway:Lake Sagelvvatn	2421443
+MH143098	Crepidostomum sp. 52Ukr	Pisidium casertanum	Ukraine:River Burulcha, Crimean peninsula	2421444
+MH143100	Crepidostomum sp. 57Ukr	Pisidium casertanum	Ukraine:River Burulcha, Crimean peninsula	2421446
+MH143094	Crepidostomum oschmarini	Barbatula barbatula	Russia:River Il'd, upper Volga River basin	2421441
+KF356362	Crepidostomum affine	Aplodinotus grunniens	USA:Pearl River,Mississippi	1429158
+MH143093	Crepidostomum oschmarini	Pisidium casertanum	Lithuania:River Nedzinge	2421441
+MH143082	Crepidostomum sp. 1 VS-2018	Salmo trutta	Norway:Lake Sagelvvatn	2421442
+KF356363	Crepidostomum affine	Aplodinotus grunniens	USA:Pearl River,Mississippi	1429158
+MH143080	Crepidostomum sp. 1 VS-2018	Salmo trutta	Norway:Lake Sagelvvatn	2421442
+KF356364	Crepidostomum illinoiense	Hiodon alosoides	USA:Red Lake River,Minnesota	985750
+KF356368	Crepidostomum illinoiense	Hiodon alosoides	USA:Red Lake River,Minnesota	985750
+KF356369	Crepidostomum illinoiense	Hiodon alosoides	USA:Red Lake River,Minnesota	985750
+MH143090	Crepidostomum oschmarini	Cottus gobio	Russia:River Il'd, upper Volga River basin	2421441
+MH143092	Crepidostomum oschmarini	Pisidium casertanum	Lithuania:River Nedzinge	2421441
+KF356374	Crepidostomum cornutum	Lepomis gulosus	USA:Pascagoula River,Mississippi	415302
+MH143078	Crepidostomum sp. 1 VS-2018	Pisidium casertanum	Norway:Lake Sagelvvatn	2421442
+MH143083	Crepidostomum sp. 1 VS-2018	Pisidium casertanum	Norway:Lake Sagelvvatn	2421442
+KF356365	Crepidostomum illinoiense	Hiodon alosoides	USA:Missouri River,North Dakota	985750
+MH143099	Crepidostomum sp. 53Ukr	Pisidium casertanum	Ukraine:River Burulcha, Crimean peninsula	2421445
+MH143095	Crepidostomum oschmarini	Barbatula barbatula	Russia:River Il'd, upper Volga River basin	2421441
+MH143091	Crepidostomum oschmarini	Cottus gobio	Russia:River Il'd, upper Volga River basin	2421441
+KF356373	Crepidostomum auritum	Aplodinotus grunniens	USA:Pearl River,Mississippi	1441779
+MH143086	Crepidostomum sp. 1 VS-2018	Pisidium casertanum	Norway:Lake Sagelvvatn	2421442
+MH143079	Crepidostomum sp. 1 VS-2018	Pisidium casertanum	Norway:Lake Kykkelvatn	2421442
+KF356372	Crepidostomum illinoiense	Hiodon alosoides	USA:Red Lake River,Minnesota	985750

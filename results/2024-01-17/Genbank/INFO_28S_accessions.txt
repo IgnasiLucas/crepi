@@ -1,0 +1,245 @@
+accession	scientific_name	host	country	tax_id
+MT196347	Crepidostomum metoecus	Salvelinus leucomaenis	Japan:Tawaramappu River (Shibetsu River	984081
+MT196350	Crepidostomum metoecus	Salvelinus malma	Japan:Tawaramappu River (Shibetsu River	984081
+MT196351	Crepidostomum metoecus	Salvelinus malma	Japan:Tawaramappu River (Shibetsu River	984081
+OQ585999	Crepidostomum cornutum		USA	415302
+MT196324	Crepidostomum metoecus	Oncorhynchus masou	Japan:Mamachi River (Chitose River tributary),	984081
+MT217147	Crepidostomum farionis	Salvelinus leucomaenis	Russia:Sakhalin region, Belaya River (near the	984080
+MT230580	Crepidostomum farionis	Oncorhynchus masou	Japan:Hokkaido Island, Mamachi River (tributary	984080
+MH159994	Crepidostomum oschmarini	Pisidium casertanum	Lithuania:River Nedzinge	2421441
+MT196352	Crepidostomum metoecus	Salvelinus malma	Japan:Tawaramappu River (Shibetsu River	984081
+MT196356	Crepidostomum metoecus	Barbatula toni	Russia:Artyomovka River, Artyomovsky district,	984081
+MT196354	Crepidostomum metoecus	Salvelinus malma	Japan:Tawaramappu River (Shibetsu River	984081
+MT196337	Crepidostomum metoecus	Barbatula toni	Japan:Mamachi River (Chitose River tributary),	984081
+OQ585997	Crepidostomum cornutum		USA	415302
+MK818590	Crepidostomum chaenogobii	Gammarus sp.	Russia:Sakhalin island, Sakhalin region, Typly	2571121
+MW368675	Crepidostomum farionis	Oncorhynchus masou	Russia:Primorsky region, Nadezhdinsky district,	984080
+MW368683	Crepidostomum farionis	Oncorhynchus masou	Russia:Sakhalin region, Tyoply Klyuch brook,	984080
+MW368688	Crepidostomum farionis	Oncorhynchus masou	Russia:Sakhalin region, Tyoply Klyuch brook,	984080
+MK818615	Crepidostomum metoecus	Gammarus sp.	Russia:Primorye, Artyomovsky district, Muravyinka	984081
+MK818596	Crepidostomum metoecus	Pungitius tymensis	Russia:Sakhalin island, Sakhalin region, Belaya	984081
+MK818621	Crepidostomum nemachilus	Barbatula toni	Russia:Khankaisky district, Komissarovka river	984082
+MK818623	Crepidostomum nemachilus	Barbatula toni	Russia:Sakhalin island, Sakhalin region, Susuya	984082
+MW368687	Crepidostomum farionis	Oncorhynchus masou	Russia:Sakhalin region, Tyoply Klyuch brook,	984080
+MK818608	Crepidostomum metoecus	Pungitius tymensis	Russia:Sakhalin island, Sakhalin region, Belaya	984081
+MK818617	Crepidostomum nemachilus	Barbatula toni	Russia:Khankaisky district, Komissarovka river	984082
+MH143107	Crepidostomum sp. 1 VS-2018	Pisidium sp.	Norway:Lake Sagelvvatn	2421442
+MH143111	Crepidostomum sp. 1 VS-2018	Salmo trutta	Norway:Lake Sagelvvatn	2421442
+MH143108	Crepidostomum sp. 1 VS-2018	Pisidium sp.	Norway:Lake Sagelvvatn	2421442
+MH143113	Crepidostomum sp. 1 VS-2018	Pisidium casertanum	Norway:Lake Sagelvvatn	2421442
+MH143098	Crepidostomum sp. 52Ukr	Pisidium casertanum	Ukraine:River Burulcha, Crimean peninsula	2421444
+MH143100	Crepidostomum sp. 57Ukr	Pisidium casertanum	Ukraine:River Burulcha, Crimean peninsula	2421446
+MH143094	Crepidostomum oschmarini	Barbatula barbatula	Russia:River Il'd, upper Volga River basin	2421441
+MH143093	Crepidostomum oschmarini	Pisidium casertanum	Lithuania:River Nedzinge	2421441
+MH143082	Crepidostomum sp. 1 VS-2018	Salmo trutta	Norway:Lake Sagelvvatn	2421442
+MH143080	Crepidostomum sp. 1 VS-2018	Salmo trutta	Norway:Lake Sagelvvatn	2421442
+MH143119	Crepidostomum sp. 57Ukr	Pisidium casertanum	Ukraine:River Burulcha, Crimea	2421446
+MH143117	Crepidostomum sp. 52Ukr	Pisidium casertanum	Ukraine:River Burulcha, Crimea	2421444
+MT196339	Crepidostomum metoecus	Barbatula toni	Japan:Mamachi River (Chitose River tributary),	984081
+MT196358	Crepidostomum metoecus	Barbatula toni	Russia:Artyomovka River, Artyomovsky district,	984081
+MT217146	Crepidostomum metoecus	Barbatula toni	Russia:Primorsky region, Artyomovsky district,	984081
+MT196334	Crepidostomum metoecus	Barbatula toni	Japan:Mamachi River (Chitose River tributary),	984081
+MN524583	Crepidostomum auriculatum			984079
+MT196353	Crepidostomum metoecus	Salvelinus malma	Japan:Tawaramappu River (Shibetsu River	984081
+MK818605	Crepidostomum metoecus	Pungitius tymensis	Russia:Sakhalin island, Sakhalin region, Belaya	984081
+MW368680	Crepidostomum farionis	Salvelinus curilus	Russia:Sakhalin region, Tyoply Klyuch brook,	984080
+MK818626	Crepidostomum nemachilus	Barbatula toni	Russia:Sakhalin island, Sakhalin region, Susuya	984082
+MW368677	Crepidostomum farionis	Oncorhynchus masou	Russia:Primorsky region, Terneysky district, Amgu	984080
+MK818602	Crepidostomum metoecus	Salvelinus curilus	Russia:Primorye, Khasansky district, Kedrovaya	984081
+MK818610	Crepidostomum metoecus	Gammarus sp.	Russia:Primorye, Artyomovsky district, Muravyinka	984081
+MK818628	Crepidostomum nemachilus	Barbatula toni	Russia:Sakhalin island, Sakhalin region, Bureya	984082
+MW368682	Crepidostomum farionis	Oncorhynchus masou	Russia:Sakhalin region, Tyoply Klyuch brook,	984080
+MN826678	Crepidostomum chaenogobii			2571121
+MK818613	Crepidostomum metoecus	Gammarus sp.	Russia:Primorye, Artyomovsky district, Muravyinka	984081
+MK818622	Crepidostomum nemachilus	Barbatula toni	Russia:Sakhalin island, Sakhalin region, Belaya	984082
+MH143116	Crepidostomum sp. 2 VS-2018	Pisidium casertanum	Norway:Lake Sagelvvatn	2421443
+MH143115	Crepidostomum sp. 2 VS-2018	Pisidium casertanum	Norway:Lake Sagelvvatn	2421443
+MK818593	Crepidostomum sp. 3 KSV-2019	Salvelinus curilus	Russia:Sakhalin island, Sakhalin region, Belaya	2571122
+MH143112	Crepidostomum sp. 1 VS-2018	Salmo trutta	Norway:Lake Sagelvvatn	2421442
+MH143099	Crepidostomum sp. 53Ukr	Pisidium casertanum	Ukraine:River Burulcha, Crimean peninsula	2421445
+MH143095	Crepidostomum oschmarini	Barbatula barbatula	Russia:River Il'd, upper Volga River basin	2421441
+MH143091	Crepidostomum oschmarini	Cottus gobio	Russia:River Il'd, upper Volga River basin	2421441
+MH143086	Crepidostomum sp. 1 VS-2018	Pisidium casertanum	Norway:Lake Sagelvvatn	2421442
+MH143079	Crepidostomum sp. 1 VS-2018	Pisidium casertanum	Norway:Lake Kykkelvatn	2421442
+MH143118	Crepidostomum sp. 53Ukr	Pisidium casertanum	Ukraine:River Burulcha, Crimea	2421445
+MT196357	Crepidostomum metoecus	Barbatula toni	Russia:Artyomovka River, Artyomovsky district,	984081
+MT738707	Crepidostomum brinkmanni	Salmo trutta	Switzerland:Stansstad (Muhlebach stream)	2710752
+MH159989	Crepidostomum oschmarini	Cottus gobio	Russia:River Il'd, upper Volga River basin	2421441
+MH159991	Crepidostomum oschmarini	Cottus gobio	Russia:River Il'd, upper Volga River basin	2421441
+MN524579	Crepidostomum auriculatum			984079
+MT196330	Crepidostomum metoecus	Salmo trutta	Japan:Mamachi River (Chitose River tributary),	984081
+MT196331	Crepidostomum metoecus	Salmo trutta	Japan:Mamachi River (Chitose River tributary),	984081
+MT196349	Crepidostomum metoecus	Salvelinus malma	Japan:Tawaramappu River (Shibetsu River	984081
+MH159992	Crepidostomum oschmarini	Barbatula barbatula	Russia:River Il'd, upper Volga River basin	2421441
+MT196323	Crepidostomum metoecus	Oncorhynchus masou	Japan:Mamachi River (Chitose River tributary),	984081
+MT196345	Crepidostomum metoecus	Salvelinus leucomaenis	Japan:Tawaramappu River (Shibetsu River	984081
+MT230576	Crepidostomum farionis	Oncorhynchus masou	Japan:Hokkaido Island, Tawaramappu River	984080
+MT738706	Crepidostomum brinkmanni	Salmo trutta	Switzerland:Stans (N2-Entwasserungskanal stream)	2710752
+MT196342	Crepidostomum metoecus	Barbatula toni	Japan:Mamachi River (Chitose River tributary),	984081
+MN524582	Crepidostomum auriculatum			984079
+MT196328	Crepidostomum metoecus	Salmo trutta	Japan:Mamachi River (Chitose River tributary),	984081
+OQ585998	Crepidostomum cornutum		USA	415302
+MK818606	Crepidostomum metoecus	Pungitius tymensis	Russia:Sakhalin island, Sakhalin region, Belaya	984081
+MW368681	Crepidostomum farionis	Salvelinus curilus	Russia:Sakhalin region, Tyoply Klyuch brook,	984080
+MW368685	Crepidostomum farionis	Oncorhynchus masou	Russia:Sakhalin region, Tyoply Klyuch brook,	984080
+MW368672	Crepidostomum farionis	Oncorhynchus masou	Russia:Primorsky region, Nadezhdinsky district,	984080
+MW368684	Crepidostomum farionis	Oncorhynchus masou	Russia:Sakhalin region, Tyoply Klyuch brook,	984080
+MK818603	Crepidostomum metoecus	Barbatula toni	Russia:Primorye, Shkotovsky district,	984081
+MK818627	Crepidostomum nemachilus	Barbatula toni	Russia:Sakhalin island, Sakhalin region, Susuya	984082
+MW368676	Crepidostomum farionis	Oncorhynchus masou	Russia:Primorsky region, Nadezhdinsky district,	984080
+MK818616	Crepidostomum metoecus	Gammarus sp.	Russia:Primorye, Artyomovsky district, Muravyinka	984081
+MK818624	Crepidostomum nemachilus	Barbatula toni	Russia:Sakhalin island, Sakhalin region, Susuya	984082
+MK818618	Crepidostomum nemachilus	Barbatula toni	Russia:Khankaisky district, Komissarovka river	984082
+MH143106	Crepidostomum sp. 1 VS-2018	Sphaerium nitidum	Norway:Lake Kykkelvatn	2421442
+MH143114	Crepidostomum sp. 1 VS-2018	Pisidium casertanum	Norway:Lake Sagelvvatn	2421442
+MH143084	Crepidostomum sp. 1 VS-2018	Pisidium casertanum	Norway:Lake Sagelvvatn	2421442
+MH143085	Crepidostomum sp. 1 VS-2018	Pisidium casertanum	Norway:Lake Sagelvvatn	2421442
+MH159990	Crepidostomum oschmarini	Barbatula barbatula	Russia:River Il'd, upper Volga River basin	2421441
+MT196336	Crepidostomum metoecus	Barbatula toni	Japan:Mamachi River (Chitose River tributary),	984081
+MT196340	Crepidostomum metoecus	Barbatula toni	Japan:Mamachi River (Chitose River tributary),	984081
+MT230577	Crepidostomum farionis	Oncorhynchus masou	Japan:Hokkaido Island, Tawaramappu River	984080
+MT230581	Crepidostomum farionis	Oncorhynchus masou	Japan:Hokkaido Island, Mamachi River (tributary	984080
+MN524581	Crepidostomum auriculatum			984079
+MT196326	Crepidostomum metoecus	Salmo trutta	Japan:Mamachi River (Chitose River tributary),	984081
+MT196346	Crepidostomum metoecus	Salvelinus leucomaenis	Japan:Tawaramappu River (Shibetsu River	984081
+OP580487	Crepidostomum pseudofarionis	Salvelinus alpinus	United Kingdom: Scotlant, Loch Rannoch	2710753
+MT196335	Crepidostomum metoecus	Barbatula toni	Japan:Mamachi River (Chitose River tributary),	984081
+MK818598	Crepidostomum metoecus	Barbatula toni	Russia:Sakhalin island, Sakhalin region, Susuya	984081
+MK818612	Crepidostomum metoecus	Gammarus sp.	Russia:Primorye, Artyomovsky district, Muravyinka	984081
+MK818591	Crepidostomum chaenogobii	Gammarus sp.	Russia:Sakhalin island, Sakhalin region, Typly	2571121
+MK818614	Crepidostomum metoecus	Gammarus sp.	Russia:Primorye, Artyomovsky district, Muravyinka	984081
+MN826679	Crepidostomum chaenogobii			2571121
+MW368678	Crepidostomum farionis	Salvelinus leucomaenis	Russia:Sakhalin region, Belaya River (near the	984080
+MK818600	Crepidostomum metoecus	Pungitius tymensis	Russia:Sakhalin island, Sakhalin region, Typly	984081
+MK818607	Crepidostomum metoecus	Pungitius tymensis	Russia:Sakhalin island, Sakhalin region, Belaya	984081
+MW368674	Crepidostomum farionis	Oncorhynchus masou	Russia:Primorsky region, Nadezhdinsky district,	984080
+MW368686	Crepidostomum farionis	Oncorhynchus masou	Russia:Sakhalin region, Tyoply Klyuch brook,	984080
+MK818594	Crepidostomum metoecus	Pungitius tymensis	Russia:Sakhalin island, Sakhalin region, Belaya	984081
+MK818601	Crepidostomum metoecus	Pungitius tymensis	Russia:Sakhalin island, Sakhalin region, Typly	984081
+MK818604	Crepidostomum metoecus	Barbatula toni	Russia:Primorye, Artyomovsky district, Klyuch	984081
+MH143109	Crepidostomum sp. 1 VS-2018	Sphaerium nitidum	Norway:Lake Kykkelvatn	2421442
+MN750364	Crepidostomum auriculatum	Acipenser fulvescens	USA	984079
+MN750365	Crepidostomum auriculatum	Acipenser fulvescens	USA	984079
+MH143081	Crepidostomum sp. 1 VS-2018	Pisidium casertanum	Norway:Lake Sagelvvatn	2421442
+MH143087	Crepidostomum sp. 2 VS-2018	Pisidium casertanum	Norway:Lake Sagelvvatn	2421443
+MH143088	Crepidostomum sp. 2 VS-2018	Pisidium casertanum	Norway:Lake Sagelvvatn	2421443
+MH143089	Crepidostomum sp. 2 VS-2018	Pisidium casertanum	Norway:Lake Sagelvvatn	2421443
+MT196343	Crepidostomum metoecus	Barbatula toni	Japan:Mamachi River (Chitose River tributary),	984081
+MT738705	Crepidostomum brinkmanni	Salmo trutta	Switzerland:Seedorf (Klosterbach stream)	2710752
+MH159993	Crepidostomum oschmarini	Pisidium casertanum	Lithuania:River Nedzinge	2421441
+MT196332	Crepidostomum metoecus	Salmo trutta	Japan:Mamachi River (Chitose River tributary),	984081
+MT196344	Crepidostomum metoecus	Barbatula toni	Japan:Mamachi River (Chitose River tributary),	984081
+OQ586000	Crepidostomum cornutum		USA	415302
+MN524580	Crepidostomum auriculatum			984079
+MN524584	Crepidostomum auriculatum			984079
+MN524585	Crepidostomum auriculatum			984079
+MT196338	Crepidostomum metoecus	Barbatula toni	Japan:Mamachi River (Chitose River tributary),	984081
+MT230579	Crepidostomum farionis	Oncorhynchus masou	Japan:Hokkaido Island, Mamachi River (tributary	984080
+MT196327	Crepidostomum metoecus	Salmo trutta	Japan:Mamachi River (Chitose River tributary),	984081
+MT196329	Crepidostomum metoecus	Salmo trutta	Japan:Mamachi River (Chitose River tributary),	984081
+MT196348	Crepidostomum metoecus	Salvelinus malma	Japan:Tawaramappu River (Shibetsu River	984081
+MT196333	Crepidostomum metoecus	Salmo trutta	Japan:Mamachi River (Chitose River tributary),	984081
+MT196355	Crepidostomum metoecus	Barbatula toni	Russia:Artyomovka River, Artyomovsky district,	984081
+MT230578	Crepidostomum farionis	Oncorhynchus masou	Japan:Hokkaido Island, Mamachi River (tributary	984080
+MT196341	Crepidostomum metoecus	Barbatula toni	Japan:Mamachi River (Chitose River tributary),	984081
+MT196325	Crepidostomum metoecus	Salmo trutta	Japan:Mamachi River (Chitose River tributary),	984081
+MK818597	Crepidostomum metoecus	Pungitius tymensis	Russia:Sakhalin island, Sakhalin region, Belaya	984081
+MK818599	Crepidostomum metoecus	Pungitius tymensis	Russia:Sakhalin island, Sakhalin region, Typly	984081
+MK818611	Crepidostomum metoecus	Gammarus sp.	Russia:Primorye, Artyomovsky district, Muravyinka	984081
+MK818619	Crepidostomum nemachilus	Barbatula toni	Russia:Khankaisky district, Komissarovka river	984082
+MK818625	Crepidostomum nemachilus	Barbatula toni	Russia:Sakhalin island, Sakhalin region, Susuya	984082
+MW368673	Crepidostomum farionis	Oncorhynchus masou	Russia:Primorsky region, Nadezhdinsky district,	984080
+MK818589	Crepidostomum chaenogobii	Gammarus sp.	Russia:Sakhalin island, Sakhalin region, Typly	2571121
+MK818620	Crepidostomum nemachilus	Barbatula toni	Russia:Khankaisky district, Komissarovka river	984082
+MW368679	Crepidostomum farionis	Oncorhynchus masou	Russia:Sakhalin region, Tyoply Klyuch brook,	984080
+MK818592	Crepidostomum chaenogobii	Pungitius tymensis	Russia:Sakhalin island, Sakhalin region, Typly	2571121
+MK818595	Crepidostomum metoecus	Gammarus sp.	Russia:Sakhalin island, Sakhalin region, Typly	984081
+MH143110	Crepidostomum sp. 1 VS-2018	Sphaerium nitidum	Norway:Lake Kykkelvatn	2421442
+MK818609	Crepidostomum sp. 3 KSV-2019	Salvelinus albus	Russia:Kamchatsky Krai, Azabachya river	2571122
+MH143090	Crepidostomum oschmarini	Cottus gobio	Russia:River Il'd, upper Volga River basin	2421441
+MH143092	Crepidostomum oschmarini	Pisidium casertanum	Lithuania:River Nedzinge	2421441
+MH143078	Crepidostomum sp. 1 VS-2018	Pisidium casertanum	Norway:Lake Sagelvvatn	2421442
+MH143083	Crepidostomum sp. 1 VS-2018	Pisidium casertanum	Norway:Lake Sagelvvatn	2421442
+FR821381	Crepidostomum auriculatum			984079
+FR821388	Crepidostomum auriculatum			984079
+FR821399	Crepidostomum farionis			984080
+FR821406	Crepidostomum metoecus			984081
+FR821373	Crepidostomum auriculatum			984079
+FR821397	Crepidostomum auriculatum			984079
+FR821386	Crepidostomum auriculatum			984079
+FR821376	Crepidostomum auriculatum			984079
+FR821401	Crepidostomum farionis			984080
+KY513136	Crepidostomum farionis	Sphaerium sp.	Norway:Lake Takvatn	984080
+KY513147	Crepidostomum metoecus	Gammarus lacustris	Norway:Lake Takvatn	984081
+KY513134	Crepidostomum farionis	Pisidium casertanum	Norway:Lake Takvatn	984080
+KY513135	Crepidostomum farionis	Pisidium casertanum	Norway:Lake Takvatn	984080
+KY513142	Crepidostomum metoecus	Gammarus lacustris	Norway:Lake Takvatn	984081
+KY513151	Crepidostomum sp. 2 AK-2017	Siphlonurus lacustris	Norway:Lake Takvatn	1972543
+KF356369	Crepidostomum illinoiense	Hiodon alosoides	USA:Red Lake River,Minnesota	985750
+KF356368	Crepidostomum illinoiense	Hiodon alosoides	USA:Red Lake River,Minnesota	985750
+KF356374	Crepidostomum cornutum	Lepomis gulosus	USA:Pascagoula River,Mississippi	415302
+KF356365	Crepidostomum illinoiense	Hiodon alosoides	USA:Missouri River,North Dakota	985750
+EF032695	Crepidostomum cornutum	Lepomis gulosus	USA	415302
+FR821385	Crepidostomum auriculatum			984079
+FR821391	Crepidostomum auriculatum			984079
+FR821398	Crepidostomum auriculatum			984079
+FR821372	Crepidostomum auriculatum			984079
+FR821380	Crepidostomum auriculatum			984079
+FR821387	Crepidostomum auriculatum			984079
+FR821402	Crepidostomum farionis			984080
+FR821404	Crepidostomum farionis			984080
+FR821405	Crepidostomum metoecus			984081
+KY513148	Crepidostomum metoecus	Salmo trutta	Norway:Lake Takvatn	984081
+KY513140	Crepidostomum metoecus	Pisidium casertanum	Norway:Lake Takvatn	984081
+KY513150	Crepidostomum sp. 1 AK-2017	Siphlonurus lacustris	Norway:Lake Takvatn	1972542
+KY513153	Crepidostomum sp. 2 AK-2017	Diura bicaudata	Norway:Lake Takvatn	1972543
+KF250357	Crepidostomum auritum	Aplodinotus grunniens	USA:Pearl River,Mississippi	1441779
+KF250360	Crepidostomum illinoiense	Hiodon alosoides	USA:Missouri River,North Dakota	985750
+KF356362	Crepidostomum affine	Aplodinotus grunniens	USA:Pearl River,Mississippi	1429158
+KF356363	Crepidostomum affine	Aplodinotus grunniens	USA:Pearl River,Mississippi	1429158
+KF356364	Crepidostomum illinoiense	Hiodon alosoides	USA:Red Lake River,Minnesota	985750
+DQ029328	Crepidostomum cooperi			334453
+FR821390	Crepidostomum auriculatum			984079
+FR821378	Crepidostomum auriculatum			984079
+FR821379	Crepidostomum auriculatum			984079
+FR821384	Crepidostomum auriculatum			984079
+FR821408	Crepidostomum nemachilus			984082
+FR821407	Crepidostomum metoecus			984081
+KY513146	Crepidostomum metoecus	Gammarus lacustris	Norway:Lake Takvatn	984081
+KY513138	Crepidostomum farionis	Pisidium casertanum	Norway:Lake Takvatn	984080
+KY513154	Crepidostomum sp. 2 AK-2017	Salmo trutta	Norway:Lake Takvatn	1972543
+KY513149	Crepidostomum sp. 1 AK-2017	Sphaerium sp.	Norway:Lake Takvatn	1972542
+KF356366	Crepidostomum illinoiense	Hiodon alosoides	USA:Missouri River,North Dakota	985750
+KF250358	Crepidostomum affine	Hiodon tergisus	USA:Pearl River,Mississippi	1429158
+KF250359	Crepidostomum illinoiense	Hiodon alosoides	USA:Red Lake River,Minnesota	985750
+KF356367	Crepidostomum illinoiense	Hiodon alosoides	USA:Missouri River,North Dakota	985750
+KF356373	Crepidostomum auritum	Aplodinotus grunniens	USA:Pearl River,Mississippi	1441779
+KF356372	Crepidostomum illinoiense	Hiodon alosoides	USA:Red Lake River,Minnesota	985750
+EF202098	Crepidostomum cooperi	Lepomis macrochirus	USA:Mud Lake, Chambers Island, WI	334453
+FR821395	Crepidostomum auriculatum			984079
+FR821400	Crepidostomum farionis			984080
+FR821374	Crepidostomum auriculatum			984079
+FR821383	Crepidostomum auriculatum			984079
+FR821409	Crepidostomum nemachilus			984082
+FR821393	Crepidostomum auriculatum			984079
+FR821403	Crepidostomum farionis			984080
+FR821371	Crepidostomum auriculatum			984079
+FR821392	Crepidostomum auriculatum			984079
+FR821382	Crepidostomum auriculatum			984079
+KY513137	Crepidostomum farionis	Sphaerium sp.	Norway:Lake Takvatn	984080
+KY513141	Crepidostomum metoecus	Gammarus lacustris	Norway:Lake Takvatn	984081
+KF356371	Crepidostomum illinoiense	Hiodon alosoides	USA:Missouri River,North Dakota	985750
+KF356361	Crepidostomum affine	Aplodinotus grunniens	USA:Pearl River,Mississippi	1429158
+KF356360	Crepidostomum affine	Aplodinotus grunniens	USA:Pearl River,Mississippi	1429158
+HQ833705	Crepidostomum illinoiense	Hiodon alosoides	USA:Red Lake River, Polk Co. MN	985750
+FR821375	Crepidostomum auriculatum			984079
+FR821394	Crepidostomum auriculatum			984079
+FR821389	Crepidostomum auriculatum			984079
+FR821377	Crepidostomum auriculatum			984079
+FR821396	Crepidostomum auriculatum			984079
+KY513139	Crepidostomum farionis	Pisidium casertanum	Norway:Lake Takvatn	984080
+KY513144	Crepidostomum metoecus	Gammarus lacustris	Norway:Lake Takvatn	984081
+KY513145	Crepidostomum metoecus	Gammarus lacustris	Norway:Lake Takvatn	984081
+KY513143	Crepidostomum metoecus	Gammarus lacustris	Norway:Lake Takvatn	984081
+KY513152	Crepidostomum sp. 2 AK-2017	Diura bicaudata	Norway:Lake Takvatn	1972543
+KF356370	Crepidostomum illinoiense	Hiodon alosoides	USA:Red Lake River,Minnesota	985750

@@ -1,0 +1,34 @@
+
+RAxML-NG v. 1.2.1 released on 22.12.2023 by The Exelixis Lab.
+Developed by: Alexey M. Kozlov and Alexandros Stamatakis.
+Contributors: Diego Darriba, Tomas Flouri, Benoit Morel, Sarah Lutteropp, Ben Bettisworth, Julia Haag, Anastasis Togkousidis.
+Latest version: https://github.com/amkozlov/raxml-ng
+Questions/problems/suggestions? Please visit: https://groups.google.com/forum/#!forum/raxml
+
+System: Intel(R) Xeon(R) CPU E5-4620 0 @ 2.20GHz, 32 cores, 251 GB RAM
+
+RAxML-NG was called at 07-Oct-2024 15:25:24 as follows:
+
+raxml-ng --support --tree RAxML/28S_round00/T2.raxml.bestTree --bs-trees RAxML/28S_round00/S2_bestTree.raxml.bootstraps --prefix RAxML/28S_round00/S2_TBE --threads 48 --bs-metric tbe
+
+Analysis options:
+  run mode: Compute bipartition support (Transfer Bootstrap)
+  start tree(s): user
+  random seed: 1728307524
+  SIMD kernels: AVX
+  parallelization: coarse-grained (auto), PTHREADS (48 threads), thread pinning: OFF
+
+Reading reference tree from file: RAxML/28S_round00/T2.raxml.bestTree
+Reference tree size: 98
+
+Reading bootstrap trees from file: RAxML/28S_round00/S2_bestTree.raxml.bootstraps
+Loaded 10000 trees with 98 taxa.
+
+Best ML tree with Transfer bootstrap (TBE) support values saved to: /nata/mar/crepidostomum2/results/2023-10-04/RAxML/28S_round00/S2_TBE.raxml.support
+
+Execution log saved to: /nata/mar/crepidostomum2/results/2023-10-04/RAxML/28S_round00/S2_TBE.raxml.log
+
+Analysis started: 07-Oct-2024 15:25:24 / finished: 07-Oct-2024 15:25:27
+
+Elapsed time: 2.999 seconds
+

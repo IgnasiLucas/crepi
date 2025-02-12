@@ -1,0 +1,26 @@
+accession	scientific_name	host	country	tax_id
+KM538087	Crepidostomum isostomum		Canada:Ontario, Lake Erie	1577536
+KF356375	Crepidostomum affine	Aplodinotus grunniens	USA:Pearl River,Mississippi	1429158
+KF356379	Crepidostomum illinoiense	Hiodon alosoides	USA:Missouri River,North Dakota	985750
+KF356383	Crepidostomum illinoiense	Hiodon alosoides	USA:Red Lake River,Minnesota	985750
+MW729433	Crepidostomum farionis	Oncorhynchus masou	Russia:Primorsky region, Kedrovaya River	984080
+MW729434	Crepidostomum farionis	Oncorhynchus masou	Russia:Primorsky region, Kedrovaya River	984080
+KF250361	Crepidostomum cornutum	Lepomis gulosus	USA:Pascagoula River,Mississippi	415302
+KF356380	Crepidostomum illinoiense	Hiodon alosoides	USA:Missouri River,North Dakota	985750
+MW729427	Crepidostomum metoecus	Barbatula toni	Russia:Primorsky region, Steklyanukha River	984081
+KF250362	Crepidostomum auritum	Aplodinotus grunniens	USA:Pearl River,Mississippi	1441779
+KF356376	Crepidostomum affine	Aplodinotus grunniens	USA:Pearl River,Mississippi	1429158
+KF356381	Crepidostomum illinoiense	Hiodon alosoides	USA:Missouri River,North Dakota	985750
+MT214990	Crepidostomum metoecus	Barbatula toni	Russia:Primorsky region, Artyomovsky district,	984081
+MW729432	Crepidostomum auriculatum	Acipenser schrenckii	Russia:Khabarovsky region, Amur River	984079
+KF356385	Crepidostomum auritum	Aplodinotus grunniens	USA:Pearl River,Mississippi	1441779
+KF250365	Crepidostomum illinoiense	Hiodon alosoides	USA:Missouri River,North Dakota	985750
+KF356377	Crepidostomum affine	Aplodinotus grunniens	USA:Pearl River,Mississippi	1429158
+KF356378	Crepidostomum illinoiense	Hiodon alosoides	USA:Red Lake River,Minnesota	985750
+KF250364	Crepidostomum illinoiense	Hiodon alosoides	USA:Red Lake River,Minnesota	985750
+MT214991	Crepidostomum metoecus	Barbatula toni	Russia:Primorsky region, Artyomovsky district,	984081
+MW729431	Crepidostomum auriculatum	Acipenser schrenckii	Russia:Khabarovsky region, Amur River	984079
+MW729425	Crepidostomum chaenogobii	Pungitius tymensis	Russia:Sakhalin region, Tyoply Klyuch brook	2571121
+KF356384	Crepidostomum illinoiense	Hiodon alosoides	USA:Missouri River,North Dakota	985750
+KF250363	Crepidostomum affine	Hiodon tergisus	USA:Pearl River,Mississippi	1429158
+KF356382	Crepidostomum illinoiense	Hiodon alosoides	USA:Red Lake River,Minnesota	985750

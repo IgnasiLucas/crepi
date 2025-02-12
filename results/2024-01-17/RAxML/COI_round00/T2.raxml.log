@@ -1,0 +1,241 @@
+
+RAxML-NG v. 1.2.1 released on 22.12.2023 by The Exelixis Lab.
+Developed by: Alexey M. Kozlov and Alexandros Stamatakis.
+Contributors: Diego Darriba, Tomas Flouri, Benoit Morel, Sarah Lutteropp, Ben Bettisworth, Julia Haag, Anastasis Togkousidis.
+Latest version: https://github.com/amkozlov/raxml-ng
+Questions/problems/suggestions? Please visit: https://groups.google.com/forum/#!forum/raxml
+
+System: Intel(R) Xeon(R) CPU E5-4620 0 @ 2.20GHz, 32 cores, 251 GB RAM
+
+RAxML-NG was called at 07-Oct-2024 10:40:29 as follows:
+
+raxml-ng --msa RAxML/COI_round00/AlignTree_Mafft.alg --model GTR+G --prefix RAxML/COI_round00/T2 --threads 48
+
+Analysis options:
+  run mode: ML tree search
+  start tree(s): random (10) + parsimony (10)
+  random seed: 1728290429
+  tip-inner: OFF
+  pattern compression: ON
+  per-rate scalers: OFF
+  site repeats: ON
+  logLH epsilon: general: 10.000000, brlen-triplet: 1000.000000
+  fast spr radius: AUTO
+  spr subtree cutoff: 1.000000
+  fast CLV updates: ON
+  branch lengths: proportional (ML estimate, algorithm: NR-FAST)
+  SIMD kernels: AVX
+  parallelization: coarse-grained (auto), PTHREADS (48 threads), thread pinning: OFF
+
+[00:00:00] Reading alignment from file: RAxML/COI_round00/AlignTree_Mafft.alg
+[00:00:00] Loaded alignment with 113 taxa and 147 sites
+
+WARNING: Sequences MW729433_C.farionis_RU and MW729434_C.farionis_RU are exactly identical!
+WARNING: Sequences MW729433_C.farionis_RU and ExKD12_5_TA1056J_BT_Cfar are exactly identical!
+WARNING: Sequences MW729433_C.farionis_RU and ExKD25_21_TA2003_AC_Cfar are exactly identical!
+WARNING: Sequences MW729433_C.farionis_RU and ExKD15_5_TA1010_BT_Cfar are exactly identical!
+WARNING: Sequences L043Cxb and L043Cxc are exactly identical!
+WARNING: Sequences L043Cxb and L043Cxd are exactly identical!
+WARNING: Sequences L043Cxb and L059Cmb are exactly identical!
+WARNING: Sequences L043Cxb and L061Cmb are exactly identical!
+WARNING: Sequences L043Cxb and L061Cmc are exactly identical!
+WARNING: Sequences L043Cxb and L064Cxa are exactly identical!
+WARNING: Sequences L043Cxb and L064Cxb are exactly identical!
+WARNING: Sequences L043Cxb and L065Cxa are exactly identical!
+WARNING: Sequences L043Cxb and L074Cmf are exactly identical!
+WARNING: Sequences L043Cxb and L074Cxc are exactly identical!
+WARNING: Sequences L043Cxb and L087Cma are exactly identical!
+WARNING: Sequences L043Cxb and L088Cmb are exactly identical!
+WARNING: Sequences L043Cxb and L088Cmc are exactly identical!
+WARNING: Sequences L043Cxb and L089Cma are exactly identical!
+WARNING: Sequences L043Cxb and L089Cmb are exactly identical!
+WARNING: Sequences L043Cxb and L089Cxc are exactly identical!
+WARNING: Sequences L043Cxb and L089Cxd are exactly identical!
+WARNING: Sequences L043Cxb and L090Cma are exactly identical!
+WARNING: Sequences L043Cxb and L098Cxc are exactly identical!
+WARNING: Sequences L043Cxb and L098Cxd are exactly identical!
+WARNING: Sequences L043Cxb and S004Cma are exactly identical!
+WARNING: Sequences L043Cxb and S004Cmb are exactly identical!
+WARNING: Sequences L043Cxb and S061Cma are exactly identical!
+WARNING: Sequences L043Cxb and S061Cmb are exactly identical!
+WARNING: Sequences L047Cxc and L059Cmc are exactly identical!
+WARNING: Sequences L047Cxc and L059Cmd are exactly identical!
+WARNING: Sequences L047Cxc and L074Cma are exactly identical!
+WARNING: Sequences L047Cxc and L074Cmd are exactly identical!
+WARNING: Sequences L047Cxc and L074Cme are exactly identical!
+WARNING: Sequences L047Cxc and L074Cxb are exactly identical!
+WARNING: Sequences L047Cxc and L089Cmc are exactly identical!
+WARNING: Sequences L047Cxc and L090Cmb are exactly identical!
+WARNING: Sequences L047Cxc and L090Cmc are exactly identical!
+WARNING: Sequences L047Cxc and L115Cxc are exactly identical!
+WARNING: Sequences L047Cxc and L131Cma are exactly identical!
+WARNING: Sequences L047Cxc and L134Cma are exactly identical!
+WARNING: Sequences L131Cmb and S001Cma are exactly identical!
+WARNING: Sequences L131Cmb and S001Cmb are exactly identical!
+WARNING: Sequences L131Cmb and S001Cmc are exactly identical!
+WARNING: Sequences L131Cmb and S002Cma are exactly identical!
+WARNING: Sequences L131Cmb and S002Cmc are exactly identical!
+WARNING: Sequences L131Cmb and S002Cme are exactly identical!
+WARNING: Sequences L131Cmb and S003Cma are exactly identical!
+WARNING: Sequences L131Cmb and S003Cmc are exactly identical!
+WARNING: Sequences L131Cmb and S003Cmd are exactly identical!
+WARNING: Sequences L131Cmb and S005Cma are exactly identical!
+WARNING: Sequences L131Cmb and S005Cmb are exactly identical!
+WARNING: Sequences L131Cmb and S006Cxa are exactly identical!
+WARNING: Sequences L131Cmb and S006Cxb are exactly identical!
+WARNING: Sequences L131Cmb and S009Cxa are exactly identical!
+WARNING: Sequences L131Cmb and S011Cxf are exactly identical!
+WARNING: Sequences L131Cmb and S011Cxh are exactly identical!
+WARNING: Sequences L131Cmb and S012Cxb are exactly identical!
+WARNING: Sequences L131Cmb and S019Cxc are exactly identical!
+WARNING: Sequences L131Cmb and S019Cxd are exactly identical!
+WARNING: Sequences L131Cmb and S020Cxc are exactly identical!
+WARNING: Sequences L131Cmb and S020Cxd are exactly identical!
+WARNING: Sequences L131Cmb and S022Cxa are exactly identical!
+WARNING: Sequences L131Cmb and S022Cxb are exactly identical!
+WARNING: Sequences L131Cmb and S023Cxc are exactly identical!
+WARNING: Sequences L131Cmb and S027Cxd are exactly identical!
+WARNING: Sequences L131Cmb and S031Cma are exactly identical!
+WARNING: Sequences L131Cmb and S083Cxb are exactly identical!
+WARNING: Sequences L131Cmb and S108Cxc are exactly identical!
+WARNING: Sequences L131Cmb and S116Cma are exactly identical!
+WARNING: Sequences L131Cmb and S116Cmb are exactly identical!
+WARNING: Sequences L131Cmb and S117Cma are exactly identical!
+WARNING: Sequences L131Cmb and S117Cmb are exactly identical!
+WARNING: Sequences L131Cmb and S118Cma are exactly identical!
+WARNING: Sequences L131Cmb and S118Cmc are exactly identical!
+WARNING: Sequences L131Cmb and S119Cma are exactly identical!
+WARNING: Sequences L131Cmb and S119Cmc are exactly identical!
+WARNING: Sequences L131Cmb and S125Cma are exactly identical!
+WARNING: Sequences L131Cmb and S125Cmc are exactly identical!
+WARNING: Sequences L131Cmb and S126Cma are exactly identical!
+WARNING: Sequences L131Cmb and S127Cma are exactly identical!
+WARNING: Sequences S016Cxb and S027Cxa are exactly identical!
+WARNING: Sequences 209BSAA003_ER43_11_Crepidostomum_COI and 209BSAA003_ER43_10_Crepidostomum_COI are exactly identical!
+WARNING: Sequences 209BSAA003_ER43_11_Crepidostomum_COI and 209BSAA003_ER43_07_Crepidostomum_COI are exactly identical!
+WARNING: Sequences 209BSAA003_ER43_11_Crepidostomum_COI and 209BSAA003_ER43_05_Crepidostomum_COI are exactly identical!
+WARNING: Sequences 209BSAA003_ER43_11_Crepidostomum_COI and Eex32_10_20F2SAA003_Assem_cons_seq are exactly identical!
+WARNING: Sequences 209BSAA003_ER43_11_Crepidostomum_COI and Eex32_09_20F2SAA003_Assem_cons_seq are exactly identical!
+WARNING: Sequences 209BSAA003_ER43_11_Crepidostomum_COI and Eex32_08_20F2SAA003_Assem_cons_seq are exactly identical!
+WARNING: Sequences 209BSAA003_ER43_11_Crepidostomum_COI and Eex32_07_20F2SAA003_Assem_cons_seq are exactly identical!
+WARNING: Sequences 209BSAA003_ER43_11_Crepidostomum_COI and Eex32_03_20F2SAA003_Assem_cons_seq are exactly identical!
+WARNING: Sequences 209BSAA003_ER43_11_Crepidostomum_COI and ExKD8_7_TA2018_BT_Cpse are exactly identical!
+WARNING: Sequences 209BSAA003_ER43_11_Crepidostomum_COI and ExKD18_9_TA64_BT_Cpse are exactly identical!
+WARNING: Sequences ExKD11_13_TA1059_BT_Cbir and ExKD23_19_TA165_AC_Cbir are exactly identical!
+WARNING: Sequences ExKD11_13_TA1059_BT_Cbir and ExKD23_21_TA85_BT_Cbir are exactly identical!
+WARNING: Sequences ExKD11_13_TA1059_BT_Cbir and ExKD2_2_TA165_AC_Cbir are exactly identical!
+WARNING: Sequences MW729427_C.metoecus_RU and MT214990_C.metoecus_RU are exactly identical!
+WARNING: Duplicate sequences found: 95
+
+NOTE: Reduced alignment (with duplicates and gap-only sites/taxa removed) 
+NOTE: was saved to: /nata/mar/crepidostomum2/results/2023-10-04/RAxML/COI_round00/T2.raxml.reduced.phy
+
+Alignment comprises 1 partitions and 55 patterns
+
+Partition 0: noname
+Model: GTR+FO+G4m
+Alignment sites / patterns: 147 / 55
+Gaps: 3.48 %
+Invariant sites: 68.71 %
+
+
+NOTE: Binary MSA file created: RAxML/COI_round00/T2.raxml.rba
+
+Parallelization scheme autoconfig: 16 worker(s) x 3 thread(s)
+
+[00:00:00] Generating 10 random starting tree(s) with 113 taxa
+[00:00:00] Generating 10 parsimony starting tree(s) with 113 taxa
+Parallel parsimony with 48 threads
+Parallel reduction/worker buffer size: 1 KB  / 0 KB
+
+[00:00:00] Data distribution: max. partitions/sites/weight per thread: 1 / 19 / 304
+[00:00:00] Data distribution: max. searches per worker: 2
+
+Starting ML tree search with 20 distinct starting trees
+
+[00:00:00 -3600.007728] Initial branch length optimization
+[00:00:00 -2395.930400] Model parameter optimization (eps = 10.000000)
+[00:00:01 -1629.553589] AUTODETECT spr round 1 (radius: 5)
+[00:00:01 -990.790436] AUTODETECT spr round 2 (radius: 10)
+[00:00:01 -783.905597] AUTODETECT spr round 3 (radius: 15)
+[00:00:02 -745.656813] AUTODETECT spr round 4 (radius: 20)
+[00:00:02 -736.506476] AUTODETECT spr round 5 (radius: 25)
+[00:00:02 -736.488755] SPR radius for FAST iterations: 20 (autodetect)
+[00:00:02 -736.488755] Model parameter optimization (eps = 3.000000)
+[00:00:03 -731.564610] FAST spr round 1 (radius: 20)
+[00:00:03] [worker #14] ML tree search #15, logLikelihood: -482.237843
+[00:00:03] [worker #13] ML tree search #14, logLikelihood: -482.236626
+[00:00:03] [worker #15] ML tree search #16, logLikelihood: -482.234849
+[00:00:04] [worker #12] ML tree search #13, logLikelihood: -482.237946
+[00:00:04 -498.277821] FAST spr round 2 (radius: 20)
+[00:00:04] [worker #10] ML tree search #11, logLikelihood: -482.234851
+[00:00:04 -489.598351] Model parameter optimization (eps = 1.000000)
+[00:00:05 -484.593100] SLOW spr round 1 (radius: 5)
+[00:00:05] [worker #11] ML tree search #12, logLikelihood: -482.234882
+[00:00:06 -482.614490] SLOW spr round 2 (radius: 10)
+[00:00:06] [worker #2] ML tree search #3, logLikelihood: -484.395111
+[00:00:06] [worker #1] ML tree search #2, logLikelihood: -482.237263
+[00:00:07 -482.614443] SLOW spr round 3 (radius: 15)
+[00:00:07] [worker #3] ML tree search #4, logLikelihood: -484.398286
+[00:00:08 -482.614428] SLOW spr round 4 (radius: 20)
+[00:00:08] [worker #5] ML tree search #6, logLikelihood: -482.243078
+[00:00:09 -482.614428] SLOW spr round 5 (radius: 25)
+[00:00:09] [worker #2] ML tree search #19, logLikelihood: -482.234763
+[00:00:09] [worker #6] ML tree search #7, logLikelihood: -484.400656
+[00:00:09] [worker #1] ML tree search #18, logLikelihood: -482.234785
+[00:00:09] [worker #9] ML tree search #10, logLikelihood: -482.243887
+[00:00:09] [worker #8] ML tree search #9, logLikelihood: -482.236067
+[00:00:09] [worker #7] ML tree search #8, logLikelihood: -482.244667
+[00:00:09 -482.614428] Model parameter optimization (eps = 0.100000)
+
+[00:00:10] [worker #0] ML tree search #1, logLikelihood: -482.242610
+
+[00:00:10 -1204.624379] Initial branch length optimization
+[00:00:10 -528.777465] Model parameter optimization (eps = 10.000000)
+[00:00:10 -483.598382] AUTODETECT spr round 1 (radius: 5)
+[00:00:10] [worker #3] ML tree search #20, logLikelihood: -482.237394
+[00:00:10 -483.523847] SPR radius for FAST iterations: 5 (autodetect)
+[00:00:10 -483.523847] Model parameter optimization (eps = 3.000000)
+[00:00:10 -483.271650] FAST spr round 1 (radius: 5)
+[00:00:10 -483.267574] Model parameter optimization (eps = 1.000000)
+[00:00:11 -483.210290] SLOW spr round 1 (radius: 5)
+[00:00:11] [worker #4] ML tree search #5, logLikelihood: -546.976433
+[00:00:11 -482.275154] SLOW spr round 2 (radius: 10)
+[00:00:11 -482.275090] SLOW spr round 3 (radius: 15)
+[00:00:12 -482.275087] SLOW spr round 4 (radius: 20)
+[00:00:12 -482.275084] SLOW spr round 5 (radius: 25)
+[00:00:13 -482.275081] Model parameter optimization (eps = 0.100000)
+
+[00:00:13] [worker #0] ML tree search #17, logLikelihood: -482.237758
+
+
+Optimized model parameters:
+
+   Partition 0: noname
+   Rate heterogeneity: GAMMA (4 cats, mean),  alpha: 0.232913 (ML),  weights&rates: (0.250000,0.001409) (0.250000,0.054658) (0.250000,0.464040) (0.250000,3.479893) 
+   Base frequencies (ML): 0.208318 0.117940 0.244725 0.429017 
+   Substitution rates (ML): 0.315359 3.463847 0.001000 0.001000 1.949431 1.000000 
+
+
+Final LogLikelihood: -482.234763
+
+AIC score: 1428.469526 / AICc score: 109540.469526 / BIC score: 2122.249887
+Free parameters (model + branch lengths): 232
+
+WARNING: Number of free parameters (K=232) is larger than alignment size (n=147).
+         This might lead to overfitting and compromise tree inference results!
+
+
+WARNING: Best ML tree contains 100 near-zero branches!
+
+Best ML tree with collapsed near-zero branches saved to: /nata/mar/crepidostomum2/results/2023-10-04/RAxML/COI_round00/T2.raxml.bestTreeCollapsed
+Best ML tree saved to: /nata/mar/crepidostomum2/results/2023-10-04/RAxML/COI_round00/T2.raxml.bestTree
+All ML trees saved to: /nata/mar/crepidostomum2/results/2023-10-04/RAxML/COI_round00/T2.raxml.mlTrees
+Optimized model saved to: /nata/mar/crepidostomum2/results/2023-10-04/RAxML/COI_round00/T2.raxml.bestModel
+
+Execution log saved to: /nata/mar/crepidostomum2/results/2023-10-04/RAxML/COI_round00/T2.raxml.log
+
+Analysis started: 07-Oct-2024 10:40:29 / finished: 07-Oct-2024 10:40:43
+
+Elapsed time: 13.119 seconds
+

@@ -1,0 +1,438 @@
+---
+title: "Phylogeny of **COI**, **lsrDNA** and **ITS2** of all samples for identification of Crepidsotomum spp."
+author: "Mar Llaberia-Robledillo"
+date: "2023-10-04"
+output:
+  html_document:
+    toc: TRUE
+--- 
+
+# COI
+Choosed marker: COI_MW_Cfar - MW729433 from Russia 
+
+## Obtain the sequences of COI for Crepidostomum from GeneBank 
+```{bash, collapse=TRUE}
+# From ENA:
+if [ ! -d Genbank ]; then mkdir Genbank; fi
+if [ ! -e Genbank/CrepiCoxENA.fa ]; then
+   if [ ! -e Genbank/INFO_accessions.txt ]; then
+   ## COI
+      PORTAL="https://www.ebi.ac.uk/ena/portal/api/search?"
+      RESULT="result=sequence&"
+      QUERY="query=tax_tree(334452)%20AND%20description%3D%22coi%22&"
+      FIELDS="fields=accession%2Cscientific_name%2Chost%2Ccountry%2Ctax_id&"
+      FORMAT="format=tsv"
+      curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT >> Genbank/INFO_accessions.txt
+   ## COX1
+      PORTAL="https://www.ebi.ac.uk/ena/portal/api/search?"
+      RESULT="result=sequence&"
+      QUERY="query=tax_tree(334452)%20AND%20description%3D%22cox1%22&"
+      FIELDS="fields=accession%2Cscientific_name%2Chost%2Ccountry%2Ctax_id&"
+      FORMAT="format=tsv"
+      curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT | tail -n +2 >> Genbank/INFO_accessions.txt
+      # if I do Coi and Cox1 at the same time add this | tail -n +2 
+   fi
+   BROWSER="https://www.ebi.ac.uk/ena/browser/api/fasta/"
+   cut -f 1 Genbank/INFO_accessions.txt | tail -n +2 > Genbank/accessions.txt
+   ACCESSIONS=$(gawk -v ORS="," '{print}' Genbank/accessions.txt |  sed 's/.$//' )
+   curl -s $BROWSER$ACCESSIONS > Genbank/CrepiCoxENA.fa
+fi
+```
+
+## Edit and selecting the sequences of GenBank
+```{r, collapse = TRUE, warning=FALSE}
+suppressWarnings(library('DECIPHER'))
+suppressWarnings(library('htmltools'))
+suppressWarnings(library('stringr'))
+
+## Edit the sequences of GenBank
+CrepiCoxENA <- readDNAStringSet("Genbank/CrepiCoxENA.fa")
+
+## Adding the information 
+if (!file.exists("GenBank_farionis.fa")) {
+  info <- read.delim("Genbank/INFO_accessions.txt", header = TRUE)
+  rownames(info) <- info$accession
+  for (i in 1:length(names(CrepiCoxENA))) {
+    name <- paste0("C.", strsplit(names(CrepiCoxENA), " ")[[i]][3])
+    accession <- strsplit(names(CrepiCoxENA), "\\|")[[i]][2]
+    #host <- paste0(strsplit(info[accession, 3], " ")[[1]][1], "_", strsplit(info[accession, 3], " ")[[1]][2])
+    country <- str_to_upper(substr(info[accession, 4], 1,2))
+    names(CrepiCoxENA)[i] <- paste0(accession, "_", name, "_", country)
+  }
+  writeXStringSet(CrepiCoxENA[names(CrepiCoxENA)[grep(".farionis", names(CrepiCoxENA), fixed = TRUE)]], "GenBank_COI_farionis.fa")
+}
+
+```
+
+## Download the outgroups
+```{r, collapse = TRUE, warning=FALSE}
+## Keep only two sequences as outgroups (the most complete)
+## Isa has some sequences that can be outgroups too. 
+writeXStringSet(CrepiCoxENA[names(CrepiCoxENA)[grep("metoecus", names(CrepiCoxENA), fixed = TRUE)[c(1,2)]]], "Outgroups.fa")
+```
+
+## Reconstruct the phylogeny 
+
+### Aligning all the sequences and prepare the input for RAxML
+Reference sequence? 
+```{r message=FALSE, collapse=TRUE}
+suppressWarnings(library(Biostrings))
+#COI_REF <- readDNAStringSet("../2023-06-22/Cox1Ref.fa")
+#names(COI_REF)[1] <- "Assembly_Crepidostomum_farionis_NO_Takvatn*"
+#writeXStringSet(COI_REF, "Cox1_Cfar_ASM.fa")
+```
+
+Choosed marker: COI_MW_Cfar - MW729433 from Russia 
+```{r, collapse=TRUE}
+
+RefGen_COI <- readDNAStringSet("../2023-10-02/markers/COI_MW_Cfar.fa")
+GB_far <- readDNAStringSet("GenBank_COI_farionis.fa")
+## Sequences sent by Isabel (all Crepidostomum sp.)
+Extra_Cox1 <- readDNAStringSet("../../data/SeqCox1_Crepido_spp_Isabel.fa")
+Extra2_Cox1 <- readDNAStringSet("../../data/SeqCox1_Crepido_spp_Kristine.fas")
+## Outgroups 
+Outgroup <-  readDNAStringSet("Outgroups.fa")
+
+## Our samples 
+CrepiCOI <- readDNAStringSet("../2023-10-02/GB/COI_MW_Cfar_align.fa-gb1")
+CrepiCOI <- CrepiCOI[names(CrepiCOI)[-grep("S031Cmc", names(CrepiCOI))]]# without data
+
+AllSequences_TreeR <- c(RefGen_COI, GB_far, CrepiCOI, Extra_Cox1, Extra2_Cox1, Outgroup)
+## Removing gaps 
+AllSeq_Tree_Ngaps <- DNAStringSet(chartr("-", "N", as.character(AllSequences_TreeR)))
+
+BrowseSeqs(AlignSeqs(AllSeq_Tree_Ngaps))
+
+writeXStringSet(AllSequences_TreeR, "AllSeq_Tree.fa")
+#writeXStringSet(Aligned_SeqTree, "Aligned_AllSeqTree.fa")
+```
+
+```{bash, collapse = TRUE}
+FOLDER=RAxML/COI_round001
+## "Probably most accurate L-INS-i
+if [ ! -d RAxML ]; then mkdir RAxML; fi
+if [ ! -d $FOLDER ]; then mkdir $FOLDER; fi
+if [ ! -e $FOLDER/AlignTree_Mafft_01.alg ]; then
+  mafft --maxiterate 1000 --thread 24 --localpair AllSeq_Tree.fa > $FOLDER/AlignTree_Mafft_01.alg
+fi
+```
+
+### Trimm the alignment
+```{r, collapse = TRUE}
+if (file.exists("RAxML/COI_round01/AlignTree_Mafft.alg") == FALSE) {
+  Align <- readDNAStringSet("RAxML/COI_round01/AlignTree_Mafft_01.alg")
+  #BrowseSeqs(subseq(Align, start = 249, end = 395))
+  #Align <- subseq(Align, start = 249, end = 395)
+  Align <- DNAStringSet(sapply(Align, function(seq) {
+    paste0(subseq(seq, 248, 402), subseq(seq, 453, 511)) 
+    }))
+  Freq <- alphabetFrequency(Align)
+  #Remove from the alignment those seq with more than 50% of gaps + N
+  Freq <- which((Freq[,15] + Freq[,16]) > (length(Align[[1]]) * 0.50))
+  Align <- Align[-Freq]
+  writeXStringSet(Align, "RAxML/COI_round01/AlignTree_Mafft.alg")
+}
+```
+
+```{bash, collapse = TRUE}
+FOLDER=RAxML/COI_round01
+## Finally run a tree Search
+raxml-ng --msa $FOLDER/AlignTree_Mafft.alg --model GTR+G --prefix $FOLDER/T2 --threads 48
+ 
+## Compute and map bootstrap support values to the best ML tree (S1.raxml.bestTree)
+raxml-ng --bootstrap --msa $FOLDER/AlignTree_Mafft.alg --model GTR+G --prefix $FOLDER/S2_bestTree --tree $FOLDER/T2.raxml.bestTree --threads 48 --bs-trees 10000
+
+# Recompute support values using the Transfer Bootstrap Expectation (TBE) algorithm. Did this change the support values?
+raxml-ng --support --tree $FOLDER/T2.raxml.bestTree --bs-trees $FOLDER/S2_bestTree.raxml.bootstraps --prefix $FOLDER/S2_FBP --threads 48 --bs-metric fbp
+raxml-ng --support --tree $FOLDER/T2.raxml.bestTree --bs-trees $FOLDER/S2_bestTree.raxml.bootstraps --prefix $FOLDER/S2_TBE --threads 48 --bs-metric tbe 
+
+```
+
+
+# lsrDNA
+Choosed marker: lsrDNA_MT_Cpse - MT080786 from Iceland
+
+## Obtain the sequences of COI for Crepidostomum from GeneBank 
+```{bash, collapse=TRUE}
+# From ENA:
+if [ ! -d Genbank ]; then mkdir Genbank; fi
+if [ ! -e Genbank/CrepiCox28S.fa ]; then
+   if [ ! -e Genbank/INFO_28S_accessions.txt ]; then
+   ## large subunit ribosomal
+      PORTAL="https://www.ebi.ac.uk/ena/portal/api/search?"
+      RESULT="result=sequence&"
+      QUERY="query=tax_tree(334452)%20AND%20description%3D%22large%20subunit%20ribosomal%20%22&"
+      FIELDS="fields=accession%2Cscientific_name%2Chost%2Ccountry%2Ctax_id&"
+      FORMAT="format=tsv"
+      curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT >> Genbank/INFO_28S_accessions.txt
+   ## 28S
+      PORTAL="https://www.ebi.ac.uk/ena/portal/api/search?"
+      RESULT="result=sequence&"
+      QUERY="query=tax_tree(334452)%20AND%20description%3D%2228S%22&"
+      FIELDS="fields=accession%2Cscientific_name%2Chost%2Ccountry%2Ctax_id&"
+      FORMAT="format=tsv"
+      curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT | tail -n +2 >> Genbank/INFO_28S_accessions.txt
+      # if I do Coi and Cox1 at the same time add this | tail -n +2 
+   fi
+   BROWSER="https://www.ebi.ac.uk/ena/browser/api/fasta/"
+   cut -f 1 Genbank/INFO_28S_accessions.txt | tail -n +2 > Genbank/accessions_28S.txt
+   ACCESSIONS=$(gawk -v ORS="," '{print}' Genbank/accessions_28S.txt |  sed 's/.$//' )
+   curl -s $BROWSER$ACCESSIONS > Genbank/CrepiCox28S.fa
+fi
+```
+
+## Edit and selecting the sequences of GenBank
+```{r, collapse = TRUE, warning=FALSE}
+suppressWarnings(library('DECIPHER'))
+suppressWarnings(library('htmltools'))
+suppressWarnings(library('stringr'))
+
+## Edit the sequences of GenBank
+CrepiCox28S <- readDNAStringSet("Genbank/CrepiCox28S.fa")
+
+## Adding the information 
+if (!file.exists("GenBank_28S_farionis.fa")) {
+  info <- read.delim("Genbank/INFO_28S_accessions.txt", header = TRUE)
+  rownames(info) <- info$accession
+  for (i in 1:length(names(CrepiCox28S))) {
+    name <- paste0("C.", strsplit(names(CrepiCox28S), " ")[[i]][3])
+    accession <- strsplit(names(CrepiCox28S), "\\|")[[i]][2]
+    #host <- paste0(strsplit(info[accession, 3], " ")[[1]][1], "_", strsplit(info[accession, 3], " ")[[1]][2])
+    country <- str_to_upper(substr(info[accession, 4], 1,2))
+    names(CrepiCox28S)[i] <- paste0(accession, "_", name, "_", country)
+  }
+  writeXStringSet(CrepiCox28S[names(CrepiCox28S)[grep(".farionis", names(CrepiCox28S), fixed = TRUE)]][c(1,5,10,15)], "GenBank_28S_farionis.fa")
+  writeXStringSet(CrepiCox28S[names(CrepiCox28S)[grep(".pseudofarionis", names(CrepiCox28S), fixed = TRUE)]], "GenBank_28S_pseudofarionis.fa")
+}
+
+```
+
+## Download the outgroups
+```{r, collapse = TRUE, warning=FALSE}
+## Keep only two sequences as outgroups (the most complete)
+## Isa has some sequences that can be outgroups too. 
+writeXStringSet(CrepiCox28S[names(CrepiCox28S)[grep("metoecus", names(CrepiCox28S), fixed = TRUE)[c(1,2)]]], "Outgroups28S.fa")
+```
+
+## Reconstruct the phylogeny 
+
+## Aligning all the sequences and prepare the input for RAxML
+Reference sequence ?
+```{r message=FALSE, collapse=TRUE}
+#suppressWarnings(library(Biostrings))
+#MARKER_28S <- readDNAStringSet("../2023-06-22/lsrDNARef.fa") ## tree marker
+#names(MARKER_28S)[1] <- "Assembly_Crepidostomum_farionis_NO_Takvatn*"
+
+#writeXStringSet(MARKER_28S, "28S_Cfar_ASM.fa")
+```
+
+Choosed marker: lsrDNA_MT_Cpse - MT080786 from Iceland
+```{r, collapse=TRUE}
+
+RefGen_28S <- readDNAStringSet("../2023-10-02/markers/lsrDNA_MT_Cpse.fa")
+GB_28S_far <- readDNAStringSet("GenBank_28S_farionis.fa")
+GB_28S_pse <- readDNAStringSet("GenBank_28S_pseudofarionis.fa")
+
+## Outgroups 
+Outgroup28S <- readDNAStringSet("Outgroups28S.fa")
+
+## Our samples 
+Crepi28S <- readDNAStringSet("../2023-10-02/GB/lsrDNA_MT_Cpse_align.fa-gb1")
+Crepi28S <- chartr("-", "N", Crepi28S)
+Crepi28S <- Crepi28S[names(Crepi28S)[-grep("S031Cmc", names(Crepi28S), fixed = TRUE)]] ## no data 
+
+AllSequences_28S_TreeR <- c(GB_28S_far, GB_28S_pse, Crepi28S, Outgroup28S)
+BrowseSeqs(AlignSeqs(AllSequences_28S_TreeR))
+
+writeXStringSet(AllSequences_28S_TreeR, "AllSeq_28S_Tree.fa")
+#writeXStringSet(Aligned_SeqTree, "Aligned_AllSeqTree.fa")
+```
+
+```{bash, collapse = TRUE}
+FOLDER=RAxML/28S_round03
+## "Probably most accurate L-INS-i
+if [ ! -d RAxML ]; then mkdir RAxML; fi
+if [ ! -d $FOLDER ]; then mkdir $FOLDER; fi
+if [ ! -e $FOLDER/AlignTree_Mafft_01.alg-gb1 ]; then
+  mafft --maxiterate 1000 --thread 24 --localpair AllSeq_28S_Tree.fa > $FOLDER/AlignTree_Mafft_01.alg
+fi
+```
+
+## Trimm the alignment
+```{r, collapse = TRUE}
+if (file.exists("RAxML/28S_round03/AlignTree_Mafft.alg") == FALSE) {
+  Align <- readDNAStringSet("RAxML/28S_round03/AlignTree_Mafft_01.alg")
+  #BrowseSeqs(subseq(Align, start = 249, end = 395))
+    Align <- DNAStringSet(sapply(Align, function(seq) {
+    paste0(subseq(seq, 78, 218), subseq(seq, 538, 1321)) 
+    }))
+  #Freq <- alphabetFrequency(Align)
+  #Remove from the alignment those seq with more than 50% of gaps + N
+  #Freq <- which((Freq[,15] + Freq[,16]) > (length(Align[[1]]) * 0.75))
+  #Align <- Align[-Freq]
+  writeXStringSet(Align, "RAxML/28S_round03/AlignTree_Mafft.alg")
+}
+```
+
+```{bash, collapse = TRUE, results='hide'}
+FOLDER=RAxML/28S_round03
+## Finally run a tree Search
+raxml-ng --msa $FOLDER/AlignTree_Mafft.alg --model GTR+G --prefix $FOLDER/T2 --threads 24
+ 
+## Compute and map bootstrap support values to the best ML tree (S1.raxml.bestTree)
+raxml-ng --bootstrap --msa $FOLDER/AlignTree_Mafft.alg --model GTR+G --prefix $FOLDER/S2_bestTree --tree $FOLDER/T2.raxml.bestTree --threads 24 --bs-trees 10000
+
+# Recompute support values using the Transfer Bootstrap Expectation (TBE) algorithm. Did this change the support values?
+raxml-ng --support --tree $FOLDER/T2.raxml.bestTree --bs-trees $FOLDER/S2_bestTree.raxml.bootstraps --prefix $FOLDER/S2_FBP --threads 24 --bs-metric fbp
+raxml-ng --support --tree $FOLDER/T2.raxml.bestTree --bs-trees $FOLDER/S2_bestTree.raxml.bootstraps --prefix $FOLDER/S2_TBE --threads 24 --bs-metric tbe 
+
+```
+
+```{r sessionInfo}
+sessionInfo()
+```
+
+
+# ITS2
+Choosed marker:  ITS2_MT_Cpse - MT080768 from Iceland
+
+```{r message=FALSE, collapse=TRUE}
+suppressWarnings(library(Biostrings))
+#ITS2_MARKER <- readDNAStringSet("../2023-06-22/Cox1Ref.fa")
+#names(ITS2_MARKER)[1] <- "Assembly_Crepidostomum_farionis_NO_Takvatn*"
+
+#writeXStringSet(ITS2_MARKER, "ITS2_Cfar_ASM.fa")
+```
+## Obtain the sequences of ITS2 for Crepidostomum from GeneBank 
+```{bash, collapse=TRUE}
+# From ENA:
+if [ ! -d Genbank ]; then mkdir Genbank; fi
+if [ ! -e Genbank/CrepiITS2ENA.fa ]; then
+   if [ ! -e Genbank/INFO_accessionsITS.txt ]; then
+   ## ITS2
+      PORTAL="https://www.ebi.ac.uk/ena/portal/api/search?"
+      RESULT="result=sequence&"
+      QUERY="query=tax_tree(334452)%20AND%20description%3D%22internal%20transcribed%20spacer%202%2C%20complete%22&"
+      FIELDS="fields=accession%2Cscientific_name%2Chost%2Ccountry%2Ctax_id&"
+      FORMAT="format=tsv"
+      curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT >> Genbank/INFO_accessionsITS.txt
+      # if I do Coi and Cox1 at the same time add this | tail -n +2 
+      #curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT | tail -n +2 >> Genbank/INFO_accessions.txt
+   fi
+   BROWSER="https://www.ebi.ac.uk/ena/browser/api/fasta/"
+   cut -f 1 Genbank/INFO_accessionsITS.txt | tail -n +2 > Genbank/accessionsITS.txt
+   ACCESSIONS=$(gawk -v ORS="," '{print}' Genbank/accessionsITS.txt |  sed 's/.$//' )
+   curl -s $BROWSER$ACCESSIONS > Genbank/CrepiITS2ENA.fa
+fi
+
+# From NCBI: the sequences in the description study of C. pse 
+# are missing, so we download it manually from Genbank. 
+```
+
+## Edit and selecting the sequences of GenBank
+```{r, collapse = TRUE, warning=FALSE}
+suppressWarnings(library('DECIPHER'))
+suppressWarnings(library('htmltools'))
+suppressWarnings(library('stringr'))
+
+## Edit the sequences of GenBank
+CrepiITS2ENA <- c(readDNAStringSet("Genbank/Cfarionis_ITS2.fasta"), readDNAStringSet("Genbank/Cpseudofarionis_ITS.fasta"))
+CrepiITS2ENA2 <- readDNAStringSet("Genbank/CrepiITS2ENA.fa")
+## Adding the information 
+if (!file.exists("GenBank_ITS2_Crep.fa")) {
+  info <- read.delim("Genbank/INFO_accessionsITS.txt", header = TRUE)
+  rownames(info) <- info$accession
+  for (i in 1:length(names(CrepiITS2ENA2))) {
+    name <- paste0("C.", strsplit(names(CrepiITS2ENA2), " ")[[i]][3])
+    accession <- strsplit(names(CrepiITS2ENA2), "\\|")[[i]][2]
+    #host <- paste0(strsplit(info[accession, 3], " ")[[1]][1], "_", strsplit(info[accession, 3], " ")[[1]][2])
+    country <- str_to_upper(substr(info[accession, 4], 1,2))
+    names(CrepiITS2ENA2)[i] <- paste0(accession, "_", name, "_", country)
+  }
+  
+  for (i in 1:length(names(CrepiITS2ENA))) {
+    name <- paste0("C.", strsplit(names(CrepiITS2ENA), " ")[[i]][3])
+    accession <- strsplit(strsplit(names(CrepiITS2ENA), " ")[[i]][1], "\\.1")[1]
+    #host <- paste0(strsplit(info[accession, 3], " ")[[1]][1], "_", strsplit(info[accession, 3], " ")[[1]][2])
+    country <- "IC/RU"
+    names(CrepiITS2ENA)[i] <- paste0(accession, "_", name, "_", country)
+  }
+  
+  CrepiITS2 <- c(CrepiITS2ENA2[names(CrepiITS2ENA2)[-grep(".sp.", names(CrepiITS2ENA2), fixed = TRUE)]], CrepiITS2ENA)
+  writeXStringSet(CrepiITS2, "GenBank_ITS2_Crep.fa")
+}
+
+
+```
+
+## Download the outgroups
+```{r, collapse = TRUE, warning=FALSE}
+## Keep only two sequences as outgroups (the most complete)
+## Isa has some sequences that can be outgroups too. 
+writeXStringSet(CrepiITS2[names(CrepiITS2)[grep("oschmarini", names(CrepiITS2), fixed = TRUE)[c(1,2)]]], "Outgroups.fa")
+```
+
+## Reconstruct the phylogeny 
+Choosed marker:  ITS2_MT_Cpse - MT080768 from Iceland
+### Aligning all the sequences and prepare the input for RAxML
+```{r, collapse=TRUE}
+
+RefGen_ITS2 <- readDNAStringSet("../2023-10-02/markers/ITS2_MT_Cpse.fa")
+GB_ITS2 <- readDNAStringSet("GenBank_ITS2_Crep.fa")
+
+## Outgroups 
+#Outgroup <-  readDNAStringSet("Outgroups.fa")
+
+## Our samples 
+CrepiITS2 <- readDNAStringSet("../2023-10-02/GB/ITS2_MT_Cpse_align.fa-gb1")
+CrepiITS2 <- CrepiITS2[names(CrepiITS2)[-grep("S031Cmc", names(CrepiITS2))]] # without data
+CrepiITS2 <- CrepiITS2[names(CrepiITS2)[-grep("N048Cmb", names(CrepiITS2))]] # without data
+
+
+AllSequences_TreeR <- c(RefGen_ITS2, GB_ITS2, CrepiITS2)
+BrowseSeqs(AlignSeqs(AllSequences_TreeR))
+
+writeXStringSet(AllSequences_TreeR, "AllSeq_ITS2_Tree.fa")
+
+```
+
+```{bash, collapse = TRUE}
+FOLDER=RAxML/ITS2_round00
+## "Probably most accurate L-INS-i
+if [ ! -d RAxML ]; then mkdir RAxML; fi
+if [ ! -d $FOLDER ]; then mkdir $FOLDER; fi
+if [ ! -e $FOLDER/AlignTree_Mafft_01.alg ]; then
+  mafft --maxiterate 1000 --thread 24 --localpair AllSeq_ITS2_Tree.fa > $FOLDER/AlignTree_Mafft_01.alg
+  Gblocks $FOLDER/AlignTree_Mafft_01.alg -t=d -b1=59 -b2=80 -b4=10 -e=-gb1 -d=y -v=1000 -b3=10 -b5=h
+fi
+```
+
+### Trimm the alignment
+```{r, collapse = TRUE}
+if (file.exists("RAxML/ITS2_round00/AlignTree_Mafft.alg") == FALSE) {
+  Align <- readDNAStringSet("RAxML/ITS2_round00/AlignTree_Mafft_01.alg-gb1")
+  #BrowseSeqs(subseq(Align))
+  #Align <- subseq(Align, start = 249, end = 395)
+  #Freq <- alphabetFrequency(Align)
+  #Remove from the alignment those seq with more than 50% of gaps + N
+  #Freq <- which((Freq[,15] + Freq[,16]) > (length(Align[[1]]) * 0.50))
+  #Align <- Align[-Freq]
+  writeXStringSet(Align, "RAxML/ITS2_round00/AlignTree_Mafft.alg")
+}
+```
+
+```{bash, collapse = TRUE}
+FOLDER=RAxML/ITS2_round00
+## Finally run a tree Search
+raxml-ng --msa $FOLDER/AlignTree_Mafft.alg --model GTR+G --prefix $FOLDER/T2 --threads 48
+ 
+## Compute and map bootstrap support values to the best ML tree (S1.raxml.bestTree)
+raxml-ng --bootstrap --msa $FOLDER/AlignTree_Mafft.alg --model GTR+G --prefix $FOLDER/S2_bestTree --tree $FOLDER/T2.raxml.bestTree --threads 48 --bs-trees 10000
+
+# Recompute support values using the Transfer Bootstrap Expectation (TBE) algorithm. Did this change the support values?
+raxml-ng --support --tree $FOLDER/T2.raxml.bestTree --bs-trees $FOLDER/S2_bestTree.raxml.bootstraps --prefix $FOLDER/S2_FBP --threads 48 --bs-metric fbp
+raxml-ng --support --tree $FOLDER/T2.raxml.bestTree --bs-trees $FOLDER/S2_bestTree.raxml.bootstraps --prefix $FOLDER/S2_TBE --threads 48 --bs-metric tbe 
+
+```
+
+# Missing data of the alignments 
