@@ -1,0 +1,111 @@
+
+RAxML-NG v. 1.2.1 released on 22.12.2023 by The Exelixis Lab.
+Developed by: Alexey M. Kozlov and Alexandros Stamatakis.
+Contributors: Diego Darriba, Tomas Flouri, Benoit Morel, Sarah Lutteropp, Ben Bettisworth, Julia Haag, Anastasis Togkousidis.
+Latest version: https://github.com/amkozlov/raxml-ng
+Questions/problems/suggestions? Please visit: https://groups.google.com/forum/#!forum/raxml
+
+System: Intel(R) Xeon(R) CPU E5-4620 0 @ 2.20GHz, 32 cores, 251 GB RAM
+
+RAxML-NG was called at 11-Dec-2024 11:19:20 as follows:
+
+raxml-ng --evaluate --msa RAxML/round00/AlignTree_Mafft.alg --tree RAxML/round00/T1_1000.raxml.bestTree --model JC --prefix RAxML/round00/EvalMod_JC
+
+Analysis options:
+  run mode: Evaluate tree likelihood
+  start tree(s): user
+  random seed: 1733912360
+  tip-inner: OFF
+  pattern compression: ON
+  per-rate scalers: OFF
+  site repeats: ON
+  logLH epsilon: general: 10.000000, brlen-triplet: 1000.000000
+  branch lengths: proportional (ML estimate, algorithm: NR-FAST)
+  SIMD kernels: AVX
+  parallelization: coarse-grained (auto), PTHREADS (auto)
+
+[00:00:00] Reading alignment from file: RAxML/round00/AlignTree_Mafft.alg
+[00:00:00] Loaded alignment with 38 taxa and 458 sites
+
+WARNING: Sequences KF356360_C.affine_US and KF356362_C.affine_US are exactly identical!
+WARNING: Sequences KF356360_C.affine_US and KF356363_C.affine_US are exactly identical!
+WARNING: Sequences MH143094_C.oschmarini_RU and MH143093_C.oschmarini_LI are exactly identical!
+WARNING: Sequences MH143094_C.oschmarini_RU and MH143090_C.oschmarini_RU are exactly identical!
+WARNING: Sequences MH143094_C.oschmarini_RU and MH143092_C.oschmarini_LI are exactly identical!
+WARNING: Sequences MH143094_C.oschmarini_RU and MH143095_C.oschmarini_RU are exactly identical!
+WARNING: Sequences MH143094_C.oschmarini_RU and MH143091_C.oschmarini_RU are exactly identical!
+WARNING: Sequences KF356364_C.illinoiense_US and KF356365_C.illinoiense_US are exactly identical!
+WARNING: Sequences KF356364_C.illinoiense_US and KF356372_C.illinoiense_US are exactly identical!
+WARNING: Sequences MT080758_C.farionis_IC/RU and MT080759_C.farionis_IC/RU are exactly identical!
+WARNING: Sequences MT080758_C.farionis_IC/RU and MT080760_C.farionis_IC/RU are exactly identical!
+WARNING: Sequences MT080758_C.farionis_IC/RU and MT080761_C.farionis_IC/RU are exactly identical!
+WARNING: Sequences MT080758_C.farionis_IC/RU and MT080762_C.farionis_IC/RU are exactly identical!
+WARNING: Sequences MT080758_C.farionis_IC/RU and MT080763_C.farionis_IC/RU are exactly identical!
+WARNING: Sequences MT080758_C.farionis_IC/RU and MT080764_C.farionis_IC/RU are exactly identical!
+WARNING: Sequences MT080758_C.farionis_IC/RU and MT080765_C.farionis_IC/RU are exactly identical!
+WARNING: Sequences MT080758_C.farionis_IC/RU and MT080766_C.farionis_IC/RU are exactly identical!
+WARNING: Sequences MT080758_C.farionis_IC/RU and MT080767_C.farionis_IC/RU are exactly identical!
+WARNING: Sequences MT080758_C.farionis_IC/RU and L064Cxa_C._farionis_NO_Langfjordvatn* are exactly identical!
+WARNING: Sequences MT080768_C.pseudofarionis_IC/RU and MT080769_C.pseudofarionis_IC/RU are exactly identical!
+WARNING: Sequences MT080768_C.pseudofarionis_IC/RU and MT080770_C.pseudofarionis_IC/RU are exactly identical!
+WARNING: Sequences MT080768_C.pseudofarionis_IC/RU and MT080771_C.pseudofarionis_IC/RU are exactly identical!
+WARNING: Sequences MT080768_C.pseudofarionis_IC/RU and MT080772_C.pseudofarionis_IC/RU are exactly identical!
+WARNING: Duplicate sequences found: 23
+
+NOTE: Reduced alignment (with duplicates and gap-only sites/taxa removed) 
+NOTE: was saved to: /nata/mar/crepidostomum2/results/2024-01-21/RAxML/round00/EvalMod_JC.raxml.reduced.phy
+
+Alignment comprises 1 partitions and 119 patterns
+
+Partition 0: noname
+Model: JC
+Alignment sites / patterns: 458 / 119
+Gaps: 1.97 %
+Invariant sites: 78.38 %
+
+
+NOTE: Binary MSA file created: RAxML/round00/EvalMod_JC.raxml.rba
+
+Parallelization scheme autoconfig: 1 worker(s) x 1 thread(s)
+
+[00:00:00] Loading user starting tree(s) from: RAxML/round00/T1_1000.raxml.bestTree
+Parallel reduction/worker buffer size: 1 KB  / 0 KB
+
+[00:00:00] Data distribution: max. partitions/sites/weight per thread: 1 / 119 / 476
+[00:00:00] Data distribution: max. searches per worker: 1
+
+Evaluating 1 trees
+
+[00:00:00] Tree #1, initial LogLikelihood: -1320.275576
+
+[00:00:00 -1320.275576] Initial branch length optimization
+[00:00:00 -1317.832392] Model parameter optimization (eps = 10.000000)
+
+[00:00:00] Tree #1, final logLikelihood: -1317.729239
+
+
+Optimized model parameters:
+
+   Partition 0: noname
+   Rate heterogeneity: NONE
+   Base frequencies (model): 0.250000 0.250000 0.250000 0.250000 
+   Substitution rates (model): 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000 
+
+
+Final LogLikelihood: -1317.729239
+
+AIC score: 2781.458478 / AICc score: 2809.593895 / BIC score: 3082.719929
+Free parameters (model + branch lengths): 73
+
+WARNING: Best ML tree contains 22 near-zero branches!
+
+Best ML tree with collapsed near-zero branches saved to: /nata/mar/crepidostomum2/results/2024-01-21/RAxML/round00/EvalMod_JC.raxml.bestTreeCollapsed
+Best ML tree saved to: /nata/mar/crepidostomum2/results/2024-01-21/RAxML/round00/EvalMod_JC.raxml.bestTree
+Optimized model saved to: /nata/mar/crepidostomum2/results/2024-01-21/RAxML/round00/EvalMod_JC.raxml.bestModel
+
+Execution log saved to: /nata/mar/crepidostomum2/results/2024-01-21/RAxML/round00/EvalMod_JC.raxml.log
+
+Analysis started: 11-Dec-2024 11:19:20 / finished: 11-Dec-2024 11:19:21
+
+Elapsed time: 0.042 seconds
+
