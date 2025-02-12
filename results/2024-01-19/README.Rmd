@@ -19,7 +19,7 @@ suppressWarnings(library(stringr))
 suppressWarnings(library(Biostrings))
 
 hapList <- read.table('../2024-01-18/hapList.txt', header = TRUE)
-hapList <- hapList[-c(which(is.na(hapList$freq))), ]
+#hapList <- hapList[-c(which(is.na(hapList$freq))), ]
 hapList$Accession[1:3] <- str_split(hapList$Accession[1:3], ";")
 
 SpAdm <- read.table("../2024-10-05/summary.txt", header=TRUE)
@@ -39,30 +39,38 @@ Only one sample differs from the admixture. We upload the
 alignment for the COI from all samples, and I gonna choose 
 those sequences with more data. 
 ```{r}
-CrepiCOI <- readDNAStringSet("../2023-10-02/GB/Cox1_Cfar_ASM_align.fa-gb1")
+CrepiCOI <- readDNAStringSet("../2023-10-02/GB/COI_MW_Cfar_align.fa")
 CrepiCOI <- CrepiCOI[names(CrepiCOI)[-grep("S031Cmc", names(CrepiCOI))]]
-far1 <- names(CrepiCOI)[49] # I wnt to see the mtching with two samples of different lake but same sp.
-Freq <- alphabetFrequency(CrepiCOI)
-Freq <- which(Freq[,15] > 0) # 15 = N, 16 = Gaps
-CrepiCOI <- CrepiCOI[-Freq]
+## Remove thos sequences with les than 50% of data
+# Length 843, aprox 50% = 400 bp
+CrepiCOI <- CrepiCOI[which(rowSums(alphabetFrequency(CrepiCOI)[,1:4]) > 400)]
 
-far2 <- intersect(names(CrepiCOI), hapList$Accession[2][[1]])[3]
-pse1 <- intersect(names(CrepiCOI), hapList$Accession[1][[1]])[1:2]
+far1 <- intersect(names(CrepiCOI), hapList$Accession[1][[1]])[1]
+pse1 <- intersect(names(CrepiCOI), hapList$Accession[2][[1]])[1]
+
+far2 <- hapList$Accession[1][[1]][grep("S", hapList$Accession[1][[1]], fixed = TRUE)][1]
+pse2 <- hapList$Accession[3][[1]][grep("L", hapList$Accession[3][[1]], fixed = TRUE)]
+
+## REPRESENTATIVES
+far3 <- 
+pse3 <- c(pse2[1], pse2.1[1])
 writeLines(c(far1, far2), "farionis.txt")
-writeLines(pse1, "pseudo.txt")
+writeLines(c(pse1, pse2), "pseudo.txt")
 ```
 
 
 ## Extraction of markers from the most common haplotypes
-
+We extract the consensus sequence again, since we need the full version 
+and not the trimmed one in ../2023-10-02/GB/COI_MW_Cfar_align.fa-gb.
+- BAM file corresponding to the marker: COI_MW_Cfar
 ```{bash, collapse = TRUE}
 if [ ! -d SampCOI_farionis ]; then mkdir SampCOI_farionis; fi
 for i in $(cat farionis.txt); do
-  if [ ! -e SampCOI_farionis/${i}_28S.fa ]; then
-    BAM=../2023-10-02/BAM_Cox1_Cfar_ASM/${i}.bam
-    samtools consensus -r Cox1_Cfar_ASM $BAM -A --P-het 0 \
+  if [ ! -e SampCOI_farionis/${i}_COI.fa ]; then
+    BAM=../2023-10-02/BAM_COI_MW_Cfar/${i}.bam
+    samtools consensus -r COI_MW_Cfar $BAM -A --P-het 0 \
                          -l 2000 -a --show-del yes --show-ins no | \
-    sed "s/>Cox1_Cfar_ASM/>${i}/" >> SampCOI_farionis/${i}_COI.fa
+    sed "s/>COI_MW_Cfar/>${i}/" >> SampCOI_farionis/${i}_COI.fa
   fi
 done
 if [ ! -e farSamp.fa ]; then cat SampCOI_farionis/*.fa > farSamp.fa; fi
@@ -70,11 +78,11 @@ if [ ! -e farSamp.fa ]; then cat SampCOI_farionis/*.fa > farSamp.fa; fi
 
 if [ ! -d SampCOI_pseudo ]; then mkdir SampCOI_pseudo; fi
 for i in $(cat pseudo.txt); do
-  if [ ! -e SampCOI_pseudo/${i}_28S.fa ]; then
-    BAM=../2023-10-02/BAM_Cox1_Cfar_ASM/${i}.bam
-    samtools consensus -r Cox1_Cfar_ASM $BAM -A --P-het 0 \
+  if [ ! -e SampCOI_pseudo/${i}_COI.fa ]; then
+    BAM=../2023-10-02/BAM_COI_MW_Cfar/${i}.bam
+    samtools consensus -r COI_MW_Cfar $BAM -A --P-het 0 \
                          -l 2000 -a --show-del yes --show-ins no | \
-    sed "s/>Cox1_Cfar_ASM/>${i}/" >> SampCOI_pseudo/${i}_COI.fa
+    sed "s/>COI_MW_Cfar/>${i}/" >> SampCOI_pseudo/${i}_COI.fa
   fi
 done
 if [ ! -e pseSamp.fa ]; then cat SampCOI_pseudo/*.fa > pseSamp.fa; fi
@@ -84,13 +92,13 @@ if [ ! -e pseSamp.fa ]; then cat SampCOI_pseudo/*.fa > pseSamp.fa; fi
 suppressWarnings(library(Biostrings))
 ## Edit the sequences names
 farSamp <- readDNAStringSet("farSamp.fa")
-names(farSamp)[1] <- "L065Cxa_C._farionis_NO_Langfjordvatn*"
+names(farSamp)[1] <- "L064Cxa_C._farionis_NO_Langfjordvatn*"
 names(farSamp)[2] <- "S004Cma_C._farionis_NO_Suohpatjávri*"
 writeXStringSet(farSamp, "farSamp.fa")
 
 pseSamp <- readDNAStringSet("pseSamp.fa")
 names(pseSamp)[1] <- "L131Cmb_C._psuedofarionis_NO_Langfjordvatn*"
-names(pseSamp)[2] <- "S001Cma_C._pseudofarionis_NO_Suohpatjávri*"
+names(pseSamp)[2] <- "S002Cma_C._pseudofarionis_NO_Suohpatjávri*"
 writeXStringSet(pseSamp, "pseSamp.fa")
 
 
@@ -98,7 +106,7 @@ writeXStringSet(pseSamp, "pseSamp.fa")
 
 ## Extraction of markers from the reference genome of Crepidsotomum 
 Done in 2023-06-22 folder. 
-```{r message=FALSE, collapse=TRUE}
+```{r message=FALSE, collapse=TRUE, eval=FALSE}
 suppressWarnings(library(Biostrings))
 markers <- readDNAStringSet("../2023-10-02/markers/Cox1_Cfar_ASM.fa")
 names(markers) <- "C.farionis_NO_Takvatn*"
@@ -245,22 +253,22 @@ PSE <- readDNAStringSet("pseSamp.fa")
 #Cox_RefGen <- readDNAStringSet("Cox1_RefGen.fa")
 
 Sequences_tree <- c(CrepiENA, FAR, PSE, Outgroups)
-writeXStringSet(Sequences_tree, "Sequences_treeR.fa")
+writeXStringSet(Sequences_tree, "Seq_tree.fa")
 #BrowseSeqs(AlignSeqs(Sequences_tree))
 ```
 
 ### Align the sequences with mafft
 ```{bash}
-FOLDER=RAxML/round01
+FOLDER=RAxML/round00
 if [ ! -d RAxML ]; then mkdir RAxML; fi
 if [ ! -d $FOLDER ]; then mkdir $FOLDER; fi
 if [ ! -e $FOLDER/AlignTree_Mafft_01.alg ]; then
-  mafft --maxiterate 1000 --thread 24 --localpair Sequences_treeR.fa > $FOLDER/AlignTree_Mafft_01.alg
+  mafft --maxiterate 1000 --thread 24 --localpair Seq_tree.fa > $FOLDER/AlignTree_Mafft_01.alg
 fi
 ```
 #### Trimm the alignment
 ```{bash}
-FOLDER=RAxML/round01
+FOLDER=RAxML/round00
 #if [ ! -e AlignTree_Mafft_01.alg-gb1 ]; then
   Gblocks $FOLDER/AlignTree_Mafft_01.alg -t=d -b1=9 -b2=11 -e=-gb1 -d=y -v=1000 -b5=h
   #mv $FOLDER/AlignTree_Mafft_01.alg-gb1 $FOLDER/AlignTree_Mafft_02.alg
@@ -268,17 +276,17 @@ FOLDER=RAxML/round01
 ```
 
 ```{r}
-if (file.exists("RAxML/round01/AlignTree_Mafft.alg") == FALSE) {
-  Align <- readDNAStringSet("RAxML/round01/AlignTree_Mafft_01.alg-gb1")
+if (file.exists("RAxML/round00/AlignTree_Mafft.alg") == FALSE) {
+  Align <- readDNAStringSet("RAxML/round00/AlignTree_Mafft_01.alg-gb1")
   #BrowseSeqs(subseq(Align, start = 97, end = 241))
   #Align <- subseq(Align, start = 173, end = 320)
-  writeXStringSet(Align, "RAxML/round01/AlignTree_Mafft.alg")
+  writeXStringSet(Align, "RAxML/round00/AlignTree_Mafft.alg")
 }
 ```
 
 ### Reconstruct the tree
 ```{bash, collapse = TRUE}
-FOLDER=RAxML/round01
+FOLDER=RAxML/round00
 
 if [ ! -e T1_1000.raxml.support ]; then 
   raxml-ng --all --msa $FOLDER/AlignTree_Mafft.alg --model GTR+G --prefix $FOLDER/T1_1000 --bs-trees 1000 --threads 48
@@ -288,7 +296,9 @@ if [ ! -e $FOLDER/EvalMod_GTR+R4.raxml.log ]; then
     raxml-ng --evaluate --msa $FOLDER/AlignTree_Mafft.alg --tree $FOLDER/T1_1000.raxml.bestTree --model ${i} --prefix $FOLDER/EvalMod_${i}
   done
 fi
-
+```
+```{bash}
+FOLDER=RAxML/round00
 # Which model yields the highest log-likelihood? 
 grep "logLikelihood" $FOLDER/EvalMod*
 ## The model is GTR+R4, but
@@ -297,12 +307,12 @@ grep "AIC" $FOLDER/EvalMod*
 ```
 
 ```{bash, collapse = TRUE, eval = FALSE}
-FOLDER=RAxML/round01
+FOLDER=RAxML/round00
 ## Finally run a tree Search
 raxml-ng --msa $FOLDER/AlignTree_Mafft.alg --model GTR+G --prefix $FOLDER/T2 --threads 48 --redo
 
 ## Compute and map bootstrap support values to the best ML tree (S1.raxml.bestTree)
-raxml-ng --bootstrap --msa $FOLDER/AlignTree_Mafft.alg --model GTR+G --prefix $FOLDER/S2_bestTree --tree $FOLDER/T2.raxml.bestTree --threads 48 --bs-trees 10000
+raxml-ng --bootstrap --msa $FOLDER/AlignTree_Mafft.alg --model GTR+R4 --prefix $FOLDER/S2_bestTree --tree $FOLDER/T2.raxml.bestTree --threads 48 --bs-trees 10000
 # Recompute support values using the Transfer Bootstrap Expectation (TBE) algorithm. Did this change the support values?
 raxml-ng --support --tree $FOLDER/T2.raxml.bestTree --bs-trees $FOLDER/S2_bestTree.raxml.bootstraps --prefix $FOLDER/S2_FBP --threads 48 --bs-metric fbp
 raxml-ng --support --tree $FOLDER/T2.raxml.bestTree --bs-trees $FOLDER/S2_bestTree.raxml.bootstraps --prefix $FOLDER/S2_TBE --threads 48 --bs-metric tbe

@@ -1,5 +1,5 @@
 %!PS-Adobe-3.0 EPSF-3.0
-%%BoundingBox: 20 20 200 1006 
+%%BoundingBox: 20 20 200 977 
 %%Title: RAxML/round00/AlignTree_Mafft_01.alg
 %%Creator Gblocks 0.91b
 %%Pages: 1
@@ -42,12 +42,11 @@ newpath
 30 100 moveto
 (Blocks found by Gblocks version 0.91b for the file AlignTree_Mafft_01.alg-gb1PS) show
 30 80 moveto
-(Parameters used: 9 12 8 10 2) show
+(Parameters used: 9 11 8 10 2) show
 
-1 sh1 956 sh2 seq
+1 sh1 927 sh2 seq
 
-41 sh1 186 sh2 block
-189 sh1 439 sh2 block
+40 sh1 509 sh2 block
 
 grestore
 showpage

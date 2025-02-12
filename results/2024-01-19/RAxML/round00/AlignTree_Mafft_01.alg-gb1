@@ -5,7 +5,8 @@ catcatatgt ttatggttgg tctggatttg aagtctgcgg ttttttttag ttcagttact
 atggtaatag gggttcctac cggtattaag gttttttctt gactttgtat gttgaaaagc
 tctcgaatgc ggcatgtggg tgttattgtt tggtggataa ttgggtttat tattttgttt
 actataggtg gtgtgacagg gattatctta tctgcttcta tattagacac tttattgcat
-gacacttggt ttgtggtggc tcattttcat tatgttt
+gacacttggt ttgtggtggc tcattttcat tatgttttat cattgggttc ttacagtacg
+gtggtcattt ctttaatttg gtggtggcct gttgtaacag gttataggtt 
 >KF356385_C._auritum_US
 gggtttggta tgattagcca tatttgtatg atacttacta ataatgattc cttatttggt
 tacttggggt tagtctttgc tatgggtgca attgtttgtc tagggagtgt ggtttgggcc
@@ -13,7 +14,8 @@ caccatatgt ttatggttgg tttggatgtt aagacttcta ttttttttag ttctgtgact
 atgattattg gtatacctac gggtattaag gttttttcct gactatatat gcttagggga
 tctcgtttac gaggttgaga tcctatagtc tgatgaattg ttggttttat agttcttttt
 acgattgggg gtgtgactgg tatagtgtta tctgcttctg tattagacac tttattacat
-gatacttggt ttgtagtggc tcattttcat tatgttt
+gatacttggt ttgtagtggc tcattttcat tatgttt--- ---------- ----------
+---------- ---------- ---------- ---------- ---------- 
 >KF356376_C._affine_US
 ggatttggta tgattagtca tatttgtatg gtgttaacta ataatgattc tctttttggt
 tatcttggtt tggtttttgc catgggtgct attgtttgtt tgggaagtgt agtatgggcc
@@ -21,7 +23,8 @@ catcacatgt ttatggttgg tttggatctt aagacgtcta ttttttttag ctctgtgact
 atggtgattg ggatccctac aggtattaag gttttttctt ggctttatat gttaggggga
 tctcgtattc gaggctgaga tccaatagtt tggtgaattg ttgggtttat agttcttttt
 actatagggg gtgttaccgg cattgtgttg tcggcttctg tgttagatat gttgctacat
-gacacctggt ttgttgttgc tcattttcat tatgttt
+gacacctggt ttgttgttgc tcattttcat tatgttt--- ---------- ----------
+---------- ---------- ---------- ---------- ---------- 
 >MT214991_C._metoecus_RU
 ggctttggta tgataagaca tatttgcatg gttttaacaa acaatgattc tctgtttgga
 tacttagggt tggtttttgc catgggtgct attgtgtgct tgggtagtgt agtttgggct
@@ -29,7 +32,8 @@ catcatatgt ttatggttgg tttagatgtc aagacggctg tttttttcag ttctgtaacg
 atgataattg gtatccctac tgggattaag gtcttttctt gactttacat gttaaggagg
 gctcgtatgc gaggttggga cccaattgtt tgatgaatag tgggatttat tgtactattt
 actatagggg gtgttactgg tattgtactg tcagcttcta tattagacac tttacttcat
-gacacttggt ttgtggtggc acattttcac tatgttt
+gacacttggt ttgtggtggc acattttcac tatgttttat ccttgggttc ttatagtact
+gtcgtgattt ctcttatttg gtgatgacct gtaatcacag ggtatagatt 
 >MW729425_C._chaenogobii_RU
 ggatttggtg ttataagaca tatatgtatg acgttgacta ataatgattc tttgtttggg
 tacctgggtc ttgtttttgc tatgggtgct atagtgtgtt tgggtagcgt agtttgggct
@@ -37,7 +41,8 @@ caccatatgt ttatggttgg attggatgtg aagactgcgg tgttctttag gtctgttact
 atgataattg gtattccaac aggtattaag gttttttcct ggctttatat gttgagtagt
 gtccgaattc gaggctggga tcccataatt tggtgaattg tggggtttat tgttttattt
 actatcgggg gtgttactgg tattgtattg tctgcttctg tgttggatac attattacac
-gatacttggt ttgtggttgc ccactttcat tatgttt
+gatacttggt ttgtggttgc ccactttcat tatgttttat cattggggtc ttatagttct
+gtggtgattt ctctaatctg gtggtgacct attataacgg gttataggtt 
 >KF356379_C._illinoiense_US
 gggtttggta tgattagtca tatttgtatg gtgttaacaa ataatgattc tttatttggt
 tatcttggtt tggtttttgc tatgggtgct attgtttgct tgggaagggt agtttgagcc
@@ -45,7 +50,8 @@ caccatatgt ttatggttgg cttagacctt aagacgtcta ttttttttag ctctgtaact
 atggtgatag ggattcccac aggtattaag gttttttctt gactttatat gttaggtggg
 tctcgtattc gaggttgaga tcctatagtt tggtggattg ttggatttat agttcttttt
 actatagggg gtgttacagg tattgtactg tcggcttctg ttttggatac attgttacat
-gatacttgat ttgttgttgc ccattttcat tatgttt
+gatacttgat ttgttgttgc ccattttcat tatgttt--- ---------- ----------
+---------- ---------- ---------- ---------- ---------- 
 >MW729433_C._farionis_RU
 gggtttggtg ttataagcca tatttgtatg gtattaacta acaatgattc tctttttggc
 tatttggggc ttatttttgc tatgggcgct attgtgtgct taggtagcgt ggtgtgagca
@@ -53,7 +59,8 @@ catcatatgt ttatggtagg tttggatgtg aagacagctg ttttttttag ttccgtcacc
 atggtgatag gtattcctac gggcattaag gttttttctt ggctttatat gttaaggggg
 tcgcgtatgc gaggttgaga tccgattgtt tggtgaattg taggatttat tgttcttttt
 actattggtg gtgtgacagg gattgtgtta tctgcttcta ttttagatac tttattacac
-gatacttggt ttgtggtagc tcattttcat tatgtgt
+gatacttggt ttgtggtagc tcattttcat tatgtgttgt ctctggggtc ctatagtact
+gttgttattt ctttgatttg gtggtgaccg attataactg gatttaggct 
 >MW729434_C._farionis_RU
 gggtttggtg ttataagcca tatttgtatg gtattaacta acaatgattc tctttttggc
 tatttggggc ttatttttgc tatgggcgct attgtgtgct taggtagcgt ggtgtgagca
@@ -61,7 +68,8 @@ catcatatgt ttatggtagg tttggatgtg aagacagctg ttttttttag ttccgtcacc
 atggtgatag gtattcctac gggcattaag gttttttctt ggctttatat gttaaggggg
 tcgcgtatgc gaggttgaga tccgattgtt tggtgaattg taggatttat tgttcttttt
 actattggtg gtgtgacagg gattgtgtta tctgcttcta ttttagatac tttattacac
-gatacttggt ttgtggtagc tcattttcat tatgtgt
+gatacttggt ttgtggtagc tcattttcat tatgtgttgt ctctggggtc ctatagtact
+gttgttattt ctttgatttg gtggtgaccg attataactg gatttaggct 
 >KF250361_C._cornutum_US
 ggttttggta tgataagtca tatatgtatg gtgctgacta ataatgattc tttatttggt
 tatttggggt tggtttttgc catgggtgct attgtttgtt taggaagggt ggtttgagct
@@ -69,47 +77,44 @@ catcatatgt ttatggttgg cttagatgtc aagacttcta ttttttttag gtctgtcact
 atgattattg gtatacccac gggtattaag gttttttcgt ggttatacat gttgagtgga
 tctcgtttac gaggttggga tccgatagtt tggtgaatta ttggttttat aattcttttt
 acgattggag gggtgactgg tatagtttta tctgcttcta ttttggacac tttattacat
-gatacctggt ttgtggtggc ccattttcat tatgttt
->L065Cxa_C._farionis_NO_Langfjordvatn*
+gatacctggt ttgtggtggc ccattttcat tatgttt--- ---------- ----------
+---------- ---------- ---------- ---------- ---------- 
+>L064Cxa_C._farionis_NO_Langfjordvatn*
 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-nnnnnnnnnn nnnnnnnnnn nnnnnntaag gttttttctt ggctttatat gttaagaggg
+nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn ngtgtgagct
+catcatatgt ttatggtagg tttggatgtg aagacagctg ttttttttag ttctgtcact
+atggtgatag ggattcctac gggcattaag gttttttctt ggctttatat gttaagaggg
 tctcgtatgc gaggttgaga tccgattgtg tgatgaatta taggcttcat tgttcttttt
-acgattggcg gtgt-acagg aattgtgtta tctgcttcta ttttggatac tttgttacat
-gnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnn
+acgattggcg gtgtgacagg aattgtgtta tctgcttcta ttttggatac tttgttacat
+gnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn ntatagtact
+gttgttattt ctttgatttg gtgatggcct attataactg ggtttaggct 
 >S004Cma_C._farionis_NO_Suohpatjávri*
 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
 nnnnnnnnnn nnnnnnnnnn nnnnnntaag gttttttctt ggctttatat gttaagaggg
 tctcgtatgc gaggttgaga tccgattgtg tgatgaatta taggcttcat tgttcttttt
-acgattggcg gtgt-acagg aattgtgtta tctgcttcta ttttggatac tttgttacat
-gnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnn
+acgattggcg gtgtgacagg aattgtgtta tctgcttcta ttttggatac tttgttacat
+gnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn ntatagtact
+gttgttattt ctttgatttg gtgatggcct attataactg ggtttaggct 
 >L131Cmb_C._psuedofarionis_NO_Langfjordvatn*
 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
 catcatatgt ttatggtagg tttggatgta aagacagctg ttttttttag ttctgtcact
 atggtgattg gtattcctac gggcattaag gttttttctt ggctttgcat gctaagaggg
 tcgcgtatgc gaggttgaga tcctattgtt tgatgaatta tagggtttat tgttcttttt
-actattggtg gtgt-acggg gattgtatta tccgcttcta ttttggatac tttnnnnnnn
-gatacttgat ttgtggtggc ccattttcat tatgtgt
->S001Cma_C._pseudofarionis_NO_Suohpatjávri*
+actattggtg gtgtgacggg gattgtatta tccgcttcta ttttggatac tttnnnnnnn
+gatacttgat ttgtggtggc ccattttcat tatgtgttgt ctctggggtc ttacaggact
+gttgttatct ctttgatttg gtggtggcct attataactg ggtttaggtt 
+>S002Cma_C._pseudofarionis_NO_Suohpatjávri*
 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnntaacta acaatgactc tctctttggt
 tacttgggtc ttatttttgc tatgggggcc attgtgtgcc tgggcagtgt ggtttgggcg
-catcatatgt ttatggtagg tttggatgta aagacagctg ttttttttag ttctgtcact
-atggtgattg gtattcctac gggcattaag gttttttctt ggctttgcat gctaagaggg
+catcatatgt ttatggtagg tttggatgta aagacagctg nnnnnnnnnn nnnnnnnnnn
+nnnnnnnnnn nnnnnnnnnn nnnnnntaag gttttttctt ggctttgcat gctaagaggg
 tcgcgtatgc gaggttgaga tcctattgtt tgatgaatta tagggtttat tgttcttttt
-actattggtg gtgt-acggg gattgtatta tccgcttcta ttttggatac tttnnnnnnn
-nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnn
->C.farionis_NO_Takvatn*
-gggtttggtg ttataagcca tatttgtatg gtattaacta acaatgattc tctttttggg
-tatttggggc ttatttttgc tatgggcgct attgtgtgct taggtagcgt ggtgtgagca
-catcatatgt ttatggtagg tttggatgtg aagacagctg ttttttttag ttccgtcacc
-atggtgatag gtattcctac gggcattaag gttttttctt ggctgtatat gttaaggggg
-tcgcgtatgc gaggttgaga tccgattgtt tggtgaattg taggatttat tgttcttttt
-actattggtg gtgt-acagg gattgtgtta tctgcttcta ttttagatac tttattacac
-gatacttggt ttgtggtagc tcattttcat tatgtgt
+actattggtg gtgtgacggg gattgtatta tccgcttcta ttttggatac tttnnnncat
+gatacctggt ttgtggtggc tcattttcat tacgtgttgt ccctggggtc ttacaggact
+gttgttattt ctttgatttg gtggtggcct attataactg ggtttaggtt 
 >LC215273_Allocreadium_gotoi
 gggtttggta ttataagaca tatttgcatg acccttacta ataaagattc tttgtttggt
 catttagggt tggtttttgc catgggggct attgtttgct tgggcagtgt tgtttgggcg
@@ -117,7 +122,8 @@ caccacatgt ttatggtggg tttggatgtt aagactgctg ttttttttag ttctgtcacc
 atggttattg gaattccaac aggtattaag gtgttttcct ggttgtatat gttgaggagc
 tctcgggtac gagggtggga tcctatagtt tggtggattg ttggatttat tgttttgttt
 actattgggg gtgtgacggg tattgtatta tctgcttcta ttttagatac gctgttgcat
-gatacctggt ttgtggtagc gcattttcat tatgttc
+gatacctggt ttgtggtagc gcattttcat tatgttctgt ccctgggctc ctatagtact
+gttgtgattt cggttatttg gtggtggccc atcatttctg gttatagttt 
 >MW729428_Allocreadium_khankaiensis
 ggttttgggg ttataagtca tatttgtatg accttaacta ataaagattc tttatttggt
 catttaggtc tcgtatttgc tatgggtgct attgtttgtt taggtagcgt tgtctgggcc
@@ -125,4 +131,5 @@ catcatatgt ttatggttgg tcttgatatt aagactgctg tattttttag ttctgttact
 atggtgatag gtattccgac ggggattaag gtgttttctt ggttgtatat gcttaggagt
 gctcgagttc gagggtgaga cccgattgtt tgatgaatag taggattcat tgtcttattt
 actatagggg gagttactgg tatagttctt tctgcctcta ttttggatac tttgctgcat
-gatacatggt ttgtagtggc tcattttcat tatgtgt
+gatacatggt ttgtagtggc tcattttcat tatgtgttat ctttgggctc ttatagtact
+gtggttatat ctgtgatttg gtggtggcct ataatttcgg gttataggtt 
