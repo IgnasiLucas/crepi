@@ -1,0 +1,26 @@
+accession	scientific_name
+KM538087	Crepidostomum isostomum
+MW729427	Crepidostomum metoecus
+KF250362	Crepidostomum auritum
+KF356376	Crepidostomum affine
+KF356381	Crepidostomum illinoiense
+MT214990	Crepidostomum metoecus
+MW729432	Crepidostomum auriculatum
+KF356385	Crepidostomum auritum
+KF356377	Crepidostomum affine
+KF356378	Crepidostomum illinoiense
+KF250365	Crepidostomum illinoiense
+KF250364	Crepidostomum illinoiense
+MW729433	Crepidostomum farionis
+MW729434	Crepidostomum farionis
+KF250361	Crepidostomum cornutum
+KF356380	Crepidostomum illinoiense
+MT214991	Crepidostomum metoecus
+MW729431	Crepidostomum auriculatum
+MW729425	Crepidostomum chaenogobii
+KF356384	Crepidostomum illinoiense
+KF250363	Crepidostomum affine
+KF356382	Crepidostomum illinoiense
+KF356375	Crepidostomum affine
+KF356379	Crepidostomum illinoiense
+KF356383	Crepidostomum illinoiense

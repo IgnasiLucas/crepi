@@ -1,0 +1,38 @@
+accession	scientific_name	host	country	tax_id
+MT230578	Crepidostomum farionis	Oncorhynchus masou	Japan:Hokkaido Island, Mamachi River (tributary	984080
+MT230579	Crepidostomum farionis	Oncorhynchus masou	Japan:Hokkaido Island, Mamachi River (tributary	984080
+MW368673	Crepidostomum farionis	Oncorhynchus masou	Russia:Primorsky region, Nadezhdinsky district,	984080
+MW368679	Crepidostomum farionis	Oncorhynchus masou	Russia:Sakhalin region, Tyoply Klyuch brook,	984080
+MT230580	Crepidostomum farionis	Oncorhynchus masou	Japan:Hokkaido Island, Mamachi River (tributary	984080
+MT217147	Crepidostomum farionis	Salvelinus leucomaenis	Russia:Sakhalin region, Belaya River (near the	984080
+MW368675	Crepidostomum farionis	Oncorhynchus masou	Russia:Primorsky region, Nadezhdinsky district,	984080
+MW368683	Crepidostomum farionis	Oncorhynchus masou	Russia:Sakhalin region, Tyoply Klyuch brook,	984080
+MW368688	Crepidostomum farionis	Oncorhynchus masou	Russia:Sakhalin region, Tyoply Klyuch brook,	984080
+MW368687	Crepidostomum farionis	Oncorhynchus masou	Russia:Sakhalin region, Tyoply Klyuch brook,	984080
+MW368680	Crepidostomum farionis	Salvelinus curilus	Russia:Sakhalin region, Tyoply Klyuch brook,	984080
+MW368677	Crepidostomum farionis	Oncorhynchus masou	Russia:Primorsky region, Terneysky district, Amgu	984080
+MW368682	Crepidostomum farionis	Oncorhynchus masou	Russia:Sakhalin region, Tyoply Klyuch brook,	984080
+MT230577	Crepidostomum farionis	Oncorhynchus masou	Japan:Hokkaido Island, Tawaramappu River	984080
+MT230581	Crepidostomum farionis	Oncorhynchus masou	Japan:Hokkaido Island, Mamachi River (tributary	984080
+MW368674	Crepidostomum farionis	Oncorhynchus masou	Russia:Primorsky region, Nadezhdinsky district,	984080
+MW368678	Crepidostomum farionis	Salvelinus leucomaenis	Russia:Sakhalin region, Belaya River (near the	984080
+MW368686	Crepidostomum farionis	Oncorhynchus masou	Russia:Sakhalin region, Tyoply Klyuch brook,	984080
+MT230576	Crepidostomum farionis	Oncorhynchus masou	Japan:Hokkaido Island, Tawaramappu River	984080
+MW368681	Crepidostomum farionis	Salvelinus curilus	Russia:Sakhalin region, Tyoply Klyuch brook,	984080
+MW368672	Crepidostomum farionis	Oncorhynchus masou	Russia:Primorsky region, Nadezhdinsky district,	984080
+MW368684	Crepidostomum farionis	Oncorhynchus masou	Russia:Sakhalin region, Tyoply Klyuch brook,	984080
+MW368685	Crepidostomum farionis	Oncorhynchus masou	Russia:Sakhalin region, Tyoply Klyuch brook,	984080
+MW368676	Crepidostomum farionis	Oncorhynchus masou	Russia:Primorsky region, Nadezhdinsky district,	984080
+FR821399	Crepidostomum farionis			984080
+FR821401	Crepidostomum farionis			984080
+KY513134	Crepidostomum farionis	Pisidium casertanum	Norway:Lake Takvatn	984080
+KY513136	Crepidostomum farionis	Sphaerium sp.	Norway:Lake Takvatn	984080
+KY513135	Crepidostomum farionis	Pisidium casertanum	Norway:Lake Takvatn	984080
+KY513139	Crepidostomum farionis	Pisidium casertanum	Norway:Lake Takvatn	984080
+FR821400	Crepidostomum farionis			984080
+FR821403	Crepidostomum farionis			984080
+KY513137	Crepidostomum farionis	Sphaerium sp.	Norway:Lake Takvatn	984080
+FR821402	Crepidostomum farionis			984080
+FR821404	Crepidostomum farionis			984080
+KY513138	Crepidostomum farionis	Pisidium casertanum	Norway:Lake Takvatn	984080
+OP580487	Crepidostomum pseudofarionis	Salvelinus alpinus	United Kingdom: Scotlant, Loch Rannoch	2710753

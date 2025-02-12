@@ -1,0 +1,74 @@
+
+
+processing file: README.Rmd
+running: bash  -c "
+if [ ! -e CrepiCoxENA.fa ]; then
+   if [ ! -e accessions.txt ]; then
+   ## COI
+      PORTAL=\"https://www.ebi.ac.uk/ena/portal/api/search?\"
+      RESULT=\"result=sequence&\"
+      QUERY=\"query=tax_tree(334452)%20AND%20description%3D%22coi%22&\"
+      FIELDS=\"fields=accession%2Cscientific_name&\"
+      FORMAT=\"format=tsv\"
+      curl -s \$PORTAL\$RESULT\$QUERY\$FIELDS\$FORMAT >> accessions.txt
+   ## COX1
+      PORTAL=\"https://www.ebi.ac.uk/ena/portal/api/search?\"
+      RESULT=\"result=sequence&\"
+      QUERY=\"query=tax_tree(334452)%20AND%20description%3D%22cox1%22&\"
+      FIELDS=\"fields=accession%2Cscientific_name&\"
+      FORMAT=\"format=tsv\"
+      curl -s \$PORTAL\$RESULT\$QUERY\$FIELDS\$FORMAT | tail -n +2 >> accessions.txt
+      # if I do Coi and Cox1 at the same time add this | tail -n +2 
+   fi
+   BROWSER=\"https://www.ebi.ac.uk/ena/browser/api/fasta/\"
+   cut -f 1 accessions.txt | tail -n +2 > accessions1.txt
+   ACCESSIONS=\$(gawk -v ORS=\",\" '{print}' accessions1.txt |  sed 's/.\$//' )
+   curl -s \$BROWSER\$ACCESSIONS > CrepiCoxENA.fa
+fi"
+running: bash  -c "ASSEMBLY=\"../2023-05-12/ABYSS_assembly/k90-kc2\"
+if [ ! -e Crepidostomum.ndb ]; then
+   makeblastdb -in \$ASSEMBLY/farionis-scaffolds.fa \\
+               -input_type 'fasta' \\
+               -title Crepidostomum \\
+               -out Crepidostomum \\
+               -dbtype 'nucl'
+fi
+
+if [ ! -e cox1_blastn.html ]; then
+   blastn -db Crepidostomum \\
+          -query cox1.queries.fasta \\
+          -out cox1_blastn.html \\
+          -evalue 20 \\
+          -html
+fi"
+running: bash  -c '#if [ ! -e lsrDNA.fasta ]; then
+   if [ ! -e SILVA_138.1_LSURef_NR99_tax_silva_trunc.fasta.gz ]; then
+      wget https://www.arb-silva.de/fileadmin/silva_databases/release_138.1/Exports/SILVA_138.1_LSURef_NR99_tax_silva_trunc.fasta.gz 2> /dev/null
+   fi
+#fi'
+running: bash  -c 'if [ ! -e lsrDNA_blastn.html ]; then
+   blastn -db Crepidostomum \
+          -query lsrDNA.fasta \
+          -out lsrDNA_blastn.html \
+          -evalue 10 \
+          -num_alignments 15 \
+          -html
+fi
+
+if [ ! -e lsrDNA_blastn.out ]; then
+   blastn -db Crepidostomum \
+          -query lsrDNA.fasta \
+          -out lsrDNA_blastn.out \
+          -outfmt "7 sseqid slen qstart qend sstart send evalue" \
+          -evalue 1
+fi'
+running: bash  -c "## Clean the horrible names of the \"contigs\", and necessary to load it in R 
+ASM=../2023-05-12/ABYSS_assembly/k90-kc2/farionis-scaffolds.fa
+awk '/^>/{gsub(\" .*\", \"\", \$0); print \$0; next} {gsub(\">\", \"\"); print \$0}' \$ASM > farionis-scaffolds-clean.fa"
+output file: README.knit.md
+
+Could not find bibliography file: ../../doc/references.bib
+Error running filter /usr/bin/pandoc-citeproc:
+Filter returned error status 1
+Error: pandoc document conversion failed with error 83
+Execution halted

@@ -1,0 +1,369 @@
+---
+title: "Crepi: Extraction of marker genes"
+author: "Mar Llaberia-Robledillo & J. Ignacio Lucas Lledó"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: TRUE
+bibliography: "../../doc/references.bib"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+Following @Bravec2023, we want to extract from ddRAD-seq FASTQ files all reads
+that map to either the *cox1* gene or the lsrDNA, which are important markers
+to discriminate flatworm species [@BlascoCosta2016].
+
+First, I need the genomic sequences of the *cox1* gene and the lsrDNA, from our
+*Crepidostomum* draft assembly. For that, I will turn the genome draft assembly
+into a BLAST database, and I will use the closest *cox1* and lsrDNA available in
+the databases as queries.
+
+The *lsrDNA* is the long subunit ribosomal RNA gene, also known as LSU rRNA gene.
+It is easier to find these sequences in the SILVA database than in the European
+Nucleotide Archive.
+
+The *cox1* gene is the cytochrome C oxidase subunit 1 gene, also known as COI.
+Isabel made us note that ENA and GenBank have some more *Crepidostomum* *cox1*
+sequences, including two from *C. farionis*, which could improve sensitivity.
+
+# COX1
+
+```{bash cox1Crepi}
+
+if [ ! -e CrepiCoxENA.fa ]; then
+   if [ ! -e accessions.txt ]; then
+   ## COI
+      PORTAL="https://www.ebi.ac.uk/ena/portal/api/search?"
+      RESULT="result=sequence&"
+      QUERY="query=tax_tree(334452)%20AND%20description%3D%22coi%22&"
+      FIELDS="fields=accession%2Cscientific_name&"
+      FORMAT="format=tsv"
+      curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT >> accessions.txt
+   ## COX1
+      PORTAL="https://www.ebi.ac.uk/ena/portal/api/search?"
+      RESULT="result=sequence&"
+      QUERY="query=tax_tree(334452)%20AND%20description%3D%22cox1%22&"
+      FIELDS="fields=accession%2Cscientific_name&"
+      FORMAT="format=tsv"
+      curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT | tail -n +2 >> accessions.txt
+      # if I do Coi and Cox1 at the same time add this | tail -n +2 
+   fi
+   BROWSER="https://www.ebi.ac.uk/ena/browser/api/fasta/"
+   cut -f 1 accessions.txt | tail -n +2 > accessions1.txt
+   ACCESSIONS=$(gawk -v ORS="," '{print}' accessions1.txt |  sed 's/.$//' )
+   curl -s $BROWSER$ACCESSIONS > CrepiCoxENA.fa
+fi
+```
+
+```{r alignment1, message=FALSE}
+library('DECIPHER')
+library('htmltools')
+cox1 <- c(readDNAStringSet('CrepiCoxENA.fa'))
+
+# Flatworm mitochondrial code is table 9.
+cox1.ali1 <- AlignTranslation(cox1, type = 'AAStringSet',
+                              geneticCode = getGeneticCode('9'),
+                              verbose = FALSE)
+BrowseSeqs(cox1.ali1, htmlFile = 'cox1.ali1.html')
+includeHTML('cox1.ali1.html')
+z <- file.remove('cox1.ali1.html')
+```
+
+I realize most sequences are much shorter than a few longer ones. I keep 8 sequences, 
+the largest ones. After checking that all translations would be the same frame, 
+I use `AlignTranslation()` to make sure I am aligning codons.
+
+```{r alignment2, warning=FALSE, eval = FALSE}
+cox1 <- cox1[cox1@ranges@width > 600]
+cox1.ali2 <- AlignTranslation(cox1, type = 'DNAStringSet',
+                              geneticCode = getGeneticCode('9'),
+                              verbose = FALSE)
+# Shortening names
+ena <- startsWith(names(cox1.ali2), 'ENA')
+names(cox1.ali2)[! ena] <- sapply(strsplit(names(cox1.ali2)[! ena], "[\\|_]"),
+                                  function(x) paste0('C.', x[[3]], '_', x[[1]]))
+names(cox1.ali2)[  ena] <- sapply(strsplit(names(cox1.ali2)[  ena], "[\\| ]"),
+                                  function(x) paste0('C.', x[[5]], '_', x[[2]]))
+BrowseSeqs(cox1.ali2, htmlFile = 'cox1.ali2.html')
+includeHTML('cox1.ali2.html')
+z <- file.remove('cox1.ali2.html')
+
+Queries <- DNAStringSet(gsub('-', '', cox1.ali2))
+writeXStringSet(c(unique(Queries), readDNAStringSet("../../data/SeqCox1_Crepido_spp_Kristine.fas"), readDNAStringSet("../../data/SeqCox1_Crepido_spp_Isabel.fa")), filepath = 'cox1.queries.fasta')
+
+library(ape)
+cox1.ali3 <- as.DNAbin(unique(cox1.ali2))
+cox1.dist <- dist.dna(cox1.ali3)
+cox1.tree <- nj(cox1.dist)
+plot(root(cox1.tree,
+          outgroup = cox1.tree$tip.label[startsWith(cox1.tree$tip.label, 'C.illinoiense')]),
+     font = 1)
+```
+
+## BLASTN
+I created a consensus DNA sequence among all known *Crepidostomum* *cox1*
+genes, to use it as a query in a BLASTN search againt the assembly. I also
+extracted the *C. farionis* cox1 sequence to a FASTA file.
+
+```{bash balstn}
+ASSEMBLY="../2023-05-12/ABYSS_assembly/k90-kc2"
+if [ ! -e Crepidostomum.ndb ]; then
+   makeblastdb -in $ASSEMBLY/farionis-scaffolds.fa \
+               -input_type 'fasta' \
+               -title Crepidostomum \
+               -out Crepidostomum \
+               -dbtype 'nucl'
+fi
+
+if [ ! -e cox1_blastn.html ]; then
+   blastn -db Crepidostomum \
+          -query cox1.queries.fasta \
+          -out cox1_blastn.html \
+          -evalue 30 \
+          -html
+fi
+
+if [ ! -e cox1_blastn.out ]; then
+   blastn -db Crepidostomum \
+          -query cox1.queries.fasta \
+          -out cox1_blastn.out \
+          -outfmt "7 qseqid sseqid slen qstart qend sstart send evalue" \
+          -evalue 1
+fi
+```
+
+```{r blastnout}
+library(kableExtra)
+#includeHTML('cox1_blastn.html')
+blastn <- read.table('cox1_blastn.out',
+                     col.names = c('qseqid', 'sseqid', 'slen', 'qstart', 'qend', 'sstart', 'send', 'evalue'))
+blastn <- blastn[order(blastn$qstart),]
+kable(blastn) %>% kable_styling()
+```
+
+Because BLASTN is not as sensitive as TBLASTN, the only query that reports
+a hit along the whole sequence is that from *C. farionis*.
+
+Curiously, we find 2 contigs that encode homologs of the COX1 protein, both
+of approximately 14000 bases. This suggests we have two alternative mitochondrial
+assemblies. Let's compare them.
+
+## Extraction COI of the draft genome
+
+```{bash}
+## Clean the horrible names of the "contigs", and necessary to load it in R 
+ASM=../2023-05-12/ABYSS_assembly/k90-kc2/farionis-scaffolds.fa
+if [ ! -e farionis-scaffolds-clean.fa ]; then
+  awk '/^>/{gsub(" .*", "", $0); print $0; next} {gsub(">", ""); print $0}' $ASM > farionis-scaffolds-clean.fa
+fi
+```
+
+
+```{r cox1ref}
+assembly <- readDNAStringSet("farionis-scaffolds-clean.fa")
+
+Cox1Ref <- DNAStringSet(
+  paste0(subseq(assembly['11399550'], 1, 179),
+         subseq(assembly['6181713'], 13, 179), 
+         subseq(assembly['15515475'], 66, 173),
+         subseq(assembly['9054047'], 5, 179),
+         subseq(assembly['15800549'], 18, 152),
+         subseq(assembly['451844'], 1, 131),
+         subseq(assembly['14625016'], 88, 126)
+    )
+)
+
+names(Cox1Ref) <- 'Cox1'
+writeXStringSet(Cox1Ref, 'Cox1Ref.fa', append = FALSE, format = 'fasta')
+writeXStringSet(Cox1Ref, 'markersRef.fa', append = FALSE, format = 'fasta')
+```
+
+# LSU rRNA
+I know, it didn't need to download the whole SILVA database to get only a few
+sequences, but it's done.
+
+```{bash silva}
+#if [ ! -e lsrDNA.fasta ]; then
+   if [ ! -e SILVA_138.1_LSURef_NR99_tax_silva_trunc.fasta.gz ]; then
+      wget https://www.arb-silva.de/fileadmin/silva_databases/release_138.1/Exports/SILVA_138.1_LSURef_NR99_tax_silva_trunc.fasta.gz 2> /dev/null
+   fi
+#fi
+```
+
+The SILVA database produces a lsrDNA a bit different for those of
+GenBank for the Crepidostomum species, so I'm going to use as 
+query oonly the sequences of *C.farionis* and *C.pseudofarionis* from 
+GenBank (ENA)
+```{r lsrTrematoda, message=FALSE, eval=FALSE}
+SILVA <- 'SILVA_138.1_LSURef_NR99_tax_silva_trunc.fasta.gz'
+silva <- readRNAStringSet(SILVA)
+# Plagiorchiida is the order to which Crepidistomum belongs.
+Plagiorchiida <- silva[grep('Plagiorchiida', names(silva))]
+# I build a consensus to simplify BLAST results
+Plagiorchiida <- DNAStringSet(Plagiorchiida)
+writeXStringSet(Plagiorchiida, 'lsrDNA.fasta')
+z <- file.remove('SILVA_138.1_LSURef_NR99_tax_silva_trunc.fasta.gz')
+```
+
+```{bash}
+## Sequences of farionis and pseudofarionis from GenBank
+if [ ! -d Genbank ]; then mkdir Genbank; fi
+if [ ! -e Genbank/INFO_28S_accessions.txt ]; then
+   # farionis
+   ## large subunit ribosomal
+      PORTAL="https://www.ebi.ac.uk/ena/portal/api/search?"
+      RESULT="result=sequence&"
+      QUERY="query=tax_tree(984080)%20AND%20description%3D%22large%20subunit%20ribosomal%20%22&"
+      FIELDS="fields=accession%2Cscientific_name%2Chost%2Ccountry%2Ctax_id&"
+      FORMAT="format=tsv"
+      curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT >> Genbank/INFO_28S_accessions.txt
+   ## 28S
+      PORTAL="https://www.ebi.ac.uk/ena/portal/api/search?"
+      RESULT="result=sequence&"
+      QUERY="query=tax_tree(984080)%20AND%20description%3D%2228S%22&"
+      FIELDS="fields=accession%2Cscientific_name%2Chost%2Ccountry%2Ctax_id&"
+      FORMAT="format=tsv"
+      curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT | tail -n +2 >> Genbank/INFO_28S_accessions.txt
+   # pseudofarionis
+   ## large subunit ribosomal
+      PORTAL="https://www.ebi.ac.uk/ena/portal/api/search?"
+      RESULT="result=sequence&"
+      QUERY="query=tax_tree(2710753)%20AND%20description%3D%22large%20subunit%20ribosomal%20%22&"
+      FIELDS="fields=accession%2Cscientific_name%2Chost%2Ccountry%2Ctax_id&"
+      FORMAT="format=tsv"
+      curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT | tail -n +2 >> Genbank/INFO_28S_accessions.txt
+   ## 28S
+      PORTAL="https://www.ebi.ac.uk/ena/portal/api/search?"
+      RESULT="result=sequence&"
+      QUERY="query=tax_tree(2710753)%20AND%20description%3D%2228S%22&"
+      FIELDS="fields=accession%2Cscientific_name%2Chost%2Ccountry%2Ctax_id&"
+      FORMAT="format=tsv"
+      curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT | tail -n +2 >> Genbank/INFO_28S_accessions.txt
+      # if I do Coi and Cox1 at the same time add this | tail -n +2 
+   fi
+   BROWSER="https://www.ebi.ac.uk/ena/browser/api/fasta/"
+   cut -f 1 Genbank/INFO_28S_accessions.txt | tail -n +2 > Genbank/accessions_28S.txt
+   ACCESSIONS=$(gawk -v ORS="," '{print}' Genbank/accessions_28S.txt |  sed 's/.$//' )
+   curl -s $BROWSER$ACCESSIONS > Genbank/Crepi28S_REFS.fa
+
+
+```
+
+## BLASTN
+
+```{bash blastn2}
+if [ ! -e lsrDNA_blastn.html ]; then
+   blastn -db Crepidostomum \
+          -query Genbank/Crepi28S_REFS.fa \
+          -out lsrDNA_blastn.html \
+          -evalue 10 \
+          -num_alignments 15 \
+          -html
+fi
+
+if [ ! -e lsrDNA_blastn.out ]; then
+   blastn -db Crepidostomum \
+          -query Genbank/Crepi28S_REFS.fa \
+          -out lsrDNA_blastn.out \
+          -outfmt "7 qseqid sseqid slen qstart qend sstart send evalue" \
+          -evalue 1
+fi
+```
+
+```{r blastn2out}
+library(kableExtra)
+includeHTML('lsrDNA_blastn.html')
+blastn <- read.table('lsrDNA_blastn.out',
+                     col.names = c('qseqid', 'sseqid', 'slen', 'qstart', 'qend', 'sstart', 'send', 'evalue'))
+blastn <- blastn[order(blastn$qstart),]
+kable(blastn) %>% kable_styling()
+```
+
+Homology to lsrDNA is distributed among several contigs. It is not surprising that
+ribosomal DNA didn't get assembled correctly, because it is highly repetitive. I
+assume different copies undergo concerted evolution [@DeLuca2021] and are similar
+enough to put the pieces together.
+
+```{bash}
+## Clean the horrible names of the "contigs", and necessary to load it in R 
+ASM=../2023-05-12/ABYSS_assembly/k90-kc2/farionis-scaffolds.fa
+if [ ! -e farionis-scaffolds-clean.fa ]; then
+  awk '/^>/{gsub(" .*", "", $0); print $0; next} {gsub(">", ""); print $0}' $ASM > farionis-scaffolds-clean.fa
+fi
+```
+
+
+```{r pasteSyn, eval=FALSE}
+assembly <- readDNAStringSet("farionis-scaffolds-clean.fa")
+
+BrowseSeqs(subseq(assembly["18044708"]))
+BrowseSeqs(subseq(assembly["18195207"]))
+
+lsrDNARef <- DNAStringSet(
+  paste0(subseq(assembly['18044708'], 1827, 4681),
+     reverseComplement(subseq(assembly['18195207'], 2954, 3954))
+    )
+)
+
+names(lsrDNARef) <- 'Synthetic_lsrDNA_ref'
+BrowseSeqs(AlignSeqs(c(lsrDNARef, readDNAStringSet("Genbank/Crepi28S_REFS.fa"))))
+
+writeXStringSet(lsrDNARef, 'Syn_lsrDNARef.fa', append = TRUE)
+#writeXStringSet(lsrDNARef, 'markers.fa', append = TRUE)
+```
+
+```{r paste}
+assembly <- readDNAStringSet("farionis-scaffolds-clean.fa")
+GB <- readDNAStringSet("Genbank/Crepi28S_REFS.fa")
+#lsrDNARef <- DNAStringSet(paste0(subseq(assembly['18044708'], 1935, 3472))) ## pseduo
+
+lsrDNARef1 <- DNAStringSet(paste0(subseq(assembly['18044708'], 1830, 3205))) ## far
+lsrDNARef2 <- DNAStringSet(paste0(subseq(assembly['18192530'], 4068, 5428))) ## far
+lsrDNARef3 <- DNAStringSet(paste0(subseq(assembly['18096606'], 7047, 8405))) ## far
+lsrDNARef4 <- DNAStringSet(paste0(reverseComplement(subseq(assembly['17772478'], 3147, 4409)))) ## far
+lsrDNARef5 <- DNAStringSet(paste0(reverseComplement(subseq(assembly['18016522'], 710, 2082)))) ## far
+lsrDNARef6 <- DNAStringSet(paste0(reverseComplement(subseq(assembly['4240400'], 1, 894)))) ## far
+
+#lsrDNARef6 <- DNAStringSet(paste0(subseq(assembly['16124017'], 137, 691))) ## far
+#lsrDNARef7 <- DNAStringSet(paste0(subseq(assembly['18096606'], 7047, 8405))) ## far
+
+
+
+lsrDNARef6 <- DNAStringSet(paste0(subseq(assembly['18192530'], 4234, 5366))) ## far
+
+lsrDNARef_far <- c(lsrDNARef1,lsrDNARef2,lsrDNARef3,lsrDNARef4,lsrDNARef5,lsrDNARef6)
+
+lsrDNA2 <- c(lsrDNARef_far, GB[c(1,37)])
+
+names(lsrDNARef) <- 'lsrDNARef_ASM'
+BrowseSeqs(AlignSeqs(c(lsrDNARef, readDNAStringSet("Genbank/Crepi28S_REFS.fa"))))
+
+writeXStringSet(lsrDNARef2, '../2024-01-20/lsrDNA_RefGen2.fa')
+#writeXStringSet(lsrDNARef, 'markers.fa', append = TRUE)
+```
+
+# Conclusions
+Keep in mind the COI is the result of my own manually pasting together 
+the pieces from diffrent contigs. Again, reads mapping to the joints 
+would confirm the reconstruction is correct. Good luck.
+
+At the end, we have two sequences for lsrDNA. One make by all the SILVA
+database, Syn_lsrDNARef.fa, and the other only with the lsrDNA from 
+Crepidostomum farionis and pseudofarionis specimens. 
+The Syn_lsrDNARef.fa will be used for the mapping of our all samples, 
+while the lsrDNARef.fa will be used for the phylogenetic reconstruction. 
+This is an approach to obtain all the bases we can in the alignment and 
+consensus steps for the samples. 
+
+# Session information
+
+```{r sessioninfo}
+sessionInfo()
+```
+
+# Bibliography
