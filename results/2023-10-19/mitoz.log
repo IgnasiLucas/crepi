@@ -1,0 +1,146 @@
+
+2024-10-02 14:42:24,138 - mitoz.utility.utility - INFO - 
+Found: /opt/mitoz3.6/bin/spades.py
+
+2024-10-02 14:42:24,138 - mitoz.utility.utility - INFO - 
+Found: /opt/mitoz3.6/bin/megahit
+
+2024-10-02 14:42:24,138 - mitoz.utility.utility - INFO - 
+all.main() got args:
+Namespace(assembler='megahit', clade='Nematoda', data_size_for_mt_assembly='2,0', debug=False, fastq_read_length='150', filter_by_taxa=True, filter_other_para='', fq1='../2023-05-12/NANO/assembly.fasta', fq2=None, func=<function main at 0x7f0758b84160>, genetic_code='5', insert_size='250', kmers=[71], kmers_megahit=['99', '119', '141'], kmers_spades=['auto'], logger=<Logger mitoz.utility.utility (DEBUG)>, memory='50', min_abundance='10', outprefix='mito_pseudo', phred64=False, profiles_dir='/nata/mar/crepidostomum2/results/2023-10-19/mitoz_custom_db/profiles', requiring_relax='0', requiring_taxa='Nematoda', resume_assembly=False, skip_filter=True, slow_search=False, species_name='Test sp.', template_sbt='/opt/mitoz3.6/lib/python3.8/site-packages/mitoz/annotate/script/template.sbt', thread_number='24', tmp_dir=None, workdir='./')
+
+2024-10-02 14:42:24,139 - mitoz.utility.utility - INFO - 
+all.main() got updated args:
+Namespace(assembler='megahit', clade='Nematoda', data_size_for_mt_assembly='2,0', debug=False, fastq_read_length='150', filter_by_taxa=True, filter_other_para='', fq1='/nata/mar/crepidostomum2/results/2023-05-12/NANO/assembly.fasta', fq2='', func=<function main at 0x7f0758b84160>, genetic_code='5', insert_size='250', kmers=[71], kmers_megahit=['99', '119', '141'], kmers_spades=['auto'], logger=<Logger mitoz.utility.utility (DEBUG)>, memory='50', min_abundance='10', outprefix='mito_pseudo', phred64=False, profiles_dir='/nata/mar/crepidostomum2/results/2023-10-19/mitoz_custom_db/profiles', requiring_relax='0', requiring_taxa='Nematoda', resume_assembly=False, skip_filter=True, slow_search=False, species_name='Test sp.', template_sbt='/opt/mitoz3.6/lib/python3.8/site-packages/mitoz/annotate/script/template.sbt', thread_number='24', tmp_dir=None, workdir='/nata/mar/crepidostomum2/results/2023-10-19')
+
+2024-10-02 14:42:24,139 - mitoz.utility.utility - INFO - 
+assemble.main() got args:
+{'logger': <Logger mitoz.utility.utility (DEBUG)>, 'workdir': '/nata/mar/crepidostomum2/results/2023-10-19/mt_assembly', 'outprefix': 'mito_pseudo', 'thread_number': '24', 'fq1': '/nata/mar/crepidostomum2/results/2023-05-12/NANO/assembly.fasta', 'fq2': '', 'insert_size': '250', 'fastq_read_length': '150', 'assembler': 'megahit', 'tmp_dir': None, 'kmers': [71], 'kmers_megahit': ['99', '119', '141'], 'kmers_spades': ['auto'], 'memory': '50', 'resume_assembly': False, 'profiles_dir': '/nata/mar/crepidostomum2/results/2023-10-19/mitoz_custom_db/profiles', 'slow_search': False, 'filter_by_taxa': True, 'requiring_taxa': 'Nematoda', 'requiring_relax': '0', 'abundance_pattern': 'abun\\=([0-9]+\\.*[0-9]*)', 'min_abundance': '10', 'genetic_code': '5', 'clade': 'Nematoda', 'skip_read_mapping': True}
+
+2024-10-02 14:42:24,139 - mitoz.utility.utility - INFO - 
+assemble.main() got updated args:
+{'logger': <Logger mitoz.utility.utility (DEBUG)>, 'workdir': '/nata/mar/crepidostomum2/results/2023-10-19/mt_assembly', 'outprefix': 'mito_pseudo', 'thread_number': '24', 'fq1': '/nata/mar/crepidostomum2/results/2023-05-12/NANO/assembly.fasta', 'fq2': '', 'insert_size': '250', 'fastq_read_length': '150', 'assembler': 'megahit', 'tmp_dir': None, 'kmers': [71], 'kmers_megahit': ['99', '119', '141'], 'kmers_spades': ['auto'], 'memory': '50', 'resume_assembly': False, 'profiles_dir': '/nata/mar/crepidostomum2/results/2023-10-19/mitoz_custom_db/profiles', 'slow_search': False, 'filter_by_taxa': True, 'requiring_taxa': 'Nematoda', 'requiring_relax': '0', 'abundance_pattern': 'abun\\=([0-9]+\\.*[0-9]*)', 'min_abundance': '10', 'genetic_code': '5', 'clade': 'Nematoda', 'skip_read_mapping': True}
+
+2024-10-02 14:42:24,139 - mitoz.utility.utility - INFO - 
+assemble.main() got
+fq1: /nata/mar/crepidostomum2/results/2023-05-12/NANO/assembly.fasta
+fq2: 
+
+2024-10-02 14:42:24,139 - mitoz.utility.utility - INFO - 
+assemble.main() working in /nata/mar/crepidostomum2/results/2023-10-19/mt_assembly
+
+2024-10-02 14:42:24,139 - mitoz.utility.utility - INFO - 
+use_megahit() workdir: /nata/mar/crepidostomum2/results/2023-10-19/mt_assembly
+
+2024-10-02 14:42:24,139 - mitoz.utility.utility - INFO - 
+use_megahit() creating: /nata/mar/crepidostomum2/results/2023-10-19/mt_assembly/megahit
+
+2024-10-02 14:42:24,140 - mitoz.utility.utility - INFO - 
+use_megahit() expected assembly_file: /nata/mar/crepidostomum2/results/2023-10-19/mt_assembly/megahit/megahit_out/final.contigs.fa
+
+2024-10-02 14:42:24,140 - mitoz.utility.utility - INFO - 
+megahit  --out-dir ./megahit_out  --num-cpu-threads 24 --k-list 99,119,141 --memory 500000000000.0 --read /nata/mar/crepidostomum2/results/2023-05-12/NANO/assembly.fasta
+
+2024-10-02 14:46:22,581 - mitoz.utility.utility - INFO - 
+/opt/mitoz3.6/bin/python3.8 /opt/mitoz3.6/lib/python3.8/site-packages/mitoz/assemble/script/megahit/reformat_megahit_scafSeq.py /nata/mar/crepidostomum2/results/2023-10-19/mt_assembly/megahit/megahit_out/final.contigs.fa  /nata/mar/crepidostomum2/results/2023-10-19/mt_assembly/megahit/megahit_out/final.contigs.fa.reformatted.fa 
+
+2024-10-02 14:46:22,869 - mitoz.utility.utility - INFO - 
+findmitoscaf.main() got args:
+{'logger': <Logger mitoz.utility.utility (DEBUG)>, 'workdir': '/nata/mar/crepidostomum2/results/2023-10-19/mt_assembly', 'outprefix': 'mito_pseudo.megahit', 'thread_number': '24', 'fq1': '/nata/mar/crepidostomum2/results/2023-05-12/NANO/assembly.fasta', 'fq2': '', 'insert_size': '250', 'fastq_read_length': '150', 'assembler': 'megahit', 'tmp_dir': None, 'kmers': [71], 'kmers_megahit': ['99', '119', '141'], 'kmers_spades': ['auto'], 'memory': '50', 'resume_assembly': False, 'profiles_dir': '/nata/mar/crepidostomum2/results/2023-10-19/mitoz_custom_db/profiles', 'slow_search': False, 'filter_by_taxa': True, 'requiring_taxa': 'Nematoda', 'requiring_relax': '0', 'abundance_pattern': 'abun\\=([0-9]+\\.*[0-9]*)', 'min_abundance': '10', 'genetic_code': '5', 'clade': 'Nematoda', 'skip_read_mapping': True, 'fastafile': '/nata/mar/crepidostomum2/results/2023-10-19/mt_assembly/megahit/megahit_out/final.contigs.fa.reformatted.fa'}
+
+2024-10-02 14:46:22,870 - mitoz.utility.utility - INFO - 
+findmitoscaf.main() got updated args:
+{'logger': <Logger mitoz.utility.utility (DEBUG)>, 'workdir': '/nata/mar/crepidostomum2/results/2023-10-19/mt_assembly', 'outprefix': 'mito_pseudo.megahit', 'thread_number': '24', 'fq1': '/nata/mar/crepidostomum2/results/2023-05-12/NANO/assembly.fasta', 'fq2': '', 'insert_size': '250', 'fastq_read_length': '150', 'assembler': 'megahit', 'tmp_dir': None, 'kmers': [71], 'kmers_megahit': ['99', '119', '141'], 'kmers_spades': ['auto'], 'memory': '50', 'resume_assembly': False, 'profiles_dir': '/nata/mar/crepidostomum2/results/2023-10-19/mitoz_custom_db/profiles', 'slow_search': False, 'filter_by_taxa': True, 'requiring_taxa': 'Nematoda', 'requiring_relax': '0', 'abundance_pattern': 'abun\\=([0-9]+\\.*[0-9]*)', 'min_abundance': '10', 'genetic_code': '5', 'clade': 'Nematoda', 'skip_read_mapping': True, 'fastafile': '/nata/mar/crepidostomum2/results/2023-10-19/mt_assembly/megahit/megahit_out/final.contigs.fa.reformatted.fa'}
+
+2024-10-02 14:46:22,870 - mitoz.utility.utility - INFO - 
+findmitoscaf.main() nhmmer_profile:
+/nata/mar/crepidostomum2/results/2023-10-19/mitoz_custom_db/profiles/CDS_HMM/Nematoda_CDS.hmm
+
+2024-10-02 14:46:22,870 - mitoz.utility.utility - INFO - 
+findmitoscaf.main() defined_gene_length_f:
+/nata/mar/crepidostomum2/results/2023-10-19/mitoz_custom_db/profiles/CDS_HMM/Nematoda_CDS_length_list
+
+2024-10-02 14:46:22,870 - mitoz.utility.utility - INFO - 
+findmitoscaf.main() MT_annotation_BGI_pro_db:
+/nata/mar/crepidostomum2/results/2023-10-19/mitoz_custom_db/profiles/MT_database/Animal_CDS_protein.fa
+
+2024-10-02 14:46:22,870 - mitoz.utility.utility - INFO - 
+findmitoscaf.main() workdir:
+/nata/mar/crepidostomum2/results/2023-10-19/mt_assembly
+
+2024-10-02 14:46:22,870 - mitoz.utility.utility - INFO - 
+findmitoscaf.main() result_wdir:
+/nata/mar/crepidostomum2/results/2023-10-19/mt_assembly/mito_pseudo.megahit.result
+
+2024-10-02 14:46:22,870 - mitoz.utility.utility - INFO - 
+findmitoscaf.main() got assembly_file:
+/nata/mar/crepidostomum2/results/2023-10-19/mt_assembly/megahit/megahit_out/final.contigs.fa.reformatted.fa
+
+2024-10-02 14:46:22,871 - mitoz.utility.utility - INFO - 
+findmitoscaf.main() got
+fq1: /nata/mar/crepidostomum2/results/2023-05-12/NANO/assembly.fasta
+fq2: 
+
+2024-10-02 14:46:22,871 - mitoz.utility.utility - INFO - 
+We will skip read-mapping during findmitoscaf().
+
+2024-10-02 14:46:22,871 - mitoz.utility.utility - INFO - 
+tiara mt_expected_result_file: mitochondrion_final.contigs.fa.reformatted.fa
+
+2024-10-02 14:46:22,871 - mitoz.utility.utility - INFO - 
+tiara --input /nata/mar/crepidostomum2/results/2023-10-19/mt_assembly/megahit/megahit_out/final.contigs.fa.reformatted.fa --output mito_pseudo.megahit.tiara.out.txt  --to_fasta mit pla pro --threads 24  --prob_cutoff 0.65 0.60 --probabilities --min_len 1000
+
+2024-10-02 14:46:51,787 - mitoz.utility.utility - INFO - 
+nhmmer -o mito_pseudo.megahit.hmmout --tblout mito_pseudo.megahit.hmmtblout --cpu 24 /nata/mar/crepidostomum2/results/2023-10-19/mitoz_custom_db/profiles/CDS_HMM/Nematoda_CDS.hmm mitochondrion_final.contigs.fa.reformatted.fa
+
+2024-10-02 14:46:52,462 - mitoz.utility.utility - INFO - 
+/opt/mitoz3.6/bin/python3.8 /opt/mitoz3.6/lib/python3.8/site-packages/mitoz/findmitoscaf/script/get_besthit_of_each_CDS_from_nhmmer.py mito_pseudo.megahit.hmmtblout mito_pseudo.megahit.hmmtblout.besthit
+
+2024-10-02 14:46:52,496 - mitoz.utility.utility - INFO - 
+/opt/mitoz3.6/bin/python3.8 /opt/mitoz3.6/lib/python3.8/site-packages/mitoz/findmitoscaf/script/simlify_nhmmer_tbl_besthit.py mito_pseudo.megahit.hmmtblout.besthit mito_pseudo.megahit.hmmtblout.besthit.sim
+
+2024-10-02 14:46:52,525 - mitoz.utility.utility - INFO - 
+/opt/mitoz3.6/bin/python3.8 /opt/mitoz3.6/lib/python3.8/site-packages/mitoz/findmitoscaf/script/extract_fasta.py -i mitochondrion_final.contigs.fa.reformatted.fa -q mito_pseudo.megahit.hmmtblout.besthit.sim -o mito_pseudo.megahit.hmmtblout.besthit.sim.fa
+
+2024-10-02 14:46:52,577 - mitoz.utility.utility - INFO - 
+filter_by_nhmmer() return:
+mitochondrion_final.contigs.fa.reformatted.fa, mito_pseudo.megahit.hmmtblout.besthit.sim, mito_pseudo.megahit.hmmtblout.besthit.sim.fa
+
+2024-10-02 14:46:52,587 - mitoz.utility.utility - INFO - 
+/opt/mitoz3.6/bin/python3.8 /opt/mitoz3.6/lib/python3.8/site-packages/mitoz/findmitoscaf/script/filter_taxonomy_by_CDS_annotation.py -fa mito_pseudo.megahit.hmmtblout.besthit.sim.fa -MTsoft /opt/mitoz3.6/lib/python3.8/site-packages/mitoz/annotate/script/MT_annotation_BGI_V1.32/MT_annotation_BGI.pl -db /nata/mar/crepidostomum2/results/2023-10-19/mitoz_custom_db/profiles/MT_database/Animal_CDS_protein.fa -thread 24 -genetic_code 5 -requiring_taxa 'Nematoda' -relax 0 -WISECONFIGDIR /opt/mitoz3.6/share/wise2/wisecfg -outf mito_pseudo.megahit.hmmtblout.besthit.sim.filtered-by-taxa.fa
+
+2024-10-02 14:47:05,009 - mitoz.utility.utility - ERROR - 
+Error occured when running command:
+/opt/mitoz3.6/bin/python3.8 /opt/mitoz3.6/lib/python3.8/site-packages/mitoz/findmitoscaf/script/filter_taxonomy_by_CDS_annotation.py -fa mito_pseudo.megahit.hmmtblout.besthit.sim.fa -MTsoft /opt/mitoz3.6/lib/python3.8/site-packages/mitoz/annotate/script/MT_annotation_BGI_V1.32/MT_annotation_BGI.pl -db /nata/mar/crepidostomum2/results/2023-10-19/mitoz_custom_db/profiles/MT_database/Animal_CDS_protein.fa -thread 24 -genetic_code 5 -requiring_taxa 'Nematoda' -relax 0 -WISECONFIGDIR /opt/mitoz3.6/share/wise2/wisecfg -outf mito_pseudo.megahit.hmmtblout.besthit.sim.filtered-by-taxa.fa
+
+
+2024-10-02 14:47:05,010 - mitoz.utility.utility - INFO - 
+/opt/mitoz3.6/bin/python3.8 /opt/mitoz3.6/lib/python3.8/site-packages/mitoz/findmitoscaf/script/filter_hmm-besthit-sim.py mito_pseudo.megahit.hmmtblout.besthit.sim.filtered-by-taxa.fa mito_pseudo.megahit.hmmtblout.besthit.sim mito_pseudo.megahit.hmmtblout.besthit.sim.filtered-by-taxa
+
+2024-10-02 14:47:05,042 - mitoz.utility.utility - ERROR - 
+Error occured when running command:
+/opt/mitoz3.6/bin/python3.8 /opt/mitoz3.6/lib/python3.8/site-packages/mitoz/findmitoscaf/script/filter_hmm-besthit-sim.py mito_pseudo.megahit.hmmtblout.besthit.sim.filtered-by-taxa.fa mito_pseudo.megahit.hmmtblout.besthit.sim mito_pseudo.megahit.hmmtblout.besthit.sim.filtered-by-taxa
+
+
+2024-10-02 14:47:05,043 - mitoz.utility.utility - INFO - 
+do_filter_by_taxa() return:
+hmm_outf_tbl_besthit_sim_filtered_by_taxa:mito_pseudo.megahit.hmmtblout.besthit.sim.filtered-by-taxa
+hmm_besthit_filtered_by_taxa_fa: mito_pseudo.megahit.hmmtblout.besthit.sim.filtered-by-taxa.fa
+
+2024-10-02 14:47:05,043 - mitoz.utility.utility - INFO - 
+/opt/mitoz3.6/bin/python3.8 /opt/mitoz3.6/lib/python3.8/site-packages/mitoz/findmitoscaf/script/filter_by_abundance.py 'abun\=([0-9]+\.*[0-9]*)'  10  mito_pseudo.megahit.hmmtblout.besthit.sim.filtered-by-taxa  mito_pseudo.megahit.hmmtblout.besthit.sim.filtered-by-taxa.fa 
+
+2024-10-02 14:47:05,313 - mitoz.utility.utility - ERROR - 
+Error occured when running command:
+/opt/mitoz3.6/bin/python3.8 /opt/mitoz3.6/lib/python3.8/site-packages/mitoz/findmitoscaf/script/filter_by_abundance.py 'abun\=([0-9]+\.*[0-9]*)'  10  mito_pseudo.megahit.hmmtblout.besthit.sim.filtered-by-taxa  mito_pseudo.megahit.hmmtblout.besthit.sim.filtered-by-taxa.fa 
+
+
+2024-10-02 14:47:05,315 - mitoz.utility.utility - INFO - 
+gather_result() creating: /nata/mar/crepidostomum2/results/2023-10-19/mt_assembly/mito_pseudo.megahit.result
+
+2024-10-02 14:47:05,316 - mitoz.utility.utility - INFO - 
+cp -r mito_pseudo.megahit.hmmtblout.besthit.sim.filtered-by-taxa.low_abundance /nata/mar/crepidostomum2/results/2023-10-19/mt_assembly/mito_pseudo.megahit.result
+
+2024-10-02 14:47:05,330 - mitoz.utility.utility - WARNING - 
+filter_by_abundance():
+All sequences are low abundance (<10X)
