@@ -178,17 +178,23 @@ Ipyrad was run in Garnatxa with different clustering thresholds, between
 # 2023-05-17
 This is the `ipyrad` run to demultiplex the FASTQ files.
 
-# 2023-05-12b
-[Note: this folder depends on previous folder `2023-04-19`, which is not in the
-current repository!]
-This seems to be a new hybrid assembly, after deciding that, after all, the two
-presumed species may actually be the same one. 
-
 # 2023-05-12
-This is the attempt to assemble the reference genome of *Crepidostomum farionis*.
-After realizing the Nanopore data came from *C. pseudofarionis*,
-Mar had to repeat the assembly with only Illumina and PacBio data.
+Assembly of the reference genome using all available reads, despite of
+the fact that different data types (PacBio, NanoPore, Illumina) come from
+different individuals, and not all from the same lineage. In previous versions
+of this folder, a separate assembly was attempted for the two linages known
+to exist, because they have been described in the literature as two different
+species. Namely, *Crepidostomum farionis* and *C. pseudofarionis*. However,
+our own results showed that the F$_ST$ value between them was in the order of
+only 0.12. And several hybrids could be spotted. Thus, the two lineages are
+close enough to be considered the same species. Consequently, the assembly is
+done again with all available data.
 
-It seems to be work in progress. Not sure if it is reproducible from the
-`README.Rmd`. 
-
+# 2023-04-19
+This is the base calling of the Nanopore raw data and the quality control of
+the different sequence data files. There is also a Genoscope2 analysis of the
+Illumina reads (the other data types do not have enough quality for that analysis).
+It suggests a very high heterozygosity (~8%). The fact is that the Illumina
+reads come from an individual with admixed ancestry (see 2024-10-18). But 8%
+heterozygosity is too much. The analysis also suggests a haploid genome size of
+680 million base pairs, with 62% unique sequence.
