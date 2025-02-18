@@ -1,0 +1,7 @@
+WARNING: The fastq_filter command does not support multithreading.
+Only 1 thread used.
+vsearch v2.21.1_linux_x86_64, 251.8GB RAM, 64 cores
+https://github.com/torognes/vsearch
+
+Reading input file 100%
+301784 sequences kept (of which 301784 truncated), 10 sequences discarded.

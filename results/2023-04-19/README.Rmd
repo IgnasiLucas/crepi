@@ -1,5 +1,5 @@
 ---
-title: "Preparing Crepi data for the assembly: basecalling and quality control"
+title: "Base calling of Nanopore sequences and quality control"
 author: "Mar Llaberia-Robledillo"
 date: "3/02/2023"
 output:
@@ -49,15 +49,15 @@ the rawdata.
 
 ```{bash basecalling}
 FAST5=../../data/Nanopore_MinIon/Ex68_3_Crepi/fast5_pass
-if [ ! -e CRP/sequencing_summary.txt ]; then
-   guppy_basecaller -i $FAST5 -s CRP \
+if [ ! -e nanopore/sequencing_summary.txt ]; then
+   guppy_basecaller -i $FAST5 -s nanopore \
                     --config dna_r9.4.1_450bps_hac.cfg \
                     -q 0 --recursive --compress_fastq \
                     --num_callers 2 --cpu_threads_per_caller 16
 fi
 
 # Remove log files reporting neither errors nor success.
-for file in $(ls -1 CRP/*.log); do
+for file in $(ls -1 nanopore/*.log); do
    if ! grep -i -e "success" -e "error" $file; then
       rm $file
    fi
@@ -66,7 +66,7 @@ done
 
 ```{r summaryBasecalling}
 library(ggplot2)
-summarySeq <- read.table('CRP/sequencing_summary.txt', header=TRUE)
+summarySeq <- read.table('nanopore/sequencing_summary.txt', header=TRUE)
 ggplot(data = summarySeq,
        mapping = aes(x = sequence_length_template,
                      y = mean_qscore_template,
@@ -81,12 +81,12 @@ There are many very long reads, as well as short ones. The quality is modest.
 ```{r NanoporeQC, fig.show="hold", out.width="50%", message=FALSE, warning=FALSE}
 library(fastqcr)
 
-if (! file.exists('after_BC')) {
-  fastqc(fq.dir = 'CRP', qc.dir = "after_BC",
+if (! file.exists('report_NP')) {
+  fastqc(fq.dir = 'nanopore', qc.dir = "report_NP",
          threads = 40, fastqc.path = "/usr/local/bin/fastqc")
 }
 
-qc.file <- list.files(path = "after_BC", all.files = FALSE,
+qc.file <- list.files(path = "report_NP", all.files = FALSE,
                       full.names = TRUE, pattern = "zip")
 nb_samples <- length(qc.file)
 
@@ -98,6 +98,77 @@ modules <- c(
 qc <- qc_read_collection(qc.file, sample_names = paste('S', 1:nb_samples, sep = ''),
        modules = modules)
 qc_plot_collection(qc, modules = modules)
+plot(density(summarySeq$sequence_length_template),
+     main = 'Read length distribution', xlim = c(0, 25000))
+text(10000, 0.0001,
+     sprintf("%.0f reads\nwith %.0f bases in total.",
+             dim(summarySeq)[1],
+             sum(summarySeq$sequence_length_template)))
+```
+
+The figure suggests the first 9 or 10 bases of every Nanopore read should be removed.
+Actually, the first average quality above 20 in the figure is an average of several
+positions. Removing the first 40 bases is actually a better way to make sure that all
+reads start with high quality bases.
+
+# Trimming of Nanopore reads
+
+```{bash trimming}
+if [ ! -d nanopore_trimmed ]; then mkdir nanopore_trimmed; fi
+for INPUT in $(ls -1 nanopore/*.fastq); do
+   OUTPUT=$(printf "nanopore_trimmed/%s" $(basename $INPUT))
+   if [ ! -e $OUTPUT ]; then
+      vsearch --fastq_filter $INPUT \
+              --fastq_stripleft 41 \
+              --fastq_minlen 35 \
+              --fastq_qmax 93 \
+              --fastqout $OUTPUT \
+              --threads 16 \
+              1> nanopore_trimmed/vsearch.log \
+              2> nanopore_trimmed/vsearch.err &
+   fi
+done
+wait
+
+if [ ! -e nanopore_trimmed/lengthHisto.txt ]; then
+   gawk '(NR % 4 == 2){
+      F[length($1)]++
+   }END{
+      for (f in F) print f "\t" F[f]
+   }' nanopore_trimmed/*.fastq | \
+   sort -nk 1,1 > nanopore_trimmed/lengthHisto.txt
+fi
+```
+
+```{r trimmedQC, fig.show="hold", out.width="50%", message=FALSE, warning=FALSE}
+if (! file.exists('report_NPtrimmed')) {
+  fastqc(fq.dir = 'nanopore_trimmed', qc.dir = "report_NPtrimmed",
+         threads = 40, fastqc.path = "/usr/local/bin/fastqc")
+}
+
+qc.file <- list.files(path = "report_NPtrimmed", all.files = FALSE,
+                      full.names = TRUE, pattern = "zip")
+nb_samples <- length(qc.file)
+
+modules <- c(
+  "Per sequence GC content",
+  "Per base sequence quality",
+  "Per sequence quality scores"
+)
+qc <- qc_read_collection(qc.file, sample_names = paste('S', 1:nb_samples, sep = ''),
+       modules = modules)
+qc_plot_collection(qc, modules = modules)
+
+lengthHisto <- read.table('nanopore_trimmed/lengthHisto.txt',
+                          col.names = c('Length', 'Freq'))
+plot(lengthHisto$Length, lengthHisto$Freq, type = 'l',
+     main = 'Trimmed-read length distribution',
+     xlim = c(0, 25000))
+
+text(10000, 175,
+     sprintf("%.0f reads\nwith %.0f bases in total.",
+             dim(summarySeq)[1],
+             sum(summarySeq$sequence_length_template)))
 ```
 
 # PacBio data
@@ -138,7 +209,10 @@ qc_plot_collection(qc, modules = modules)
 
 fq <- '../../data/PacBio/fastqs'
 pacbio <- readFastq(fq, withIds = FALSE)
-barplot(table(width(pacbio)), xlab = 'Read length', ylab = 'Frequency', las = 2)
+#barplot(table(width(pacbio)), xlab = 'Read length', ylab = 'Frequency', las = 2)
+plot(density(width(pacbio)))
+text(10000, 0.0003,
+     sprintf("%.0f reads\nwith %i total bases", length(pacbio), sum(width(pacbio))))
 ```
 
 # Shotgun Illumina data
