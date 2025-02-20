@@ -1,0 +1,217 @@
+---
+title: "Polishing with nthits and ntedit"
+author: "Mar Llaberia-Robledillo"
+date: "2023-05-15"
+output:
+  html_document:
+    toc: true
+---
+
+## Filtering the FASTQ files for polishing
+
+The first attempts to run ntEdits [@Warren2019] end up with a `std::bad_alloc` error,
+which may be due to insufficient memory. The assembly is about 453 million
+base pairs (<0.5 Gb), which is much less than the 20 Gb-genomes reported to be
+polished with ntHits in less than 30 minutes with 90 Gb of RAM [@Warren2019]
+(we have 250 Gb). The main difference between the examples reported in the
+original article and our attempt may be the size of the bloom filter (BF). While the
+authors used 17$\times$ sequence data for the bloom filter, we have probably more
+than double that (~35$\times$, in two FASTQ files).
+
+Too much data in the FASTQ files could be the problem. Below, I use `vsearch` to get
+statistics of the expected number of errors per read in the first FASTQ file,
+then I filter the file to reduce the size and remove errors before running the
+`ntcard` and `nthits` programs.
+
+```{bash eestats2}
+FASTQ1=../../data/Shotgun_Illumina/IBC_2_Ex71_6_1.fastq.gz
+FASTQ2=../../data/Shotgun_Illumina/IBC_2_Ex71_6_2.fastq.gz
+
+if [ ! -e eestats1.txt ]; then
+   vsearch --fastq_eestats2 $FASTQ1 \
+           --output eestats1.txt \
+           --ee_cutoffs 0.5,0.75,0.85,0.95,1
+fi
+
+if [ ! -e eestats2.txt ]; then
+   vsearch --fastq_eestats2 $FASTQ2 \
+           --output eestats2.txt \
+           --ee_cutoffs 0.5,0.75,0.85,0.95,1
+fi
+
+if [ ! -e eestats_summary.txt ]; then
+   gawk 'BEGIN{
+      START = 0
+      print "Length\tMaxEE0.50\tMaxEE0.75\tMaxEE0.85\tMaxEE0.95\tMaxEE1.00\tFile"
+   }(START == 1){
+      gsub(/[\(\)]/, "", $0)
+      print $1 "\t" $2 "\t" $4 "\t" $6 "\t" $8 "\t" $10 "\tFASTQ1"
+   }(/----/){START = 1}' eestats1.txt > eestats_summary.txt
+   gawk 'BEGIN{
+      START = 0
+   }(START == 1){
+      gsub(/[\(\)]/, "", $0)
+      print $1 "\t" $2 "\t" $4 "\t" $6 "\t" $8 "\t" $10 "\tFASTQ2"
+   }(/----/){START = 1}' eestats2.txt >> eestats_summary.txt
+fi
+```
+
+```{r eestatsPlots}
+library(ggplot2)
+library(tidyr)
+eestats <- read.table('eestats_summary.txt', header = TRUE)
+eestats_L <- pivot_longer(eestats, 2:6, names_to = 'MaxEE', values_to = 'NumReads')
+ggplot(data = eestats_L, mapping = aes(x = Length, y = NumReads, color = MaxEE)) +
+   geom_line() + facet_wrap(~File)
+```
+
+```{bash filter}
+FASTQ1=../../data/Shotgun_Illumina/IBC_2_Ex71_6_1.fastq.gz
+FASTQ2=../../data/Shotgun_Illumina/IBC_2_Ex71_6_2.fastq.gz
+
+if [ ! -e filtered1.fasta ]; then
+   vsearch --fastq_filter $FASTQ1 \
+           --fastaout filtered1.fasta \
+           --fastq_maxee 0.5
+fi
+
+if [ ! -e filtered2.fasta ]; then
+   vsearch --fastq_filter $FASTQ2 \
+           --fastaout filtered2.fasta \
+           --fastq_maxee 0.5
+fi
+```
+
+```{bash}
+for k in 31 47 61; do
+   if [ ! -e filtered1_k$k.hist ]; then
+      ntcard -k $k -t 16 -p filtered1 filtered1.fasta
+   fi
+done
+
+for k in 31 47 61; do
+   if [ ! -e filtered2_k$k.hist ]; then
+      ntcard -k $k -t 16 -p filtered2 filtered2.fasta
+   fi
+done
+```
+
+```{r kmerFreqs}
+k31 <- read.table('filtered1_k31.hist', skip = 2,
+                  col.names = c('multiplicity', 'frequency'))
+k47 <- read.table('filtered1_k47.hist', skip = 2,
+                  col.names = c('multiplicity', 'frequency'))
+k61 <- read.table('filtered1_k61.hist', skip = 2,
+                  col.names = c('multiplicity', 'frequency'))
+plot(k31$multiplicity, k31$frequency, type = 'l',
+     xlim = c(0, 50), ylim = c(5.0e+05, 1.0e+09),
+     log = 'y', xlab = 'Multiplicity',
+     ylab = 'Frequency', col = 'darkred')
+lines(k47$multiplicity, k47$frequency, col = 'darkgreen')
+lines(k61$multiplicity, k61$frequency, col = 'darkblue')
+abline(v = 6, col = 'darkred', lty = 2)
+#abline(v = 5, col = 'darkgreen', lty = 2)
+abline(v = 4, col = 'darkblue', lty = 2)
+
+
+k31 <- read.table('filtered2_k31.hist', skip = 2,
+                  col.names = c('multiplicity', 'frequency'))
+k47 <- read.table('filtered2_k47.hist', skip = 2,
+                  col.names = c('multiplicity', 'frequency'))
+k61 <- read.table('filtered2_k61.hist', skip = 2,
+                  col.names = c('multiplicity', 'frequency'))
+plot(k31$multiplicity, k31$frequency, type = 'l',
+     xlim = c(0, 50), ylim = c(5.0e+05, 1.0e+09),
+     log = 'y', xlab = 'Multiplicity',
+     ylab = 'Frequency', col = 'darkred')
+lines(k47$multiplicity, k47$frequency, col = 'darkgreen')
+lines(k61$multiplicity, k61$frequency, col = 'darkblue')
+abline(v = 6, col = 'darkred', lty = 2)
+#abline(v = 5, col = 'darkgreen', lty = 2)
+abline(v = 4, col = 'darkblue', lty = 2)
+```
+
+The sequenced reads were shortenned from 150 to 140 bp. The reason why longer kmers
+have lower coverage peaks is just that any fragment of a chromosome
+has a lower chance of being fully contained in a fixed-length, randomly located read,
+the longer the fragment is. The high coverage of error-free 31-mers distinguish them
+from low-frequency, error-containing 31-mers. Thus, I'd suggest we use $k=31$ for
+polishing.
+
+```{bash nthits}
+FASTA1=filtered1.fasta
+FASTA2=filtered2.fasta
+
+for k in 31 47 61; do
+   if [ ! -e filtered_k$k.bf ]; then
+      nthits --threads 16 \
+             --kmer $k \
+             --pref filtered \
+             --outbloom \
+             --solid \
+             $FASTA1 $FASTA2 1> nthits_k$k.log 2> nthits_k$k.err
+   fi
+done
+```
+
+```{bash ntedit}
+ASSEMBLY=../2023-05-12/flye/ONT_PB/assembly.fasta
+
+for k in 31 47 61; do
+   if [ ! -e ntedit_k${k}_edited.fa ]; then
+      ntedit -t 32 \
+             -f $ASSEMBLY \
+             -r filtered_k$k.bf \
+             -b ntedit_k$k \
+             -v 1 1> ntedit_k$k.log 2> ntedit_k$k.err
+   fi
+   if [ ! -e changes_k$k.tsv ]; then
+   # In the original file, not all lines have the same number of columns.
+      cut -f 1,2,3,4,5 ntedit_k${k}_changes.tsv > changes_k$k.tsv
+   fi
+done
+```
+
+```{r stats}
+changes_k31 <- read.table('changes_k31.tsv', header = TRUE, sep = '\t',
+                          col.names = c('contig', 'position',
+                                        'original', 'newbase', 'support'))
+changes_k47 <- read.table('changes_k47.tsv', header = TRUE, sep = '\t',
+                          col.names = c('contig', 'position',
+                                        'original', 'newbase', 'support'))
+changes_k61 <- read.table('changes_k61.tsv', header = TRUE, sep = '\t',
+                         col.names = c('contig', 'position',
+                                       'original', 'newbase', 'support'))
+changes_k31$change <- paste(changes_k31$original,
+                            changes_k31$newbase,
+                            sep = ':')
+changes_k47$change <- paste(changes_k47$original,
+                            changes_k47$newbase,
+                            sep = ':')
+changes_k61$change <- paste(changes_k61$original,
+                            changes_k61$newbase,
+                            sep = ':')
+
+profile31 <- as.data.frame(table(changes_k31$change))
+profile31$k <- 31
+profile31$RelFreq <- profile31$Freq / sum(profile31$Freq)
+profile47 <- as.data.frame(table(changes_k47$change))
+profile47$k <- 47
+profile47$RelFreq <- profile47$Freq / sum(profile47$Freq)
+profile61 <- as.data.frame(table(changes_k61$change))
+profile61$k <- 61
+profile61$RelFreq <- profile61$Freq / sum(profile61$Freq)
+z <- rbind(profile31, profile47, profile61)
+z2 <- pivot_wider(z, names_from = k, values_from = c('Freq', 'RelFreq'))
+z2[is.na(z2)] <- 0
+class(z2) <- 'data.frame'
+z2$TotFreq <- z2$Freq_31 + z2$Freq_47 + z2$Freq_61
+t <- order(z2$TotFreq, decreasing = TRUE)
+class(z) <- 'data.frame'
+z$Var1 <- ordered(z$Var1, levels = z2[t, 'Var1'])
+z$k <- factor(as.character(z$k))
+f <- z$RelFreq >= 0.02
+ggplot(z[f,], aes(x = k, y = RelFreq, fill = Var1)) + geom_bar(stat = 'identity')
+ggplot(z, aes(x = as.numeric(Var1), y = Freq, color = k)) +
+   geom_line() + xlim(0, 20)
+```
