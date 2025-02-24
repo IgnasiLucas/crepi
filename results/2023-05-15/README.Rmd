@@ -215,3 +215,33 @@ ggplot(z[f,], aes(x = k, y = RelFreq, fill = Var1)) + geom_bar(stat = 'identity'
 ggplot(z, aes(x = as.numeric(Var1), y = Freq, color = k)) +
    geom_line() + xlim(0, 20)
 ```
+
+The plots above represent different editions introduced by `ntedit` with
+different values of the $k$. Nothing important. It seems that using $k=31$
+produces more editions, but not qualitatively different from those introduced
+when using higher values of $k$.
+
+## Filtering and ordering of contigs
+
+For subsequent analyses, it is convenient to have contigs of the assembly
+ordered by size, decreasingly. I also want to remove contigs of presumed
+multiplicity larger than 1, according to `flye` (see `2023-05-13`), which
+are not a large fraction of the assembly.
+
+```{r}
+library(Biostrings)
+chosen <- readDNAStringSet('ntedit_k31_edited.fa')
+AssInf <- read.table('../2023-05-12/flye/ONT_PB/assembly_info.txt',
+                     col.names = c('ctg', 'len', 'cov', 'circ', 'rep',
+                                   'mult', 'group', 'path'))
+multi1 <- AssInf[AssInf$mult == 1, 'ctg']
+multi1 <- intersect(multi1, names(chosen))
+chosen <- chosen[multi1]
+chosen <- chosen[order(width(chosen), decreasing = TRUE)]
+writeXStringSet(chosen, 'assembly.fasta')
+```
+
+I write down in `assembly.fasta` a filtered and ordered version of
+the chosen assembly, with a total length of `r sum(width(chosen))`
+nucleotides. Please, use `assembly.fasta` in this folder as a reference.
+

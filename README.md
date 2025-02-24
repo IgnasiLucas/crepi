@@ -178,6 +178,16 @@ Ipyrad was run in Garnatxa with different clustering thresholds, between
 # 2023-05-17
 This is the `ipyrad` run to demultiplex the FASTQ files.
 
+# 2023-05-15
+We use Illumina shotgun reads and `ntedit` with different values of *k*
+to polish the ONT-PB assembly from 2023-05-12 (that is, the one obtained
+by using Nanopore data first and PacBio data for polishing). Note that
+the polishing removed a few contigs in addition to introducing a lot of
+editions. We retain the polishing made with $k=31$ and re-write the polished
+assembly descending length order of the contigs, after removing contigs
+suspected to have multiplicities higher than 1. The final, ordered assembly
+is saved in `assembly.fasta` and it is 206254914 nucleotides long.
+
 # 2023-05-12
 Assembly of the reference genome using all available reads, despite of
 the fact that different data types (PacBio, NanoPore, Illumina) come from

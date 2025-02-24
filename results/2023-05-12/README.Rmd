@@ -49,7 +49,8 @@ high heterozygosity.
 NOTE: flye: error: argument --pacbio-hifi: not allowed with argument --nano-hq
 Flye does not acceot the two arguments in the same run. Lucky for us, the author
 resolved this issue in his Github:
-[https://github.com/fenderglass/Flye/issues/98](https://github.com/fenderglass/Flye/issues/98)
+[https://github.com/fenderglass/Flye/issues/98](https://github.com/fenderglass/Flye/issues/98).
+It is also currently documented [here](https://github.com/mikolmogorov/Flye/blob/flye/docs/FAQ.md#can-i-use-both-pacbio-and-ont-reads-for-assembly).
 
 ```{bash, eval=FALSE}
 ## Solution from the author in GitHub. Not run.
