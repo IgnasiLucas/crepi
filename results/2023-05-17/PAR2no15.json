@@ -2,8 +2,8 @@
     "assembly":{
         "name":"PAR2no15",
         "dirs":{
-            "project":"/nata/mar/crepidostomum2/results/2023-05-17",
-            "fastqs":"/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs",
+            "project":"/nata/joiglu/crepidostomum2/results/2023-05-17",
+            "fastqs":"/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs",
             "edits":"",
             "clusts":"",
             "consens":"",
@@ -44,7 +44,7 @@
                 "_reference_as_filter"
             ],
             "_assembly_name":"PAR2no15",
-            "_project_dir":"/nata/mar/crepidostomum2/results/2023-05-17",
+            "_project_dir":"/nata/joiglu/crepidostomum2/results/2023-05-17",
             "_raw_fastq_path":"/nata/mar/crepidostomum/data/PARASIT_HiSeq_data_WINDU3/PAR2no15_*",
             "_barcodes_path":"/nata/mar/proteocephalus/data/data_info/demultiplex/barcod_PAR2_no15.txt",
             "_sorted_fastq_path":"",
@@ -101,30 +101,30 @@
             "_reference_as_filter":""
         },
         "samples":[
-            "T061Hma",
-            "T128Pxc",
-            "S012Cxb",
-            "L061Cmc",
-            "L135Hxa",
-            "T010Pxa",
-            "S005Cma",
-            "W078Hxa",
-            "T060pma",
-            "T110Pxa",
-            "L050Hxb",
-            "S118Cma",
-            "S076Hxc",
-            "L029Hxa",
-            "L047Cxc",
-            "T113Pxa",
-            "T082Pxb",
-            "L042Hxa",
             "LR16504",
-            "T082Pxd",
-            "T091Hxa",
+            "T010Pxa",
+            "T110Pxa",
+            "T082Pxb",
+            "T061Hma",
+            "L050Hxb",
+            "T128Pxc",
+            "L135Hxa",
+            "S012Cxb",
             "T019Pxb",
-            "T173Hxc",
-            "W006Hxc"
+            "L029Hxa",
+            "S005Cma",
+            "L047Cxc",
+            "S118Cma",
+            "W006Hxc",
+            "T060pma",
+            "T082Pxd",
+            "W078Hxa",
+            "T113Pxa",
+            "L042Hxa",
+            "S076Hxc",
+            "L061Cmc",
+            "T091Hxa",
+            "T173Hxc"
         ],
         "populations":{},
         "clust_database":"",
@@ -160,7 +160,7 @@
             "L042Hxa":"TGCTTC"
         },
         "stats_files":{
-            "s1":"/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/s1_demultiplex_stats.txt"
+            "s1":"/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/s1_demultiplex_stats.txt"
         },
         "hackersonly":{
             "random_seed":42,
@@ -180,16 +180,16 @@
         }
     },
     "samples":{
-        "T061Hma":{
-            "name":"T061Hma",
-            "barcode":"CCTACT",
+        "LR16504":{
+            "name":"LR16504",
+            "barcode":"TTGCGC",
             "files":{
                 "fastqs":[
                     {
                         "__tuple__":true,
                         "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T061Hma_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T061Hma_R2_.fastq.gz"
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/LR16504_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/LR16504_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -202,7 +202,7 @@
             },
             "stats_dfs":{
                 "s1":{
-                    "reads_raw":1077327
+                    "reads_raw":1171320
                 },
                 "s2":{
                     "reads_raw":NaN,
@@ -245,319 +245,7 @@
             },
             "stats":{
                 "state":1,
-                "reads_raw":1077327,
-                "reads_passed_filter":NaN,
-                "reads_merged":NaN,
-                "refseq_mapped_reads":NaN,
-                "refseq_unmapped_reads":NaN,
-                "clusters_total":NaN,
-                "clusters_hidepth":NaN,
-                "hetero_est":NaN,
-                "error_est":NaN,
-                "reads_consens":NaN
-            },
-            "depths":{}
-        },
-        "T128Pxc":{
-            "name":"T128Pxc",
-            "barcode":"GCAGGA",
-            "files":{
-                "fastqs":[
-                    {
-                        "__tuple__":true,
-                        "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T128Pxc_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T128Pxc_R2_.fastq.gz"
-                        ]
-                    }
-                ],
-                "edits":[],
-                "mapped_reads":[],
-                "unmapped_reads":[],
-                "clusters":[],
-                "consens":[],
-                "database":[]
-            },
-            "stats_dfs":{
-                "s1":{
-                    "reads_raw":944269
-                },
-                "s2":{
-                    "reads_raw":NaN,
-                    "trim_adapter_bp_read1":NaN,
-                    "trim_adapter_bp_read2":NaN,
-                    "trim_quality_bp_read1":NaN,
-                    "trim_quality_bp_read2":NaN,
-                    "reads_filtered_by_Ns":NaN,
-                    "reads_filtered_by_minlen":NaN,
-                    "reads_passed_filter":NaN
-                },
-                "s3":{
-                    "merged_pairs":NaN,
-                    "clusters_total":NaN,
-                    "hidepth_min":NaN,
-                    "clusters_hidepth":NaN,
-                    "avg_depth_total":NaN,
-                    "avg_depth_mj":NaN,
-                    "avg_depth_stat":NaN,
-                    "sd_depth_total":NaN,
-                    "sd_depth_mj":NaN,
-                    "sd_depth_stat":NaN,
-                    "filtered_bad_align":NaN
-                },
-                "s4":{
-                    "hetero_est":NaN,
-                    "error_est":NaN
-                },
-                "s5":{
-                    "clusters_total":NaN,
-                    "filtered_by_depth":NaN,
-                    "filtered_by_maxH":NaN,
-                    "filtered_by_maxAlleles":NaN,
-                    "filtered_by_maxN":NaN,
-                    "reads_consens":NaN,
-                    "nsites":NaN,
-                    "nhetero":NaN,
-                    "heterozygosity":NaN
-                }
-            },
-            "stats":{
-                "state":1,
-                "reads_raw":944269,
-                "reads_passed_filter":NaN,
-                "reads_merged":NaN,
-                "refseq_mapped_reads":NaN,
-                "refseq_unmapped_reads":NaN,
-                "clusters_total":NaN,
-                "clusters_hidepth":NaN,
-                "hetero_est":NaN,
-                "error_est":NaN,
-                "reads_consens":NaN
-            },
-            "depths":{}
-        },
-        "S012Cxb":{
-            "name":"S012Cxb",
-            "barcode":"AGAGCA",
-            "files":{
-                "fastqs":[
-                    {
-                        "__tuple__":true,
-                        "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/S012Cxb_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/S012Cxb_R2_.fastq.gz"
-                        ]
-                    }
-                ],
-                "edits":[],
-                "mapped_reads":[],
-                "unmapped_reads":[],
-                "clusters":[],
-                "consens":[],
-                "database":[]
-            },
-            "stats_dfs":{
-                "s1":{
-                    "reads_raw":1042400
-                },
-                "s2":{
-                    "reads_raw":NaN,
-                    "trim_adapter_bp_read1":NaN,
-                    "trim_adapter_bp_read2":NaN,
-                    "trim_quality_bp_read1":NaN,
-                    "trim_quality_bp_read2":NaN,
-                    "reads_filtered_by_Ns":NaN,
-                    "reads_filtered_by_minlen":NaN,
-                    "reads_passed_filter":NaN
-                },
-                "s3":{
-                    "merged_pairs":NaN,
-                    "clusters_total":NaN,
-                    "hidepth_min":NaN,
-                    "clusters_hidepth":NaN,
-                    "avg_depth_total":NaN,
-                    "avg_depth_mj":NaN,
-                    "avg_depth_stat":NaN,
-                    "sd_depth_total":NaN,
-                    "sd_depth_mj":NaN,
-                    "sd_depth_stat":NaN,
-                    "filtered_bad_align":NaN
-                },
-                "s4":{
-                    "hetero_est":NaN,
-                    "error_est":NaN
-                },
-                "s5":{
-                    "clusters_total":NaN,
-                    "filtered_by_depth":NaN,
-                    "filtered_by_maxH":NaN,
-                    "filtered_by_maxAlleles":NaN,
-                    "filtered_by_maxN":NaN,
-                    "reads_consens":NaN,
-                    "nsites":NaN,
-                    "nhetero":NaN,
-                    "heterozygosity":NaN
-                }
-            },
-            "stats":{
-                "state":1,
-                "reads_raw":1042400,
-                "reads_passed_filter":NaN,
-                "reads_merged":NaN,
-                "refseq_mapped_reads":NaN,
-                "refseq_unmapped_reads":NaN,
-                "clusters_total":NaN,
-                "clusters_hidepth":NaN,
-                "hetero_est":NaN,
-                "error_est":NaN,
-                "reads_consens":NaN
-            },
-            "depths":{}
-        },
-        "L061Cmc":{
-            "name":"L061Cmc",
-            "barcode":"ACCTAA",
-            "files":{
-                "fastqs":[
-                    {
-                        "__tuple__":true,
-                        "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L061Cmc_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L061Cmc_R2_.fastq.gz"
-                        ]
-                    }
-                ],
-                "edits":[],
-                "mapped_reads":[],
-                "unmapped_reads":[],
-                "clusters":[],
-                "consens":[],
-                "database":[]
-            },
-            "stats_dfs":{
-                "s1":{
-                    "reads_raw":1089414
-                },
-                "s2":{
-                    "reads_raw":NaN,
-                    "trim_adapter_bp_read1":NaN,
-                    "trim_adapter_bp_read2":NaN,
-                    "trim_quality_bp_read1":NaN,
-                    "trim_quality_bp_read2":NaN,
-                    "reads_filtered_by_Ns":NaN,
-                    "reads_filtered_by_minlen":NaN,
-                    "reads_passed_filter":NaN
-                },
-                "s3":{
-                    "merged_pairs":NaN,
-                    "clusters_total":NaN,
-                    "hidepth_min":NaN,
-                    "clusters_hidepth":NaN,
-                    "avg_depth_total":NaN,
-                    "avg_depth_mj":NaN,
-                    "avg_depth_stat":NaN,
-                    "sd_depth_total":NaN,
-                    "sd_depth_mj":NaN,
-                    "sd_depth_stat":NaN,
-                    "filtered_bad_align":NaN
-                },
-                "s4":{
-                    "hetero_est":NaN,
-                    "error_est":NaN
-                },
-                "s5":{
-                    "clusters_total":NaN,
-                    "filtered_by_depth":NaN,
-                    "filtered_by_maxH":NaN,
-                    "filtered_by_maxAlleles":NaN,
-                    "filtered_by_maxN":NaN,
-                    "reads_consens":NaN,
-                    "nsites":NaN,
-                    "nhetero":NaN,
-                    "heterozygosity":NaN
-                }
-            },
-            "stats":{
-                "state":1,
-                "reads_raw":1089414,
-                "reads_passed_filter":NaN,
-                "reads_merged":NaN,
-                "refseq_mapped_reads":NaN,
-                "refseq_unmapped_reads":NaN,
-                "clusters_total":NaN,
-                "clusters_hidepth":NaN,
-                "hetero_est":NaN,
-                "error_est":NaN,
-                "reads_consens":NaN
-            },
-            "depths":{}
-        },
-        "L135Hxa":{
-            "name":"L135Hxa",
-            "barcode":"TCTGGT",
-            "files":{
-                "fastqs":[
-                    {
-                        "__tuple__":true,
-                        "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L135Hxa_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L135Hxa_R2_.fastq.gz"
-                        ]
-                    }
-                ],
-                "edits":[],
-                "mapped_reads":[],
-                "unmapped_reads":[],
-                "clusters":[],
-                "consens":[],
-                "database":[]
-            },
-            "stats_dfs":{
-                "s1":{
-                    "reads_raw":892316
-                },
-                "s2":{
-                    "reads_raw":NaN,
-                    "trim_adapter_bp_read1":NaN,
-                    "trim_adapter_bp_read2":NaN,
-                    "trim_quality_bp_read1":NaN,
-                    "trim_quality_bp_read2":NaN,
-                    "reads_filtered_by_Ns":NaN,
-                    "reads_filtered_by_minlen":NaN,
-                    "reads_passed_filter":NaN
-                },
-                "s3":{
-                    "merged_pairs":NaN,
-                    "clusters_total":NaN,
-                    "hidepth_min":NaN,
-                    "clusters_hidepth":NaN,
-                    "avg_depth_total":NaN,
-                    "avg_depth_mj":NaN,
-                    "avg_depth_stat":NaN,
-                    "sd_depth_total":NaN,
-                    "sd_depth_mj":NaN,
-                    "sd_depth_stat":NaN,
-                    "filtered_bad_align":NaN
-                },
-                "s4":{
-                    "hetero_est":NaN,
-                    "error_est":NaN
-                },
-                "s5":{
-                    "clusters_total":NaN,
-                    "filtered_by_depth":NaN,
-                    "filtered_by_maxH":NaN,
-                    "filtered_by_maxAlleles":NaN,
-                    "filtered_by_maxN":NaN,
-                    "reads_consens":NaN,
-                    "nsites":NaN,
-                    "nhetero":NaN,
-                    "heterozygosity":NaN
-                }
-            },
-            "stats":{
-                "state":1,
-                "reads_raw":892316,
+                "reads_raw":1171320,
                 "reads_passed_filter":NaN,
                 "reads_merged":NaN,
                 "refseq_mapped_reads":NaN,
@@ -578,8 +266,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T010Pxa_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T010Pxa_R2_.fastq.gz"
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T010Pxa_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T010Pxa_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -592,7 +280,7 @@
             },
             "stats_dfs":{
                 "s1":{
-                    "reads_raw":819420
+                    "reads_raw":820692
                 },
                 "s2":{
                     "reads_raw":NaN,
@@ -635,241 +323,7 @@
             },
             "stats":{
                 "state":1,
-                "reads_raw":819420,
-                "reads_passed_filter":NaN,
-                "reads_merged":NaN,
-                "refseq_mapped_reads":NaN,
-                "refseq_unmapped_reads":NaN,
-                "clusters_total":NaN,
-                "clusters_hidepth":NaN,
-                "hetero_est":NaN,
-                "error_est":NaN,
-                "reads_consens":NaN
-            },
-            "depths":{}
-        },
-        "S005Cma":{
-            "name":"S005Cma",
-            "barcode":"ATGAAT",
-            "files":{
-                "fastqs":[
-                    {
-                        "__tuple__":true,
-                        "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/S005Cma_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/S005Cma_R2_.fastq.gz"
-                        ]
-                    }
-                ],
-                "edits":[],
-                "mapped_reads":[],
-                "unmapped_reads":[],
-                "clusters":[],
-                "consens":[],
-                "database":[]
-            },
-            "stats_dfs":{
-                "s1":{
-                    "reads_raw":860625
-                },
-                "s2":{
-                    "reads_raw":NaN,
-                    "trim_adapter_bp_read1":NaN,
-                    "trim_adapter_bp_read2":NaN,
-                    "trim_quality_bp_read1":NaN,
-                    "trim_quality_bp_read2":NaN,
-                    "reads_filtered_by_Ns":NaN,
-                    "reads_filtered_by_minlen":NaN,
-                    "reads_passed_filter":NaN
-                },
-                "s3":{
-                    "merged_pairs":NaN,
-                    "clusters_total":NaN,
-                    "hidepth_min":NaN,
-                    "clusters_hidepth":NaN,
-                    "avg_depth_total":NaN,
-                    "avg_depth_mj":NaN,
-                    "avg_depth_stat":NaN,
-                    "sd_depth_total":NaN,
-                    "sd_depth_mj":NaN,
-                    "sd_depth_stat":NaN,
-                    "filtered_bad_align":NaN
-                },
-                "s4":{
-                    "hetero_est":NaN,
-                    "error_est":NaN
-                },
-                "s5":{
-                    "clusters_total":NaN,
-                    "filtered_by_depth":NaN,
-                    "filtered_by_maxH":NaN,
-                    "filtered_by_maxAlleles":NaN,
-                    "filtered_by_maxN":NaN,
-                    "reads_consens":NaN,
-                    "nsites":NaN,
-                    "nhetero":NaN,
-                    "heterozygosity":NaN
-                }
-            },
-            "stats":{
-                "state":1,
-                "reads_raw":860625,
-                "reads_passed_filter":NaN,
-                "reads_merged":NaN,
-                "refseq_mapped_reads":NaN,
-                "refseq_unmapped_reads":NaN,
-                "clusters_total":NaN,
-                "clusters_hidepth":NaN,
-                "hetero_est":NaN,
-                "error_est":NaN,
-                "reads_consens":NaN
-            },
-            "depths":{}
-        },
-        "W078Hxa":{
-            "name":"W078Hxa",
-            "barcode":"AAGACC",
-            "files":{
-                "fastqs":[
-                    {
-                        "__tuple__":true,
-                        "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/W078Hxa_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/W078Hxa_R2_.fastq.gz"
-                        ]
-                    }
-                ],
-                "edits":[],
-                "mapped_reads":[],
-                "unmapped_reads":[],
-                "clusters":[],
-                "consens":[],
-                "database":[]
-            },
-            "stats_dfs":{
-                "s1":{
-                    "reads_raw":648492
-                },
-                "s2":{
-                    "reads_raw":NaN,
-                    "trim_adapter_bp_read1":NaN,
-                    "trim_adapter_bp_read2":NaN,
-                    "trim_quality_bp_read1":NaN,
-                    "trim_quality_bp_read2":NaN,
-                    "reads_filtered_by_Ns":NaN,
-                    "reads_filtered_by_minlen":NaN,
-                    "reads_passed_filter":NaN
-                },
-                "s3":{
-                    "merged_pairs":NaN,
-                    "clusters_total":NaN,
-                    "hidepth_min":NaN,
-                    "clusters_hidepth":NaN,
-                    "avg_depth_total":NaN,
-                    "avg_depth_mj":NaN,
-                    "avg_depth_stat":NaN,
-                    "sd_depth_total":NaN,
-                    "sd_depth_mj":NaN,
-                    "sd_depth_stat":NaN,
-                    "filtered_bad_align":NaN
-                },
-                "s4":{
-                    "hetero_est":NaN,
-                    "error_est":NaN
-                },
-                "s5":{
-                    "clusters_total":NaN,
-                    "filtered_by_depth":NaN,
-                    "filtered_by_maxH":NaN,
-                    "filtered_by_maxAlleles":NaN,
-                    "filtered_by_maxN":NaN,
-                    "reads_consens":NaN,
-                    "nsites":NaN,
-                    "nhetero":NaN,
-                    "heterozygosity":NaN
-                }
-            },
-            "stats":{
-                "state":1,
-                "reads_raw":648492,
-                "reads_passed_filter":NaN,
-                "reads_merged":NaN,
-                "refseq_mapped_reads":NaN,
-                "refseq_unmapped_reads":NaN,
-                "clusters_total":NaN,
-                "clusters_hidepth":NaN,
-                "hetero_est":NaN,
-                "error_est":NaN,
-                "reads_consens":NaN
-            },
-            "depths":{}
-        },
-        "T060pma":{
-            "name":"T060pma",
-            "barcode":"TATTAG",
-            "files":{
-                "fastqs":[
-                    {
-                        "__tuple__":true,
-                        "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T060pma_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T060pma_R2_.fastq.gz"
-                        ]
-                    }
-                ],
-                "edits":[],
-                "mapped_reads":[],
-                "unmapped_reads":[],
-                "clusters":[],
-                "consens":[],
-                "database":[]
-            },
-            "stats_dfs":{
-                "s1":{
-                    "reads_raw":633712
-                },
-                "s2":{
-                    "reads_raw":NaN,
-                    "trim_adapter_bp_read1":NaN,
-                    "trim_adapter_bp_read2":NaN,
-                    "trim_quality_bp_read1":NaN,
-                    "trim_quality_bp_read2":NaN,
-                    "reads_filtered_by_Ns":NaN,
-                    "reads_filtered_by_minlen":NaN,
-                    "reads_passed_filter":NaN
-                },
-                "s3":{
-                    "merged_pairs":NaN,
-                    "clusters_total":NaN,
-                    "hidepth_min":NaN,
-                    "clusters_hidepth":NaN,
-                    "avg_depth_total":NaN,
-                    "avg_depth_mj":NaN,
-                    "avg_depth_stat":NaN,
-                    "sd_depth_total":NaN,
-                    "sd_depth_mj":NaN,
-                    "sd_depth_stat":NaN,
-                    "filtered_bad_align":NaN
-                },
-                "s4":{
-                    "hetero_est":NaN,
-                    "error_est":NaN
-                },
-                "s5":{
-                    "clusters_total":NaN,
-                    "filtered_by_depth":NaN,
-                    "filtered_by_maxH":NaN,
-                    "filtered_by_maxAlleles":NaN,
-                    "filtered_by_maxN":NaN,
-                    "reads_consens":NaN,
-                    "nsites":NaN,
-                    "nhetero":NaN,
-                    "heterozygosity":NaN
-                }
-            },
-            "stats":{
-                "state":1,
-                "reads_raw":633712,
+                "reads_raw":820692,
                 "reads_passed_filter":NaN,
                 "reads_merged":NaN,
                 "refseq_mapped_reads":NaN,
@@ -890,8 +344,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T110Pxa_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T110Pxa_R2_.fastq.gz"
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T110Pxa_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T110Pxa_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -904,7 +358,7 @@
             },
             "stats_dfs":{
                 "s1":{
-                    "reads_raw":962021
+                    "reads_raw":962844
                 },
                 "s2":{
                     "reads_raw":NaN,
@@ -947,475 +401,7 @@
             },
             "stats":{
                 "state":1,
-                "reads_raw":962021,
-                "reads_passed_filter":NaN,
-                "reads_merged":NaN,
-                "refseq_mapped_reads":NaN,
-                "refseq_unmapped_reads":NaN,
-                "clusters_total":NaN,
-                "clusters_hidepth":NaN,
-                "hetero_est":NaN,
-                "error_est":NaN,
-                "reads_consens":NaN
-            },
-            "depths":{}
-        },
-        "L050Hxb":{
-            "name":"L050Hxb",
-            "barcode":"GTATGC",
-            "files":{
-                "fastqs":[
-                    {
-                        "__tuple__":true,
-                        "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L050Hxb_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L050Hxb_R2_.fastq.gz"
-                        ]
-                    }
-                ],
-                "edits":[],
-                "mapped_reads":[],
-                "unmapped_reads":[],
-                "clusters":[],
-                "consens":[],
-                "database":[]
-            },
-            "stats_dfs":{
-                "s1":{
-                    "reads_raw":906652
-                },
-                "s2":{
-                    "reads_raw":NaN,
-                    "trim_adapter_bp_read1":NaN,
-                    "trim_adapter_bp_read2":NaN,
-                    "trim_quality_bp_read1":NaN,
-                    "trim_quality_bp_read2":NaN,
-                    "reads_filtered_by_Ns":NaN,
-                    "reads_filtered_by_minlen":NaN,
-                    "reads_passed_filter":NaN
-                },
-                "s3":{
-                    "merged_pairs":NaN,
-                    "clusters_total":NaN,
-                    "hidepth_min":NaN,
-                    "clusters_hidepth":NaN,
-                    "avg_depth_total":NaN,
-                    "avg_depth_mj":NaN,
-                    "avg_depth_stat":NaN,
-                    "sd_depth_total":NaN,
-                    "sd_depth_mj":NaN,
-                    "sd_depth_stat":NaN,
-                    "filtered_bad_align":NaN
-                },
-                "s4":{
-                    "hetero_est":NaN,
-                    "error_est":NaN
-                },
-                "s5":{
-                    "clusters_total":NaN,
-                    "filtered_by_depth":NaN,
-                    "filtered_by_maxH":NaN,
-                    "filtered_by_maxAlleles":NaN,
-                    "filtered_by_maxN":NaN,
-                    "reads_consens":NaN,
-                    "nsites":NaN,
-                    "nhetero":NaN,
-                    "heterozygosity":NaN
-                }
-            },
-            "stats":{
-                "state":1,
-                "reads_raw":906652,
-                "reads_passed_filter":NaN,
-                "reads_merged":NaN,
-                "refseq_mapped_reads":NaN,
-                "refseq_unmapped_reads":NaN,
-                "clusters_total":NaN,
-                "clusters_hidepth":NaN,
-                "hetero_est":NaN,
-                "error_est":NaN,
-                "reads_consens":NaN
-            },
-            "depths":{}
-        },
-        "S118Cma":{
-            "name":"S118Cma",
-            "barcode":"GTCTAG",
-            "files":{
-                "fastqs":[
-                    {
-                        "__tuple__":true,
-                        "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/S118Cma_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/S118Cma_R2_.fastq.gz"
-                        ]
-                    }
-                ],
-                "edits":[],
-                "mapped_reads":[],
-                "unmapped_reads":[],
-                "clusters":[],
-                "consens":[],
-                "database":[]
-            },
-            "stats_dfs":{
-                "s1":{
-                    "reads_raw":975026
-                },
-                "s2":{
-                    "reads_raw":NaN,
-                    "trim_adapter_bp_read1":NaN,
-                    "trim_adapter_bp_read2":NaN,
-                    "trim_quality_bp_read1":NaN,
-                    "trim_quality_bp_read2":NaN,
-                    "reads_filtered_by_Ns":NaN,
-                    "reads_filtered_by_minlen":NaN,
-                    "reads_passed_filter":NaN
-                },
-                "s3":{
-                    "merged_pairs":NaN,
-                    "clusters_total":NaN,
-                    "hidepth_min":NaN,
-                    "clusters_hidepth":NaN,
-                    "avg_depth_total":NaN,
-                    "avg_depth_mj":NaN,
-                    "avg_depth_stat":NaN,
-                    "sd_depth_total":NaN,
-                    "sd_depth_mj":NaN,
-                    "sd_depth_stat":NaN,
-                    "filtered_bad_align":NaN
-                },
-                "s4":{
-                    "hetero_est":NaN,
-                    "error_est":NaN
-                },
-                "s5":{
-                    "clusters_total":NaN,
-                    "filtered_by_depth":NaN,
-                    "filtered_by_maxH":NaN,
-                    "filtered_by_maxAlleles":NaN,
-                    "filtered_by_maxN":NaN,
-                    "reads_consens":NaN,
-                    "nsites":NaN,
-                    "nhetero":NaN,
-                    "heterozygosity":NaN
-                }
-            },
-            "stats":{
-                "state":1,
-                "reads_raw":975026,
-                "reads_passed_filter":NaN,
-                "reads_merged":NaN,
-                "refseq_mapped_reads":NaN,
-                "refseq_unmapped_reads":NaN,
-                "clusters_total":NaN,
-                "clusters_hidepth":NaN,
-                "hetero_est":NaN,
-                "error_est":NaN,
-                "reads_consens":NaN
-            },
-            "depths":{}
-        },
-        "S076Hxc":{
-            "name":"S076Hxc",
-            "barcode":"AGGCTA",
-            "files":{
-                "fastqs":[
-                    {
-                        "__tuple__":true,
-                        "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/S076Hxc_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/S076Hxc_R2_.fastq.gz"
-                        ]
-                    }
-                ],
-                "edits":[],
-                "mapped_reads":[],
-                "unmapped_reads":[],
-                "clusters":[],
-                "consens":[],
-                "database":[]
-            },
-            "stats_dfs":{
-                "s1":{
-                    "reads_raw":797016
-                },
-                "s2":{
-                    "reads_raw":NaN,
-                    "trim_adapter_bp_read1":NaN,
-                    "trim_adapter_bp_read2":NaN,
-                    "trim_quality_bp_read1":NaN,
-                    "trim_quality_bp_read2":NaN,
-                    "reads_filtered_by_Ns":NaN,
-                    "reads_filtered_by_minlen":NaN,
-                    "reads_passed_filter":NaN
-                },
-                "s3":{
-                    "merged_pairs":NaN,
-                    "clusters_total":NaN,
-                    "hidepth_min":NaN,
-                    "clusters_hidepth":NaN,
-                    "avg_depth_total":NaN,
-                    "avg_depth_mj":NaN,
-                    "avg_depth_stat":NaN,
-                    "sd_depth_total":NaN,
-                    "sd_depth_mj":NaN,
-                    "sd_depth_stat":NaN,
-                    "filtered_bad_align":NaN
-                },
-                "s4":{
-                    "hetero_est":NaN,
-                    "error_est":NaN
-                },
-                "s5":{
-                    "clusters_total":NaN,
-                    "filtered_by_depth":NaN,
-                    "filtered_by_maxH":NaN,
-                    "filtered_by_maxAlleles":NaN,
-                    "filtered_by_maxN":NaN,
-                    "reads_consens":NaN,
-                    "nsites":NaN,
-                    "nhetero":NaN,
-                    "heterozygosity":NaN
-                }
-            },
-            "stats":{
-                "state":1,
-                "reads_raw":797016,
-                "reads_passed_filter":NaN,
-                "reads_merged":NaN,
-                "refseq_mapped_reads":NaN,
-                "refseq_unmapped_reads":NaN,
-                "clusters_total":NaN,
-                "clusters_hidepth":NaN,
-                "hetero_est":NaN,
-                "error_est":NaN,
-                "reads_consens":NaN
-            },
-            "depths":{}
-        },
-        "L029Hxa":{
-            "name":"L029Hxa",
-            "barcode":"TTCGTT",
-            "files":{
-                "fastqs":[
-                    {
-                        "__tuple__":true,
-                        "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L029Hxa_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L029Hxa_R2_.fastq.gz"
-                        ]
-                    }
-                ],
-                "edits":[],
-                "mapped_reads":[],
-                "unmapped_reads":[],
-                "clusters":[],
-                "consens":[],
-                "database":[]
-            },
-            "stats_dfs":{
-                "s1":{
-                    "reads_raw":800994
-                },
-                "s2":{
-                    "reads_raw":NaN,
-                    "trim_adapter_bp_read1":NaN,
-                    "trim_adapter_bp_read2":NaN,
-                    "trim_quality_bp_read1":NaN,
-                    "trim_quality_bp_read2":NaN,
-                    "reads_filtered_by_Ns":NaN,
-                    "reads_filtered_by_minlen":NaN,
-                    "reads_passed_filter":NaN
-                },
-                "s3":{
-                    "merged_pairs":NaN,
-                    "clusters_total":NaN,
-                    "hidepth_min":NaN,
-                    "clusters_hidepth":NaN,
-                    "avg_depth_total":NaN,
-                    "avg_depth_mj":NaN,
-                    "avg_depth_stat":NaN,
-                    "sd_depth_total":NaN,
-                    "sd_depth_mj":NaN,
-                    "sd_depth_stat":NaN,
-                    "filtered_bad_align":NaN
-                },
-                "s4":{
-                    "hetero_est":NaN,
-                    "error_est":NaN
-                },
-                "s5":{
-                    "clusters_total":NaN,
-                    "filtered_by_depth":NaN,
-                    "filtered_by_maxH":NaN,
-                    "filtered_by_maxAlleles":NaN,
-                    "filtered_by_maxN":NaN,
-                    "reads_consens":NaN,
-                    "nsites":NaN,
-                    "nhetero":NaN,
-                    "heterozygosity":NaN
-                }
-            },
-            "stats":{
-                "state":1,
-                "reads_raw":800994,
-                "reads_passed_filter":NaN,
-                "reads_merged":NaN,
-                "refseq_mapped_reads":NaN,
-                "refseq_unmapped_reads":NaN,
-                "clusters_total":NaN,
-                "clusters_hidepth":NaN,
-                "hetero_est":NaN,
-                "error_est":NaN,
-                "reads_consens":NaN
-            },
-            "depths":{}
-        },
-        "L047Cxc":{
-            "name":"L047Cxc",
-            "barcode":"CGAATA",
-            "files":{
-                "fastqs":[
-                    {
-                        "__tuple__":true,
-                        "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L047Cxc_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L047Cxc_R2_.fastq.gz"
-                        ]
-                    }
-                ],
-                "edits":[],
-                "mapped_reads":[],
-                "unmapped_reads":[],
-                "clusters":[],
-                "consens":[],
-                "database":[]
-            },
-            "stats_dfs":{
-                "s1":{
-                    "reads_raw":886857
-                },
-                "s2":{
-                    "reads_raw":NaN,
-                    "trim_adapter_bp_read1":NaN,
-                    "trim_adapter_bp_read2":NaN,
-                    "trim_quality_bp_read1":NaN,
-                    "trim_quality_bp_read2":NaN,
-                    "reads_filtered_by_Ns":NaN,
-                    "reads_filtered_by_minlen":NaN,
-                    "reads_passed_filter":NaN
-                },
-                "s3":{
-                    "merged_pairs":NaN,
-                    "clusters_total":NaN,
-                    "hidepth_min":NaN,
-                    "clusters_hidepth":NaN,
-                    "avg_depth_total":NaN,
-                    "avg_depth_mj":NaN,
-                    "avg_depth_stat":NaN,
-                    "sd_depth_total":NaN,
-                    "sd_depth_mj":NaN,
-                    "sd_depth_stat":NaN,
-                    "filtered_bad_align":NaN
-                },
-                "s4":{
-                    "hetero_est":NaN,
-                    "error_est":NaN
-                },
-                "s5":{
-                    "clusters_total":NaN,
-                    "filtered_by_depth":NaN,
-                    "filtered_by_maxH":NaN,
-                    "filtered_by_maxAlleles":NaN,
-                    "filtered_by_maxN":NaN,
-                    "reads_consens":NaN,
-                    "nsites":NaN,
-                    "nhetero":NaN,
-                    "heterozygosity":NaN
-                }
-            },
-            "stats":{
-                "state":1,
-                "reads_raw":886857,
-                "reads_passed_filter":NaN,
-                "reads_merged":NaN,
-                "refseq_mapped_reads":NaN,
-                "refseq_unmapped_reads":NaN,
-                "clusters_total":NaN,
-                "clusters_hidepth":NaN,
-                "hetero_est":NaN,
-                "error_est":NaN,
-                "reads_consens":NaN
-            },
-            "depths":{}
-        },
-        "T113Pxa":{
-            "name":"T113Pxa",
-            "barcode":"CCGCTC",
-            "files":{
-                "fastqs":[
-                    {
-                        "__tuple__":true,
-                        "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T113Pxa_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T113Pxa_R2_.fastq.gz"
-                        ]
-                    }
-                ],
-                "edits":[],
-                "mapped_reads":[],
-                "unmapped_reads":[],
-                "clusters":[],
-                "consens":[],
-                "database":[]
-            },
-            "stats_dfs":{
-                "s1":{
-                    "reads_raw":1552836
-                },
-                "s2":{
-                    "reads_raw":NaN,
-                    "trim_adapter_bp_read1":NaN,
-                    "trim_adapter_bp_read2":NaN,
-                    "trim_quality_bp_read1":NaN,
-                    "trim_quality_bp_read2":NaN,
-                    "reads_filtered_by_Ns":NaN,
-                    "reads_filtered_by_minlen":NaN,
-                    "reads_passed_filter":NaN
-                },
-                "s3":{
-                    "merged_pairs":NaN,
-                    "clusters_total":NaN,
-                    "hidepth_min":NaN,
-                    "clusters_hidepth":NaN,
-                    "avg_depth_total":NaN,
-                    "avg_depth_mj":NaN,
-                    "avg_depth_stat":NaN,
-                    "sd_depth_total":NaN,
-                    "sd_depth_mj":NaN,
-                    "sd_depth_stat":NaN,
-                    "filtered_bad_align":NaN
-                },
-                "s4":{
-                    "hetero_est":NaN,
-                    "error_est":NaN
-                },
-                "s5":{
-                    "clusters_total":NaN,
-                    "filtered_by_depth":NaN,
-                    "filtered_by_maxH":NaN,
-                    "filtered_by_maxAlleles":NaN,
-                    "filtered_by_maxN":NaN,
-                    "reads_consens":NaN,
-                    "nsites":NaN,
-                    "nhetero":NaN,
-                    "heterozygosity":NaN
-                }
-            },
-            "stats":{
-                "state":1,
-                "reads_raw":1552836,
+                "reads_raw":962844,
                 "reads_passed_filter":NaN,
                 "reads_merged":NaN,
                 "refseq_mapped_reads":NaN,
@@ -1436,8 +422,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T082Pxb_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T082Pxb_R2_.fastq.gz"
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T082Pxb_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T082Pxb_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -1450,7 +436,7 @@
             },
             "stats_dfs":{
                 "s1":{
-                    "reads_raw":988062
+                    "reads_raw":989117
                 },
                 "s2":{
                     "reads_raw":NaN,
@@ -1493,7 +479,7 @@
             },
             "stats":{
                 "state":1,
-                "reads_raw":988062,
+                "reads_raw":989117,
                 "reads_passed_filter":NaN,
                 "reads_merged":NaN,
                 "refseq_mapped_reads":NaN,
@@ -1506,16 +492,16 @@
             },
             "depths":{}
         },
-        "L042Hxa":{
-            "name":"L042Hxa",
-            "barcode":"TGCTTC",
+        "T061Hma":{
+            "name":"T061Hma",
+            "barcode":"CCTACT",
             "files":{
                 "fastqs":[
                     {
                         "__tuple__":true,
                         "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L042Hxa_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L042Hxa_R2_.fastq.gz"
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T061Hma_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T061Hma_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -1528,7 +514,7 @@
             },
             "stats_dfs":{
                 "s1":{
-                    "reads_raw":995275
+                    "reads_raw":1665792
                 },
                 "s2":{
                     "reads_raw":NaN,
@@ -1571,7 +557,7 @@
             },
             "stats":{
                 "state":1,
-                "reads_raw":995275,
+                "reads_raw":1665792,
                 "reads_passed_filter":NaN,
                 "reads_merged":NaN,
                 "refseq_mapped_reads":NaN,
@@ -1584,16 +570,16 @@
             },
             "depths":{}
         },
-        "LR16504":{
-            "name":"LR16504",
-            "barcode":"TTGCGC",
+        "L050Hxb":{
+            "name":"L050Hxb",
+            "barcode":"GTATGC",
             "files":{
                 "fastqs":[
                     {
                         "__tuple__":true,
                         "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/LR16504_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/LR16504_R2_.fastq.gz"
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L050Hxb_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L050Hxb_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -1606,7 +592,7 @@
             },
             "stats_dfs":{
                 "s1":{
-                    "reads_raw":647488
+                    "reads_raw":1345026
                 },
                 "s2":{
                     "reads_raw":NaN,
@@ -1649,7 +635,7 @@
             },
             "stats":{
                 "state":1,
-                "reads_raw":647488,
+                "reads_raw":1345026,
                 "reads_passed_filter":NaN,
                 "reads_merged":NaN,
                 "refseq_mapped_reads":NaN,
@@ -1662,16 +648,16 @@
             },
             "depths":{}
         },
-        "T082Pxd":{
-            "name":"T082Pxd",
-            "barcode":"CTAACG",
+        "T128Pxc":{
+            "name":"T128Pxc",
+            "barcode":"GCAGGA",
             "files":{
                 "fastqs":[
                     {
                         "__tuple__":true,
                         "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T082Pxd_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T082Pxd_R2_.fastq.gz"
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T128Pxc_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T128Pxc_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -1684,7 +670,7 @@
             },
             "stats_dfs":{
                 "s1":{
-                    "reads_raw":938931
+                    "reads_raw":945298
                 },
                 "s2":{
                     "reads_raw":NaN,
@@ -1727,7 +713,7 @@
             },
             "stats":{
                 "state":1,
-                "reads_raw":938931,
+                "reads_raw":945298,
                 "reads_passed_filter":NaN,
                 "reads_merged":NaN,
                 "refseq_mapped_reads":NaN,
@@ -1740,16 +726,16 @@
             },
             "depths":{}
         },
-        "T091Hxa":{
-            "name":"T091Hxa",
-            "barcode":"CATTCA",
+        "L135Hxa":{
+            "name":"L135Hxa",
+            "barcode":"TCTGGT",
             "files":{
                 "fastqs":[
                     {
                         "__tuple__":true,
                         "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T091Hxa_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T091Hxa_R2_.fastq.gz"
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L135Hxa_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L135Hxa_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -1762,7 +748,7 @@
             },
             "stats_dfs":{
                 "s1":{
-                    "reads_raw":987816
+                    "reads_raw":1381523
                 },
                 "s2":{
                     "reads_raw":NaN,
@@ -1805,7 +791,85 @@
             },
             "stats":{
                 "state":1,
-                "reads_raw":987816,
+                "reads_raw":1381523,
+                "reads_passed_filter":NaN,
+                "reads_merged":NaN,
+                "refseq_mapped_reads":NaN,
+                "refseq_unmapped_reads":NaN,
+                "clusters_total":NaN,
+                "clusters_hidepth":NaN,
+                "hetero_est":NaN,
+                "error_est":NaN,
+                "reads_consens":NaN
+            },
+            "depths":{}
+        },
+        "S012Cxb":{
+            "name":"S012Cxb",
+            "barcode":"AGAGCA",
+            "files":{
+                "fastqs":[
+                    {
+                        "__tuple__":true,
+                        "items":[
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/S012Cxb_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/S012Cxb_R2_.fastq.gz"
+                        ]
+                    }
+                ],
+                "edits":[],
+                "mapped_reads":[],
+                "unmapped_reads":[],
+                "clusters":[],
+                "consens":[],
+                "database":[]
+            },
+            "stats_dfs":{
+                "s1":{
+                    "reads_raw":1589635
+                },
+                "s2":{
+                    "reads_raw":NaN,
+                    "trim_adapter_bp_read1":NaN,
+                    "trim_adapter_bp_read2":NaN,
+                    "trim_quality_bp_read1":NaN,
+                    "trim_quality_bp_read2":NaN,
+                    "reads_filtered_by_Ns":NaN,
+                    "reads_filtered_by_minlen":NaN,
+                    "reads_passed_filter":NaN
+                },
+                "s3":{
+                    "merged_pairs":NaN,
+                    "clusters_total":NaN,
+                    "hidepth_min":NaN,
+                    "clusters_hidepth":NaN,
+                    "avg_depth_total":NaN,
+                    "avg_depth_mj":NaN,
+                    "avg_depth_stat":NaN,
+                    "sd_depth_total":NaN,
+                    "sd_depth_mj":NaN,
+                    "sd_depth_stat":NaN,
+                    "filtered_bad_align":NaN
+                },
+                "s4":{
+                    "hetero_est":NaN,
+                    "error_est":NaN
+                },
+                "s5":{
+                    "clusters_total":NaN,
+                    "filtered_by_depth":NaN,
+                    "filtered_by_maxH":NaN,
+                    "filtered_by_maxAlleles":NaN,
+                    "filtered_by_maxN":NaN,
+                    "reads_consens":NaN,
+                    "nsites":NaN,
+                    "nhetero":NaN,
+                    "heterozygosity":NaN
+                }
+            },
+            "stats":{
+                "state":1,
+                "reads_raw":1589635,
                 "reads_passed_filter":NaN,
                 "reads_merged":NaN,
                 "refseq_mapped_reads":NaN,
@@ -1826,8 +890,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T019Pxb_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T019Pxb_R2_.fastq.gz"
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T019Pxb_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T019Pxb_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -1840,7 +904,7 @@
             },
             "stats_dfs":{
                 "s1":{
-                    "reads_raw":1125566
+                    "reads_raw":1126496
                 },
                 "s2":{
                     "reads_raw":NaN,
@@ -1883,7 +947,7 @@
             },
             "stats":{
                 "state":1,
-                "reads_raw":1125566,
+                "reads_raw":1126496,
                 "reads_passed_filter":NaN,
                 "reads_merged":NaN,
                 "refseq_mapped_reads":NaN,
@@ -1896,16 +960,16 @@
             },
             "depths":{}
         },
-        "T173Hxc":{
-            "name":"T173Hxc",
-            "barcode":"AATGGC",
+        "L029Hxa":{
+            "name":"L029Hxa",
+            "barcode":"TTCGTT",
             "files":{
                 "fastqs":[
                     {
                         "__tuple__":true,
                         "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T173Hxc_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T173Hxc_R2_.fastq.gz"
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L029Hxa_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L029Hxa_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -1918,7 +982,7 @@
             },
             "stats_dfs":{
                 "s1":{
-                    "reads_raw":1113897
+                    "reads_raw":1238431
                 },
                 "s2":{
                     "reads_raw":NaN,
@@ -1961,7 +1025,241 @@
             },
             "stats":{
                 "state":1,
-                "reads_raw":1113897,
+                "reads_raw":1238431,
+                "reads_passed_filter":NaN,
+                "reads_merged":NaN,
+                "refseq_mapped_reads":NaN,
+                "refseq_unmapped_reads":NaN,
+                "clusters_total":NaN,
+                "clusters_hidepth":NaN,
+                "hetero_est":NaN,
+                "error_est":NaN,
+                "reads_consens":NaN
+            },
+            "depths":{}
+        },
+        "S005Cma":{
+            "name":"S005Cma",
+            "barcode":"ATGAAT",
+            "files":{
+                "fastqs":[
+                    {
+                        "__tuple__":true,
+                        "items":[
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/S005Cma_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/S005Cma_R2_.fastq.gz"
+                        ]
+                    }
+                ],
+                "edits":[],
+                "mapped_reads":[],
+                "unmapped_reads":[],
+                "clusters":[],
+                "consens":[],
+                "database":[]
+            },
+            "stats_dfs":{
+                "s1":{
+                    "reads_raw":1365639
+                },
+                "s2":{
+                    "reads_raw":NaN,
+                    "trim_adapter_bp_read1":NaN,
+                    "trim_adapter_bp_read2":NaN,
+                    "trim_quality_bp_read1":NaN,
+                    "trim_quality_bp_read2":NaN,
+                    "reads_filtered_by_Ns":NaN,
+                    "reads_filtered_by_minlen":NaN,
+                    "reads_passed_filter":NaN
+                },
+                "s3":{
+                    "merged_pairs":NaN,
+                    "clusters_total":NaN,
+                    "hidepth_min":NaN,
+                    "clusters_hidepth":NaN,
+                    "avg_depth_total":NaN,
+                    "avg_depth_mj":NaN,
+                    "avg_depth_stat":NaN,
+                    "sd_depth_total":NaN,
+                    "sd_depth_mj":NaN,
+                    "sd_depth_stat":NaN,
+                    "filtered_bad_align":NaN
+                },
+                "s4":{
+                    "hetero_est":NaN,
+                    "error_est":NaN
+                },
+                "s5":{
+                    "clusters_total":NaN,
+                    "filtered_by_depth":NaN,
+                    "filtered_by_maxH":NaN,
+                    "filtered_by_maxAlleles":NaN,
+                    "filtered_by_maxN":NaN,
+                    "reads_consens":NaN,
+                    "nsites":NaN,
+                    "nhetero":NaN,
+                    "heterozygosity":NaN
+                }
+            },
+            "stats":{
+                "state":1,
+                "reads_raw":1365639,
+                "reads_passed_filter":NaN,
+                "reads_merged":NaN,
+                "refseq_mapped_reads":NaN,
+                "refseq_unmapped_reads":NaN,
+                "clusters_total":NaN,
+                "clusters_hidepth":NaN,
+                "hetero_est":NaN,
+                "error_est":NaN,
+                "reads_consens":NaN
+            },
+            "depths":{}
+        },
+        "L047Cxc":{
+            "name":"L047Cxc",
+            "barcode":"CGAATA",
+            "files":{
+                "fastqs":[
+                    {
+                        "__tuple__":true,
+                        "items":[
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L047Cxc_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L047Cxc_R2_.fastq.gz"
+                        ]
+                    }
+                ],
+                "edits":[],
+                "mapped_reads":[],
+                "unmapped_reads":[],
+                "clusters":[],
+                "consens":[],
+                "database":[]
+            },
+            "stats_dfs":{
+                "s1":{
+                    "reads_raw":1321543
+                },
+                "s2":{
+                    "reads_raw":NaN,
+                    "trim_adapter_bp_read1":NaN,
+                    "trim_adapter_bp_read2":NaN,
+                    "trim_quality_bp_read1":NaN,
+                    "trim_quality_bp_read2":NaN,
+                    "reads_filtered_by_Ns":NaN,
+                    "reads_filtered_by_minlen":NaN,
+                    "reads_passed_filter":NaN
+                },
+                "s3":{
+                    "merged_pairs":NaN,
+                    "clusters_total":NaN,
+                    "hidepth_min":NaN,
+                    "clusters_hidepth":NaN,
+                    "avg_depth_total":NaN,
+                    "avg_depth_mj":NaN,
+                    "avg_depth_stat":NaN,
+                    "sd_depth_total":NaN,
+                    "sd_depth_mj":NaN,
+                    "sd_depth_stat":NaN,
+                    "filtered_bad_align":NaN
+                },
+                "s4":{
+                    "hetero_est":NaN,
+                    "error_est":NaN
+                },
+                "s5":{
+                    "clusters_total":NaN,
+                    "filtered_by_depth":NaN,
+                    "filtered_by_maxH":NaN,
+                    "filtered_by_maxAlleles":NaN,
+                    "filtered_by_maxN":NaN,
+                    "reads_consens":NaN,
+                    "nsites":NaN,
+                    "nhetero":NaN,
+                    "heterozygosity":NaN
+                }
+            },
+            "stats":{
+                "state":1,
+                "reads_raw":1321543,
+                "reads_passed_filter":NaN,
+                "reads_merged":NaN,
+                "refseq_mapped_reads":NaN,
+                "refseq_unmapped_reads":NaN,
+                "clusters_total":NaN,
+                "clusters_hidepth":NaN,
+                "hetero_est":NaN,
+                "error_est":NaN,
+                "reads_consens":NaN
+            },
+            "depths":{}
+        },
+        "S118Cma":{
+            "name":"S118Cma",
+            "barcode":"GTCTAG",
+            "files":{
+                "fastqs":[
+                    {
+                        "__tuple__":true,
+                        "items":[
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/S118Cma_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/S118Cma_R2_.fastq.gz"
+                        ]
+                    }
+                ],
+                "edits":[],
+                "mapped_reads":[],
+                "unmapped_reads":[],
+                "clusters":[],
+                "consens":[],
+                "database":[]
+            },
+            "stats_dfs":{
+                "s1":{
+                    "reads_raw":1475811
+                },
+                "s2":{
+                    "reads_raw":NaN,
+                    "trim_adapter_bp_read1":NaN,
+                    "trim_adapter_bp_read2":NaN,
+                    "trim_quality_bp_read1":NaN,
+                    "trim_quality_bp_read2":NaN,
+                    "reads_filtered_by_Ns":NaN,
+                    "reads_filtered_by_minlen":NaN,
+                    "reads_passed_filter":NaN
+                },
+                "s3":{
+                    "merged_pairs":NaN,
+                    "clusters_total":NaN,
+                    "hidepth_min":NaN,
+                    "clusters_hidepth":NaN,
+                    "avg_depth_total":NaN,
+                    "avg_depth_mj":NaN,
+                    "avg_depth_stat":NaN,
+                    "sd_depth_total":NaN,
+                    "sd_depth_mj":NaN,
+                    "sd_depth_stat":NaN,
+                    "filtered_bad_align":NaN
+                },
+                "s4":{
+                    "hetero_est":NaN,
+                    "error_est":NaN
+                },
+                "s5":{
+                    "clusters_total":NaN,
+                    "filtered_by_depth":NaN,
+                    "filtered_by_maxH":NaN,
+                    "filtered_by_maxAlleles":NaN,
+                    "filtered_by_maxN":NaN,
+                    "reads_consens":NaN,
+                    "nsites":NaN,
+                    "nhetero":NaN,
+                    "heterozygosity":NaN
+                }
+            },
+            "stats":{
+                "state":1,
+                "reads_raw":1475811,
                 "reads_passed_filter":NaN,
                 "reads_merged":NaN,
                 "refseq_mapped_reads":NaN,
@@ -1982,8 +1280,8 @@
                     {
                         "__tuple__":true,
                         "items":[
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/W006Hxc_R1_.fastq.gz",
-                            "/nata/mar/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/W006Hxc_R2_.fastq.gz"
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/W006Hxc_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/W006Hxc_R2_.fastq.gz"
                         ]
                     }
                 ],
@@ -1996,7 +1294,7 @@
             },
             "stats_dfs":{
                 "s1":{
-                    "reads_raw":974592
+                    "reads_raw":1580030
                 },
                 "s2":{
                     "reads_raw":NaN,
@@ -2039,7 +1337,709 @@
             },
             "stats":{
                 "state":1,
-                "reads_raw":974592,
+                "reads_raw":1580030,
+                "reads_passed_filter":NaN,
+                "reads_merged":NaN,
+                "refseq_mapped_reads":NaN,
+                "refseq_unmapped_reads":NaN,
+                "clusters_total":NaN,
+                "clusters_hidepth":NaN,
+                "hetero_est":NaN,
+                "error_est":NaN,
+                "reads_consens":NaN
+            },
+            "depths":{}
+        },
+        "T060pma":{
+            "name":"T060pma",
+            "barcode":"TATTAG",
+            "files":{
+                "fastqs":[
+                    {
+                        "__tuple__":true,
+                        "items":[
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T060pma_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T060pma_R2_.fastq.gz"
+                        ]
+                    }
+                ],
+                "edits":[],
+                "mapped_reads":[],
+                "unmapped_reads":[],
+                "clusters":[],
+                "consens":[],
+                "database":[]
+            },
+            "stats_dfs":{
+                "s1":{
+                    "reads_raw":634742
+                },
+                "s2":{
+                    "reads_raw":NaN,
+                    "trim_adapter_bp_read1":NaN,
+                    "trim_adapter_bp_read2":NaN,
+                    "trim_quality_bp_read1":NaN,
+                    "trim_quality_bp_read2":NaN,
+                    "reads_filtered_by_Ns":NaN,
+                    "reads_filtered_by_minlen":NaN,
+                    "reads_passed_filter":NaN
+                },
+                "s3":{
+                    "merged_pairs":NaN,
+                    "clusters_total":NaN,
+                    "hidepth_min":NaN,
+                    "clusters_hidepth":NaN,
+                    "avg_depth_total":NaN,
+                    "avg_depth_mj":NaN,
+                    "avg_depth_stat":NaN,
+                    "sd_depth_total":NaN,
+                    "sd_depth_mj":NaN,
+                    "sd_depth_stat":NaN,
+                    "filtered_bad_align":NaN
+                },
+                "s4":{
+                    "hetero_est":NaN,
+                    "error_est":NaN
+                },
+                "s5":{
+                    "clusters_total":NaN,
+                    "filtered_by_depth":NaN,
+                    "filtered_by_maxH":NaN,
+                    "filtered_by_maxAlleles":NaN,
+                    "filtered_by_maxN":NaN,
+                    "reads_consens":NaN,
+                    "nsites":NaN,
+                    "nhetero":NaN,
+                    "heterozygosity":NaN
+                }
+            },
+            "stats":{
+                "state":1,
+                "reads_raw":634742,
+                "reads_passed_filter":NaN,
+                "reads_merged":NaN,
+                "refseq_mapped_reads":NaN,
+                "refseq_unmapped_reads":NaN,
+                "clusters_total":NaN,
+                "clusters_hidepth":NaN,
+                "hetero_est":NaN,
+                "error_est":NaN,
+                "reads_consens":NaN
+            },
+            "depths":{}
+        },
+        "T082Pxd":{
+            "name":"T082Pxd",
+            "barcode":"CTAACG",
+            "files":{
+                "fastqs":[
+                    {
+                        "__tuple__":true,
+                        "items":[
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T082Pxd_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T082Pxd_R2_.fastq.gz"
+                        ]
+                    }
+                ],
+                "edits":[],
+                "mapped_reads":[],
+                "unmapped_reads":[],
+                "clusters":[],
+                "consens":[],
+                "database":[]
+            },
+            "stats_dfs":{
+                "s1":{
+                    "reads_raw":939891
+                },
+                "s2":{
+                    "reads_raw":NaN,
+                    "trim_adapter_bp_read1":NaN,
+                    "trim_adapter_bp_read2":NaN,
+                    "trim_quality_bp_read1":NaN,
+                    "trim_quality_bp_read2":NaN,
+                    "reads_filtered_by_Ns":NaN,
+                    "reads_filtered_by_minlen":NaN,
+                    "reads_passed_filter":NaN
+                },
+                "s3":{
+                    "merged_pairs":NaN,
+                    "clusters_total":NaN,
+                    "hidepth_min":NaN,
+                    "clusters_hidepth":NaN,
+                    "avg_depth_total":NaN,
+                    "avg_depth_mj":NaN,
+                    "avg_depth_stat":NaN,
+                    "sd_depth_total":NaN,
+                    "sd_depth_mj":NaN,
+                    "sd_depth_stat":NaN,
+                    "filtered_bad_align":NaN
+                },
+                "s4":{
+                    "hetero_est":NaN,
+                    "error_est":NaN
+                },
+                "s5":{
+                    "clusters_total":NaN,
+                    "filtered_by_depth":NaN,
+                    "filtered_by_maxH":NaN,
+                    "filtered_by_maxAlleles":NaN,
+                    "filtered_by_maxN":NaN,
+                    "reads_consens":NaN,
+                    "nsites":NaN,
+                    "nhetero":NaN,
+                    "heterozygosity":NaN
+                }
+            },
+            "stats":{
+                "state":1,
+                "reads_raw":939891,
+                "reads_passed_filter":NaN,
+                "reads_merged":NaN,
+                "refseq_mapped_reads":NaN,
+                "refseq_unmapped_reads":NaN,
+                "clusters_total":NaN,
+                "clusters_hidepth":NaN,
+                "hetero_est":NaN,
+                "error_est":NaN,
+                "reads_consens":NaN
+            },
+            "depths":{}
+        },
+        "W078Hxa":{
+            "name":"W078Hxa",
+            "barcode":"AAGACC",
+            "files":{
+                "fastqs":[
+                    {
+                        "__tuple__":true,
+                        "items":[
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/W078Hxa_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/W078Hxa_R2_.fastq.gz"
+                        ]
+                    }
+                ],
+                "edits":[],
+                "mapped_reads":[],
+                "unmapped_reads":[],
+                "clusters":[],
+                "consens":[],
+                "database":[]
+            },
+            "stats_dfs":{
+                "s1":{
+                    "reads_raw":1080992
+                },
+                "s2":{
+                    "reads_raw":NaN,
+                    "trim_adapter_bp_read1":NaN,
+                    "trim_adapter_bp_read2":NaN,
+                    "trim_quality_bp_read1":NaN,
+                    "trim_quality_bp_read2":NaN,
+                    "reads_filtered_by_Ns":NaN,
+                    "reads_filtered_by_minlen":NaN,
+                    "reads_passed_filter":NaN
+                },
+                "s3":{
+                    "merged_pairs":NaN,
+                    "clusters_total":NaN,
+                    "hidepth_min":NaN,
+                    "clusters_hidepth":NaN,
+                    "avg_depth_total":NaN,
+                    "avg_depth_mj":NaN,
+                    "avg_depth_stat":NaN,
+                    "sd_depth_total":NaN,
+                    "sd_depth_mj":NaN,
+                    "sd_depth_stat":NaN,
+                    "filtered_bad_align":NaN
+                },
+                "s4":{
+                    "hetero_est":NaN,
+                    "error_est":NaN
+                },
+                "s5":{
+                    "clusters_total":NaN,
+                    "filtered_by_depth":NaN,
+                    "filtered_by_maxH":NaN,
+                    "filtered_by_maxAlleles":NaN,
+                    "filtered_by_maxN":NaN,
+                    "reads_consens":NaN,
+                    "nsites":NaN,
+                    "nhetero":NaN,
+                    "heterozygosity":NaN
+                }
+            },
+            "stats":{
+                "state":1,
+                "reads_raw":1080992,
+                "reads_passed_filter":NaN,
+                "reads_merged":NaN,
+                "refseq_mapped_reads":NaN,
+                "refseq_unmapped_reads":NaN,
+                "clusters_total":NaN,
+                "clusters_hidepth":NaN,
+                "hetero_est":NaN,
+                "error_est":NaN,
+                "reads_consens":NaN
+            },
+            "depths":{}
+        },
+        "T113Pxa":{
+            "name":"T113Pxa",
+            "barcode":"CCGCTC",
+            "files":{
+                "fastqs":[
+                    {
+                        "__tuple__":true,
+                        "items":[
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T113Pxa_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T113Pxa_R2_.fastq.gz"
+                        ]
+                    }
+                ],
+                "edits":[],
+                "mapped_reads":[],
+                "unmapped_reads":[],
+                "clusters":[],
+                "consens":[],
+                "database":[]
+            },
+            "stats_dfs":{
+                "s1":{
+                    "reads_raw":1553990
+                },
+                "s2":{
+                    "reads_raw":NaN,
+                    "trim_adapter_bp_read1":NaN,
+                    "trim_adapter_bp_read2":NaN,
+                    "trim_quality_bp_read1":NaN,
+                    "trim_quality_bp_read2":NaN,
+                    "reads_filtered_by_Ns":NaN,
+                    "reads_filtered_by_minlen":NaN,
+                    "reads_passed_filter":NaN
+                },
+                "s3":{
+                    "merged_pairs":NaN,
+                    "clusters_total":NaN,
+                    "hidepth_min":NaN,
+                    "clusters_hidepth":NaN,
+                    "avg_depth_total":NaN,
+                    "avg_depth_mj":NaN,
+                    "avg_depth_stat":NaN,
+                    "sd_depth_total":NaN,
+                    "sd_depth_mj":NaN,
+                    "sd_depth_stat":NaN,
+                    "filtered_bad_align":NaN
+                },
+                "s4":{
+                    "hetero_est":NaN,
+                    "error_est":NaN
+                },
+                "s5":{
+                    "clusters_total":NaN,
+                    "filtered_by_depth":NaN,
+                    "filtered_by_maxH":NaN,
+                    "filtered_by_maxAlleles":NaN,
+                    "filtered_by_maxN":NaN,
+                    "reads_consens":NaN,
+                    "nsites":NaN,
+                    "nhetero":NaN,
+                    "heterozygosity":NaN
+                }
+            },
+            "stats":{
+                "state":1,
+                "reads_raw":1553990,
+                "reads_passed_filter":NaN,
+                "reads_merged":NaN,
+                "refseq_mapped_reads":NaN,
+                "refseq_unmapped_reads":NaN,
+                "clusters_total":NaN,
+                "clusters_hidepth":NaN,
+                "hetero_est":NaN,
+                "error_est":NaN,
+                "reads_consens":NaN
+            },
+            "depths":{}
+        },
+        "L042Hxa":{
+            "name":"L042Hxa",
+            "barcode":"TGCTTC",
+            "files":{
+                "fastqs":[
+                    {
+                        "__tuple__":true,
+                        "items":[
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L042Hxa_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L042Hxa_R2_.fastq.gz"
+                        ]
+                    }
+                ],
+                "edits":[],
+                "mapped_reads":[],
+                "unmapped_reads":[],
+                "clusters":[],
+                "consens":[],
+                "database":[]
+            },
+            "stats_dfs":{
+                "s1":{
+                    "reads_raw":1477405
+                },
+                "s2":{
+                    "reads_raw":NaN,
+                    "trim_adapter_bp_read1":NaN,
+                    "trim_adapter_bp_read2":NaN,
+                    "trim_quality_bp_read1":NaN,
+                    "trim_quality_bp_read2":NaN,
+                    "reads_filtered_by_Ns":NaN,
+                    "reads_filtered_by_minlen":NaN,
+                    "reads_passed_filter":NaN
+                },
+                "s3":{
+                    "merged_pairs":NaN,
+                    "clusters_total":NaN,
+                    "hidepth_min":NaN,
+                    "clusters_hidepth":NaN,
+                    "avg_depth_total":NaN,
+                    "avg_depth_mj":NaN,
+                    "avg_depth_stat":NaN,
+                    "sd_depth_total":NaN,
+                    "sd_depth_mj":NaN,
+                    "sd_depth_stat":NaN,
+                    "filtered_bad_align":NaN
+                },
+                "s4":{
+                    "hetero_est":NaN,
+                    "error_est":NaN
+                },
+                "s5":{
+                    "clusters_total":NaN,
+                    "filtered_by_depth":NaN,
+                    "filtered_by_maxH":NaN,
+                    "filtered_by_maxAlleles":NaN,
+                    "filtered_by_maxN":NaN,
+                    "reads_consens":NaN,
+                    "nsites":NaN,
+                    "nhetero":NaN,
+                    "heterozygosity":NaN
+                }
+            },
+            "stats":{
+                "state":1,
+                "reads_raw":1477405,
+                "reads_passed_filter":NaN,
+                "reads_merged":NaN,
+                "refseq_mapped_reads":NaN,
+                "refseq_unmapped_reads":NaN,
+                "clusters_total":NaN,
+                "clusters_hidepth":NaN,
+                "hetero_est":NaN,
+                "error_est":NaN,
+                "reads_consens":NaN
+            },
+            "depths":{}
+        },
+        "S076Hxc":{
+            "name":"S076Hxc",
+            "barcode":"AGGCTA",
+            "files":{
+                "fastqs":[
+                    {
+                        "__tuple__":true,
+                        "items":[
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/S076Hxc_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/S076Hxc_R2_.fastq.gz"
+                        ]
+                    }
+                ],
+                "edits":[],
+                "mapped_reads":[],
+                "unmapped_reads":[],
+                "clusters":[],
+                "consens":[],
+                "database":[]
+            },
+            "stats_dfs":{
+                "s1":{
+                    "reads_raw":1228278
+                },
+                "s2":{
+                    "reads_raw":NaN,
+                    "trim_adapter_bp_read1":NaN,
+                    "trim_adapter_bp_read2":NaN,
+                    "trim_quality_bp_read1":NaN,
+                    "trim_quality_bp_read2":NaN,
+                    "reads_filtered_by_Ns":NaN,
+                    "reads_filtered_by_minlen":NaN,
+                    "reads_passed_filter":NaN
+                },
+                "s3":{
+                    "merged_pairs":NaN,
+                    "clusters_total":NaN,
+                    "hidepth_min":NaN,
+                    "clusters_hidepth":NaN,
+                    "avg_depth_total":NaN,
+                    "avg_depth_mj":NaN,
+                    "avg_depth_stat":NaN,
+                    "sd_depth_total":NaN,
+                    "sd_depth_mj":NaN,
+                    "sd_depth_stat":NaN,
+                    "filtered_bad_align":NaN
+                },
+                "s4":{
+                    "hetero_est":NaN,
+                    "error_est":NaN
+                },
+                "s5":{
+                    "clusters_total":NaN,
+                    "filtered_by_depth":NaN,
+                    "filtered_by_maxH":NaN,
+                    "filtered_by_maxAlleles":NaN,
+                    "filtered_by_maxN":NaN,
+                    "reads_consens":NaN,
+                    "nsites":NaN,
+                    "nhetero":NaN,
+                    "heterozygosity":NaN
+                }
+            },
+            "stats":{
+                "state":1,
+                "reads_raw":1228278,
+                "reads_passed_filter":NaN,
+                "reads_merged":NaN,
+                "refseq_mapped_reads":NaN,
+                "refseq_unmapped_reads":NaN,
+                "clusters_total":NaN,
+                "clusters_hidepth":NaN,
+                "hetero_est":NaN,
+                "error_est":NaN,
+                "reads_consens":NaN
+            },
+            "depths":{}
+        },
+        "L061Cmc":{
+            "name":"L061Cmc",
+            "barcode":"ACCTAA",
+            "files":{
+                "fastqs":[
+                    {
+                        "__tuple__":true,
+                        "items":[
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L061Cmc_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/L061Cmc_R2_.fastq.gz"
+                        ]
+                    }
+                ],
+                "edits":[],
+                "mapped_reads":[],
+                "unmapped_reads":[],
+                "clusters":[],
+                "consens":[],
+                "database":[]
+            },
+            "stats_dfs":{
+                "s1":{
+                    "reads_raw":1683782
+                },
+                "s2":{
+                    "reads_raw":NaN,
+                    "trim_adapter_bp_read1":NaN,
+                    "trim_adapter_bp_read2":NaN,
+                    "trim_quality_bp_read1":NaN,
+                    "trim_quality_bp_read2":NaN,
+                    "reads_filtered_by_Ns":NaN,
+                    "reads_filtered_by_minlen":NaN,
+                    "reads_passed_filter":NaN
+                },
+                "s3":{
+                    "merged_pairs":NaN,
+                    "clusters_total":NaN,
+                    "hidepth_min":NaN,
+                    "clusters_hidepth":NaN,
+                    "avg_depth_total":NaN,
+                    "avg_depth_mj":NaN,
+                    "avg_depth_stat":NaN,
+                    "sd_depth_total":NaN,
+                    "sd_depth_mj":NaN,
+                    "sd_depth_stat":NaN,
+                    "filtered_bad_align":NaN
+                },
+                "s4":{
+                    "hetero_est":NaN,
+                    "error_est":NaN
+                },
+                "s5":{
+                    "clusters_total":NaN,
+                    "filtered_by_depth":NaN,
+                    "filtered_by_maxH":NaN,
+                    "filtered_by_maxAlleles":NaN,
+                    "filtered_by_maxN":NaN,
+                    "reads_consens":NaN,
+                    "nsites":NaN,
+                    "nhetero":NaN,
+                    "heterozygosity":NaN
+                }
+            },
+            "stats":{
+                "state":1,
+                "reads_raw":1683782,
+                "reads_passed_filter":NaN,
+                "reads_merged":NaN,
+                "refseq_mapped_reads":NaN,
+                "refseq_unmapped_reads":NaN,
+                "clusters_total":NaN,
+                "clusters_hidepth":NaN,
+                "hetero_est":NaN,
+                "error_est":NaN,
+                "reads_consens":NaN
+            },
+            "depths":{}
+        },
+        "T091Hxa":{
+            "name":"T091Hxa",
+            "barcode":"CATTCA",
+            "files":{
+                "fastqs":[
+                    {
+                        "__tuple__":true,
+                        "items":[
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T091Hxa_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T091Hxa_R2_.fastq.gz"
+                        ]
+                    }
+                ],
+                "edits":[],
+                "mapped_reads":[],
+                "unmapped_reads":[],
+                "clusters":[],
+                "consens":[],
+                "database":[]
+            },
+            "stats_dfs":{
+                "s1":{
+                    "reads_raw":1504378
+                },
+                "s2":{
+                    "reads_raw":NaN,
+                    "trim_adapter_bp_read1":NaN,
+                    "trim_adapter_bp_read2":NaN,
+                    "trim_quality_bp_read1":NaN,
+                    "trim_quality_bp_read2":NaN,
+                    "reads_filtered_by_Ns":NaN,
+                    "reads_filtered_by_minlen":NaN,
+                    "reads_passed_filter":NaN
+                },
+                "s3":{
+                    "merged_pairs":NaN,
+                    "clusters_total":NaN,
+                    "hidepth_min":NaN,
+                    "clusters_hidepth":NaN,
+                    "avg_depth_total":NaN,
+                    "avg_depth_mj":NaN,
+                    "avg_depth_stat":NaN,
+                    "sd_depth_total":NaN,
+                    "sd_depth_mj":NaN,
+                    "sd_depth_stat":NaN,
+                    "filtered_bad_align":NaN
+                },
+                "s4":{
+                    "hetero_est":NaN,
+                    "error_est":NaN
+                },
+                "s5":{
+                    "clusters_total":NaN,
+                    "filtered_by_depth":NaN,
+                    "filtered_by_maxH":NaN,
+                    "filtered_by_maxAlleles":NaN,
+                    "filtered_by_maxN":NaN,
+                    "reads_consens":NaN,
+                    "nsites":NaN,
+                    "nhetero":NaN,
+                    "heterozygosity":NaN
+                }
+            },
+            "stats":{
+                "state":1,
+                "reads_raw":1504378,
+                "reads_passed_filter":NaN,
+                "reads_merged":NaN,
+                "refseq_mapped_reads":NaN,
+                "refseq_unmapped_reads":NaN,
+                "clusters_total":NaN,
+                "clusters_hidepth":NaN,
+                "hetero_est":NaN,
+                "error_est":NaN,
+                "reads_consens":NaN
+            },
+            "depths":{}
+        },
+        "T173Hxc":{
+            "name":"T173Hxc",
+            "barcode":"AATGGC",
+            "files":{
+                "fastqs":[
+                    {
+                        "__tuple__":true,
+                        "items":[
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T173Hxc_R1_.fastq.gz",
+                            "/nata/joiglu/crepidostomum2/results/2023-05-17/PAR2no15_fastqs/T173Hxc_R2_.fastq.gz"
+                        ]
+                    }
+                ],
+                "edits":[],
+                "mapped_reads":[],
+                "unmapped_reads":[],
+                "clusters":[],
+                "consens":[],
+                "database":[]
+            },
+            "stats_dfs":{
+                "s1":{
+                    "reads_raw":1719133
+                },
+                "s2":{
+                    "reads_raw":NaN,
+                    "trim_adapter_bp_read1":NaN,
+                    "trim_adapter_bp_read2":NaN,
+                    "trim_quality_bp_read1":NaN,
+                    "trim_quality_bp_read2":NaN,
+                    "reads_filtered_by_Ns":NaN,
+                    "reads_filtered_by_minlen":NaN,
+                    "reads_passed_filter":NaN
+                },
+                "s3":{
+                    "merged_pairs":NaN,
+                    "clusters_total":NaN,
+                    "hidepth_min":NaN,
+                    "clusters_hidepth":NaN,
+                    "avg_depth_total":NaN,
+                    "avg_depth_mj":NaN,
+                    "avg_depth_stat":NaN,
+                    "sd_depth_total":NaN,
+                    "sd_depth_mj":NaN,
+                    "sd_depth_stat":NaN,
+                    "filtered_bad_align":NaN
+                },
+                "s4":{
+                    "hetero_est":NaN,
+                    "error_est":NaN
+                },
+                "s5":{
+                    "clusters_total":NaN,
+                    "filtered_by_depth":NaN,
+                    "filtered_by_maxH":NaN,
+                    "filtered_by_maxAlleles":NaN,
+                    "filtered_by_maxN":NaN,
+                    "reads_consens":NaN,
+                    "nsites":NaN,
+                    "nhetero":NaN,
+                    "heterozygosity":NaN
+                }
+            },
+            "stats":{
+                "state":1,
+                "reads_raw":1719133,
                 "reads_passed_filter":NaN,
                 "reads_merged":NaN,
                 "refseq_mapped_reads":NaN,

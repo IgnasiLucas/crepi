@@ -1,5 +1,5 @@
 ---
-title: "Alignment and SNP calling with `ipyrad` for *Crepidostomum* sp."
+title: "Demultiplexing of ddRAD sequence data"
 author: "Mar Llaberia and José Ignacio Lucas Lledó"
 date: "`r Sys.Date()`"
 output:
@@ -8,24 +8,28 @@ output:
 bibliography: ../../doc/references.bib
 ---
 
-# Analysis with `ipyrad`
+# Introduction
 
-The goal of the assembly process is to convert raw or sorted `fastq` data into assembled loci that can be 
-formatted for downstream analyses in phylogenetic or population genetic inference software. `ipyrad`offers 
+The goal of the assembly process is to convert raw or sorted `fastq`
+data into assembled loci that can be formatted for downstream analyses
+in phylogenetic or population genetic inference software. `ipyrad` offers
 an atomized process of sequential steps to create a modular workflow.
-
-`ipyrad` works in bash command line, and needs an input file (demux format, i.e. .txt) with all the analysis
-information you want to carry out. It is very easy to use, as it has a straigforward procedure with only 7 
-steps that you can execute all in one, or one by one (as we do here). Anyways, we need to create these input
-file and specify the parameters needed for a given assembly. `ipyrad` will automatically create this file
+`ipyrad` works in bash command line, and needs an input file (*demux*
+format, i.e. .txt) with all the analysis information you want to carry
+out. It is very easy to use, as it has a straightforward procedure with
+only 7 steps that you can execute all in one, or one by one (as we do here).
+Anyways, we need to create these input file and specify the parameters
+needed for a given assembly. `ipyrad` will automatically create this file
 with the argument `-n`, and we only need to modify the parameters. 
-Manual of `ipyrad`: https://ipyrad.readthedocs.io/en/latest/6-params.html
+Manual of `ipyrad`:
+[https://ipyrad.readthedocs.io/en/latest/6-params.html](https://ipyrad.readthedocs.io/en/latest/6-params.html)
 
-The *params* file lists in each line one parameter, followed by a \#\# mark, the name of the parameter, and
-then a short description of its prupose. Note: not all the parameters are needed in all steps. The ideal is
-that you modify all the parameters at the same time, and then, execute all steps together. But, as we only
-need for now the first and (maybe) the second steps (demultiplex and filtering), we will only modify the
-steps that we need. 
+The *params* file lists in each line one parameter, followed by a \#\# mark,
+the name of the parameter, and then a short description of its purpose.
+Note: not all the parameters are needed in all steps. The ideal is that you
+modify all the parameters at the same time, and then, execute all steps together.
+But, as we only need for now the first and (maybe) the second steps (demultiplex
+and filtering), we will only modify the steps that we need. 
 
 The parameters to take in account in ALL steps are:
 
@@ -59,39 +63,42 @@ The parameters to take in account in ALL steps are:
 -   `[27] [output_formats]`: Output formats (set to `*` -all-)
 -   `[28] [pop_assign_file]`: Path to population assignment file
 
-## Step 0: Load raw data (`.fastq`) and create a directory 
+In our case, we have many libraries with multiple lanes of sequencing
+for the samples (samples of different species, important point later).
+To begin with the assembly process, we have to demultiplex the barcodes
+and join the multiple lanes of sequence data that belong to the same
+samples. To do that, first we need to create a directory (a folder where
+all the outputs will be saved) and the input file for every fastq.gz
+and barcode file. /*/ Don't move or rename directories that ipyrad creates
+or your assembly will break.
 
-In our case, we have many libraries with multiple lanes of sequencing for the samples (samples of different
-species, important point later). To begin with the assembly process, we have to demultiplex the barcodes 
-and join the multiple lanes of sequence data that belong to the same samples. To do that, first we need 
-to create a directory (a folder where all the outputs will be saved) and the input file for every fastq.gz
-and barcode file. /*/ Don't move or rename directories that ipyrad creates or your assembly will break.
-
-`ipyrad` works efficiently in the sense that, if you have `_R1_` and `_R2_` in the names of the fastq.gz 
-files (that we have it), it automatically detects that there are forward and reverse reads, and you 
-don't need to specify both files in the command line. Additionally, `ipyrad` detects if one sample have 
+`ipyrad` works efficiently in the sense that, if you have `_R1_` and `_R2_`
+in the names of the `fastq.gz` files, it automatically detects that there
+are forward and reverse reads, and you don't need to specify both files
+in the command line. Additionally, `ipyrad` detects if one sample have
 been sequenced several times, and join the separated sequences in one.
 
-## Step 1 - Demultiplex the raw data files
-
+## Demultiplex the raw data files
 ### Change the large name of files
+Before execute the Step 1, I'm going to change the names of the raw data.
+I'm going to create symbolic links to the original file. That is to say,
+basically create a "direct access" to the raw data but with the name that
+interests us. Why am I doing this? In short, because the original file names
+for the forward and reverse reads (R1 and R2) of the same library didn't
+match. This represents a serious problem since if the names of these files
+are not exactly the same (except for R1 and R2) `ipyrad` does not identify
+them as part of the same run and therefore, only demultiplexes the forward
+read. By creating symbolic links, we only modify the names of the "shortcuts"
+to match without damaging the original data.
 
-Before execute the Step 1, I'm going to change the names of the raw data. I'm going to create symbolic 
-links to the original file. That is to say, basically create a "direct access" to the raw data but with 
-the name that interests us.
-Why am I doing this? In short, because the original file names for the forward and reverse reads 
-(R1 and R2) of the same library didn't match. This represents a serious problem since if the names of 
-these files are not exactly the same (except for R1 and R2) `ipyrad` does not identify them as part 
-of the same run and therefore, only demultiplexes the forward read.
-By creating symbolic links, we only modify the names of the "shortcuts" to match without damaging the
-original data.
-
-Additionally to the symbolic links, I'm going to take advantage of this step and modify the name 
-of libraries to join later the sequences of the same sample present in the two PAR libraries. 
-The thing here is, since PAR3 is a "replicate" of PAR2, the barcodes used to sequence PAR3 are the 
-same of PAR2. So, the barcode files to demultiplex both libraries are the same. This being the case, 
-I change the name of PAR3 to PAR2 in the symbolic links. This way, later in step 1, `ipyrad` will 
-"understand" that there is an individual with two sequences files, and then merge them in one single file.
+Additionally to the symbolic links, I'm going to take advantage of this
+step and modify the name of libraries to join later the sequences of the
+same sample present in the two libraries. The thing here is, since library
+PAR3 is a "replicate" of library PAR2, the barcodes used in PAR3 are the
+same as in PAR2. So, the barcode files to demultiplex both libraries are the
+same. This being the case, I change the name of PAR3 to PAR2 in the symbolic
+links. This way, later in step 1, `ipyrad` will "understand" that there is
+an individual with two sequences files, and then merge them in one single file.
 
 ```{bash links}
 # PATHS TO RAW DATA AND working DIRECTORY
@@ -139,7 +146,7 @@ for file in $(ls -1 $FASTQDIR2/*.fastq.gz); do
 done
 
 # Symbolic links for WINDU341 folder (contains PAR2)
-## So here I changed manually the name of PAR when creating the link
+## So here I change the name of PAR when creating the link
 for file in $(ls -1 $FASTQDIR3/*.fastq.gz); do
    SAMPLE=$(echo $file | cut -d "/" -f 7)
    PAR=$(echo $SAMPLE | cut -d "_" -f 1 | sed "s/PAR3/PAR2/")
@@ -156,62 +163,80 @@ done
 ## and the origin of that sequence. 
 ```
 
-### DEMULTIPLEXING
+### Demultiplexing
+`ìpyrad` has the option `-n` to create a new parameters file. Then you
+only need to modify this file with the specifications
+you want. I did this with two loops. The first to specify the number of
+PAR library (PAR2 or PAR3; remember that only these libraries have the
+*Crepidostomum* samples, so I'm just going to take these). Then, in the second,
+I specify the number of PAR sub-libraries (from 1 to 16). I changed the name of the
+simbolic links of PAR3 to PAR2, so now all the data is in PAR2 now. 
 
-`ìpyrad` has the option incorporated with the argument -n, and you only need to modify this file after 
-being created with the specifications you want.
-I did this with two loops. The first for specify the number of PAR library (PAR2 or PAR3; remember that 
-only these libraries has the *Crepidostomum* samples, so I'm just going to take these). Then, the second, I specify the number of PAR sub-libraries. BUT, I changed the name of the simbolic links of PAR3 to PAR2,
-so now all the data is in PAR2 now. 
+First `ipyrad` will create parameters files for each PARno sublibrary
+(every PAR1, PAR2, PAR3 number). Then we modify those files before executing
+step 1. Finally, when I have them all edited, I run step 1 for all of them.
 
-The first the program will do is to create params-file.txt for each PARno file (every PAR1, PAR2, PAR3 
-number), and then you will modify it before execute Step 1.
-So, next I create the params-file.txt and, right after and in the same loop, I modify it with the 
-necessary parameters for THAT specific combination (these are the objects with $ that you see in the code).
-Finally, when I have them all created, I run step 1 for all of them.
+In order for `ipyrad` to work, this script should be executed from
+within a bash session where `conda activate ipyrad` had been called
+before, like this:
 
-(I can't execute conda inside a RMD, so it will be executed with .sh script)
-```{bash demultiplex, eval=FALSE}
+```{bash, eval=FALSE}
+# NOT RUN HERE!
+conda activate ipyrad
+R --quiet --no-save -e "rmarkdown::render('README.Rmd', output_file = 'README.html')"
+```
+
+```{bash demultiplex}
 #!/bin/bash
 PARPATH="/nata/mar/crepidostomum2/data/PARASIT_HiSeq_data_WINDU3"
 BARCODEDIR="/nata/mar/proteocephalus/data/data_info/demultiplex"
-PROJECTDIR="/nata/mar/crepidostomum2/results/2023-05-17"
+PROJECTDIR=$(pwd)
 
 for n in $(seq 1 16); do
-   ipyrad -n PAR2no${n}
-   RAWFASTQPATH="${PARPATH}/PAR2no${n}_*"
-   BARCODESPATH="$BARCODEDIR/barcod_PAR2_no${n}.txt"
-   sed -i "/## \[1\]/c $PROJECTDIR    ## [1] [project dir]"    params-PAR2no${n}.txt
-   sed -i "/## \[2\]/c $RAWFASTQPATH  ## [2] [raw_fastq_path]" params-PAR2no${n}.txt
-   sed -i "/## \[3\]/c $BARCODESPATH  ## [3] [barcodes_path]"  params-PAR2no${n}.txt
-   sed -i "/## \[7\]/c pairddrad      ## [7] [datatype]"       params-PAR2no${n}.txt
-   sed -i "/## \[8\]/c CATG, TAA      ## [8] [restriction_ov]" params-PAR2no${n}.txt
-   ipyrad -p params-PAR2no${n}.txt -s 1 -c 24
+   if [ ! -e params-PAR2no${n}.txt ]; then
+      ipyrad -n PAR2no${n}
+      RAWFASTQPATH="${PARPATH}/PAR2no${n}_*"
+      BARCODESPATH="$BARCODEDIR/barcod_PAR2_no${n}.txt"
+      sed -i "/## \[1\]/c $PROJECTDIR    ## [1] [project dir]"    params-PAR2no${n}.txt
+      sed -i "/## \[2\]/c $RAWFASTQPATH  ## [2] [raw_fastq_path]" params-PAR2no${n}.txt
+      sed -i "/## \[3\]/c $BARCODESPATH  ## [3] [barcodes_path]"  params-PAR2no${n}.txt
+      sed -i "/## \[7\]/c pairddrad      ## [7] [datatype]"       params-PAR2no${n}.txt
+      sed -i "/## \[8\]/c CATG, TAA      ## [8] [restriction_ov]" params-PAR2no${n}.txt
+   fi
+   if [ ! -d PAR2no${n}_fastqs ]; then
+      ipyrad -p params-PAR2no${n}.txt -s 1 -c 24
+   fi
 done
 ```
 
+## Removing unwanted samples (branching)
 
+In a previous script, I tried to move the `fastq.gz` files belonging
+to *Proteocephalus* (abbreviated P in the 4th position in the file name)
+and *Crepidostomum* (abbreviated C). But if I do it this way, the
+summary file of each demultiplex (.json) becomes useless. So in this
+script, I do it differently using `ipyrad`.
 
-## Remove samples of other species (branching)
+NOTE: we only do this in anticipation that perhaps, later on, we will
+continue executing the next steps available in `ipyrad` such as mapping,
+clustering or filtering.
 
-In a previous script, I tried to move the fastq.gz files belonging to Proteocephalus (abbreviated P in the 4th position
-in the name of data) and Crepidostomum (abbreviated C), but if I do it this way, the summary file of each demultiplex
-(.json) becomes useless. So in this script, I do it differently using `ipyrad`.
-NOTE: we only do this in anticipation that perhaps, later on, we will continue executing the next steps available in
-`ipyrad` such as mapping, clustering or filtering.
-
-Then, to "remove" from the assembly those sequence data that we don't want, we need to use the `ipyrad` argument -m
-(merge) and -b (branch). In -merge step, we encompass all the assemblies created in the previous steps, that is,
-encompass all + params-PAR2no(1 to 16) in one single params-PARall.txt.
-Then, with -branch option, we specify all the individuals that we want to keep in the assembly (that is, the
-*Crepidostomum* individuals in my case), and create an assembly with all the fastq.gz definied and only those
-samples that I am interested in.
-To do that, we need a list with all the individual names of *Crepidostomum*. This list can be obtained from
-the "barcode_crepi.txt" file present in the folder where the barcodes are located, or simply "finding" and
-"listing" the sample names in the output folder "parasite" (the way I do it).
+Then, to "remove" from the assembly those sequence data that we don't
+want, we need to use the `ipyrad` argument `-m` (merge) and `-b` (branch).
+In the merging step, we encompass all the assemblies created in the
+previous steps. That is, we merge all `params-PAR2no*` (1 to 16) in one
+single `params-PARall.txt`. Then, with the *branch* option, we specify
+all the individuals that we want to keep in the assembly; namely, the
+*Crepidostomum* individuals in this case. And we create an assembly
+with all the `fastq.gz` definied and only those samples that I am
+interested in. To do that, we need a list with all the individual names
+of *Crepidostomum*. This list can be obtained from the `barcode_crepi.txt`
+file present in the folder where the barcodes are located, or simply 
+*finding* and *listing* the sample names in the output folders (the way I
+chose).
 
 ```{bash}
-REFPATH="../2023-05-12/RAGTAG/z.fa"
+REFPATH="../2023-05-15/assembly.fasta"
 
 ## Obtain the list of Crepidostomum sample names (abbreviated C or c)
 if [ ! -e samples.txt ]; then
@@ -225,32 +250,34 @@ if [ ! -e params-PARall.txt ]; then
    ipyrad -m PARall params-PAR*
 fi
 
-# Branch to keep only the Crepidostomum samples. Well, we not add the samples
-# LR18_06, Mo18_05, FU37, 17_Om07 and 17_Om05, of different host and probably different species.
+# Branch to keep only the Crepidostomum samples. Well, we do not add the samples
+# LR18_06, Mo18_05, FU37, 17_Om07 and 17_Om05, of different host and probably
+# different species.
 
-cat samples.txt | xargs ipyrad -p params-PARall.txt -b crepi
+if [ ! -e params-crepi.txt ]; then
+   cat samples.txt | xargs ipyrad -p params-PARall.txt -b crepi
 
-sed -i "/## \[5\]/c reference    ## [5] [assembly_method]"       params-crepi.txt
-sed -i "/## \[6\]/c              ## [6] [reference_sequence]"    params-crepi.txt
-sed -i "/## \[9\]/c 4            ## [9] [max_low_qual_bases]"    params-crepi.txt
-sed -i "/## \[10\]/c 33          ## [10] [phred_Qscore_offset]"  params-crepi.txt
-sed -i "/## \[11\]/c 6           ## [11] [mindepth_statistical]" params-crepi.txt
-sed -i "/## \[12\]/c 4           ## [12] [mindepth_majrule]"     params-crepi.txt
-sed -i "/## \[13\]/c 1000        ## [13] [maxdepth]"             params-crepi.txt
-sed -i "/## \[14\]/c 0.93        ## [14] [clust_threshold]"      params-crepi.txt
-sed -i "/## \[17\]/c 35          ## [17] [filter_min_trim_len]"  params-crepi.txt
-sed -i "/## \[18\]/c 2           ## [18] [max_alleles_consens]"  params-crepi.txt
-sed -i "/## \[19\]/c 0.05        ## [19] [max_Ns_consens]"       params-crepi.txt
-sed -i "/## \[20\]/c 0.05        ## [20] [max_Hs_consens]"       params-crepi.txt
-sed -i "/## \[21\]/c 10          ## [21] [min_samples_locus]"    params-crepi.txt
-sed -i "/## \[22\]/c 0.1         ## [22] [max_SNPs_locus]"       params-crepi.txt
-sed -i "/## \[23\]/c 8           ## [23] [max_Indels_locus]"     params-crepi.txt
-sed -i "/## \[24\]/c 0.5         ## [24] [max_shared_Hs_locus]"  params-crepi.txt
-sed -i "/## \[25\]/c 0, 0, 0, 0  ## [25] [trim_reads]"           params-crepi.txt
-sed -i "/## \[26\]/c 0, 0, 0, 0  ## [26] [trim_loci]"            params-crepi.txt
-sed -i "/## \[27\]/c *           ## [27] [output_formats]"       params-crepi.txt
-sed -i "/## \[28\]/c ipopmap.txt ## [28] [pop_assign_file]"      params-crepi.txt
-
+   sed -i "/## \[5\]/c reference    ## [5] [assembly_method]"       params-crepi.txt
+   sed -i "/## \[6\]/c $REFPATH     ## [6] [reference_sequence]"    params-crepi.txt
+   sed -i "/## \[9\]/c 4            ## [9] [max_low_qual_bases]"    params-crepi.txt
+   sed -i "/## \[10\]/c 33          ## [10] [phred_Qscore_offset]"  params-crepi.txt
+   sed -i "/## \[11\]/c 6           ## [11] [mindepth_statistical]" params-crepi.txt
+   sed -i "/## \[12\]/c 4           ## [12] [mindepth_majrule]"     params-crepi.txt
+   sed -i "/## \[13\]/c 1000        ## [13] [maxdepth]"             params-crepi.txt
+   sed -i "/## \[14\]/c 0.93        ## [14] [clust_threshold]"      params-crepi.txt
+   sed -i "/## \[17\]/c 35          ## [17] [filter_min_trim_len]"  params-crepi.txt
+   sed -i "/## \[18\]/c 2           ## [18] [max_alleles_consens]"  params-crepi.txt
+   sed -i "/## \[19\]/c 0.05        ## [19] [max_Ns_consens]"       params-crepi.txt
+   sed -i "/## \[20\]/c 0.05        ## [20] [max_Hs_consens]"       params-crepi.txt
+   sed -i "/## \[21\]/c 10          ## [21] [min_samples_locus]"    params-crepi.txt
+   sed -i "/## \[22\]/c 0.1         ## [22] [max_SNPs_locus]"       params-crepi.txt
+   sed -i "/## \[23\]/c 8           ## [23] [max_Indels_locus]"     params-crepi.txt
+   sed -i "/## \[24\]/c 0.5         ## [24] [max_shared_Hs_locus]"  params-crepi.txt
+   sed -i "/## \[25\]/c 0, 0, 0, 0  ## [25] [trim_reads]"           params-crepi.txt
+   sed -i "/## \[26\]/c 0, 0, 0, 0  ## [26] [trim_loci]"            params-crepi.txt
+   sed -i "/## \[27\]/c *           ## [27] [output_formats]"       params-crepi.txt
+   sed -i "/## \[28\]/c ipopmap.txt ## [28] [pop_assign_file]"      params-crepi.txt
+fi
 
 # Creating the popmap file
 if [ ! -e ipopmap.txt ]; then
@@ -274,8 +301,9 @@ if [ ! -e ipopmap.txt ]; then
    }' samples.txt > ipopmap.txt
 fi
 
-ipyrad -p params-crepi.txt -f -s 2 -c 32 1> ipyrad.log 2> ipyrad.err
-
+if [ ! -e crepi_edits/s2_rawedit_stats.txt ]; then
+   ipyrad -p params-crepi.txt -f -s 2 -c 32 1> ipyrad.log 2> ipyrad.err
+fi
 ```
 
 ## Diagnostics
@@ -283,7 +311,7 @@ ipyrad -p params-crepi.txt -f -s 2 -c 32 1> ipyrad.log 2> ipyrad.err
 
 ```{bash}
 if [ ! -e crepi_path.txt ]; then
-   find parasite -name '*_R1_.fastq.gz' | \
+   find . -name '*_R1_.fastq.gz' | \
    grep -E ".{4}[C]" | grep -v "trimmed" | sort | \
    gawk '{S = S " " $1}END{print S}' > crepi_path.txt
 fi
@@ -323,7 +351,22 @@ qc_plot_collection(qc, modules = modules)
 ```
 
 
-### Demultiplexing
+### Demultiplexing results
+Every `PAR2no*_fastqs` folder, resulting from the demultiplexing of
+every sub-library, contains an `s1_demultiplex_stats.txt` file, with three
+sections, separated by blank lines. The first section shows the number of
+reads processed from each `fastq.gz` file demultiplexed with the same
+set of barcodes. The second section shows the number of reads assigned to
+each sample from those files. The third section also shows the number of
+reads assigned to samples, and includes the searched and the observed
+codeword corresponding to each sample. It also shows the number of reads
+not assigned to any sample. Note that in the third section (but not in the
+second) the name of the sample may be supplemented with the suffix
+*technical-replicate-0* if any sample in the barcode got assigned more than
+one codeword. That happens in libraries PAR2no4, PAR2no5 and PAR2no6 only.
+
+Because there are 16 such files, below I gather each section from all them
+in a separate file.
 
 ```{bash demultiplexSummaries}
 if [ ! -e demultiplex_summary3.txt ]; then
@@ -337,8 +380,12 @@ if [ ! -e demultiplex_summary3.txt ]; then
 fi
 ```
 
+Note that the demultiplexing retrieved FASTQ files for samples that
+are not of interest here, but were sequenced together.
+
 ```{r demultiplexStats}
 library(ggplot2)
+library(kableExtra)
 dem1 <- read.table('demultiplex_summary1.txt',
                    col.names = c('raw_file', 'total_reads', 'cut_found', 'bar_matched'))
 dem1$no_match <- dem1$total_reads - dem1$bar_matched
@@ -348,46 +395,51 @@ dem1$barcode_file <- sapply(strsplit(dem1$raw_file, '_'), '[[', 1)
 dem1$library      <- sapply(strsplit(dem1$raw_file, '_'), '[[', 2)
 dem1$sense        <- sapply(strsplit(dem1$raw_file, '_'), '[[', 3)
 dem1$seqRun       <- sapply(strsplit(dem1$raw_file, '[_\\.]', perl = TRUE), '[[', 4)
+kable(dem1) %>% kable_styling()
+ggplot(dem1, aes(x = library, y = no_match_prop)) + geom_boxplot()
+ggplot(dem1, aes(x = seqRun,  y = no_match_prop)) + geom_boxplot()
+```
 
+I think PAR1, PAR2 and PAR3 corresponded to three sequencing runs, while
+L2 and L8 are the actual libraries. If so, library L2 got sequenced in one
+run (*41*), while library L8 got sequenced in two runs, *11* and *13*. For
+some reason (higher error rates?) the fraction of reads not assigned to any
+sample is higher in sequencing run *41*.
+
+```{r, message=FALSE}
+library(dplyr)
 dem2 <- read.table('demultiplex_summary2.txt',
                    col.names = c('sample_name', 'total_reads'))
-dem2v <- sapply(split(dem2$total_reads, dem2$sample_name), sum)
-samples <- scan('samples.txt', what = 'character')
-multiplicity <- table(dem2$sample_name)
-overSequenced <- names(multiplicity[names(multiplicity) %in% samples & multiplicity > 1])
+# only Crepidostomum:
+samples <- scan('samples.txt', what = 'character', quiet = TRUE)
+dem2 <- dem2[dem2$sample_name %in% samples,]
 
-dem3 <- read.table('demultiplex_summary3.txt',
-                   col.names = c('sample_name', 'true_bar', 'obs_bar', 'N_records'),
-                   na.strings = '_')
+# join reads of the same sample
+dem2v <- group_by(dem2, sample_name) %>%
+   summarise(total_reads = sum(total_reads),
+             multiplicity = n())
+dem2v <- as.data.frame(dem2v) # I hate tibbles
 
-ggplot(dem1, aes(x = library, y = no_match_prop)) + geom_boxplot()
-plot(ecdf(dem2[dem2$sample_name %in% samples, 'total_reads']),
+plot(ecdf(dem2v$total_reads),
      main = 'Total number of reads per sample')
-plot(ecdf(dem2v[samples]), main = 'Total number of reads per sample')
-points(dem2v[overSequenced],
-       sapply(overSequenced, function(x) sum(dem2v < dem2v[x]) / length(dem2v)),
+points(dem2v[dem2v$multiplicity > 1, 'total_reads'],
+       ecdf(dem2v$total_reads)(dem2v[dem2v$multiplicity > 1, 'total_reads']),
        col = 'red', pch = 16, cex = 1.2)
 ```
 
 According to the barcodes, a few samples were sequenced twice, with different
-barcodes each time. Among *Phyllodistomum* samples, the ones with more than one
-set of FASTQ files are painted red in the previous plot, and they are the
-following: `r overSequenced`.
+barcodes each time. They are painted red in the previous plot to show that
+they got about twice as many reads as the rest, as expected. Only one sample
+got much fewer than 1 milion reads, namely: `r dem2v[dem2v$total_reads < 1000000, 'sample_name']`
 
-
-
-
-
-
-###----------------------------------------------------
-```{r summary2}
+```{r summary2, fig.width=10}
 library('MetBrewer')
-edits <- read.table('s2_rawedit_stats.txt')
+edits <- read.table('crepi_edits/s2_rawedit_stats.txt')
 plot(c(1, dim(edits)[1]), c(50, 1e+09), type = 'n', xlab = '', ylab = '',
      axes = FALSE, log = 'y', main = 'Number of reads per sample')
 barplot(t(edits[order(edits$reads_raw, decreasing = TRUE), 6:8]),
         col = met.brewer('Egypt', 3), border = met.brewer('Egypt', 3),
-        las = 2, cex.names = 0.7, add = TRUE, log = 'y')
+        las = 2, cex.names = 0.4, add = TRUE, log = 'y', space = 0)
 legend(50, 1.0e+09, legend = c('Filtered by Ns', 'Filtered by length', 'Passed filter'),
        fill = met.brewer('Egypt', 3))
 ```
@@ -395,99 +447,6 @@ legend(50, 1.0e+09, legend = c('Filtered by Ns', 'Filtered by length', 'Passed f
 Note the logarithmic scale in the plot above. Actually, the vast majority of reads passed
 the filter. Plot in this way, we can see better that filters acted proportionally on every
 sample.
-
-The most interesting table is the one at the end of the `crepi_stats.txt` file. This file
-contains several tables, I can use the `skip` argument of `read.table()` to read only the
-last table of the file. I look up manually the number of lines to skip, using, for example,
-the command `gawk '(/## Final Sample stats summary/){print NR}' crepi_stats.txt`. And we
-know there are 102 samples, so just as many lines or data to read.
-
-```{r crepiSummaries}
-library(ggplot2)
-crepi <- read.table('crepi_stats.txt', skip = 3432, nrows = 102)
-ggplot(data = crepi, mapping = aes(x = reads_raw, y = clusters_hidepth)) +
-   geom_point()
-```
-
-The number of clusters wiht high depth reaches a maximum between 75000 and 100000 if
-if the number of raw reads is above 3 million. Most samples got more than 25000 loci
-sequenced at high (>4X) depth. It seems a lot, but unfortunately it's not more than
-1/3 of the loci targeted. Because the fraction of loci at high depth is independent
-among samples, the fraction of loci sequenced at high depth in $n$ samples is expected
-to be $\prod_{i=1}^n p_i$, where $p_i$ is the fraction of loci sequenced at high depth
-per sample. Assuming the number of total loci targeted is 75000, the fraction of loci
-highly covered in all 102 samples would be expected to be 
-`r prod(pmin(crepi$clusters_hidepth, 75000) / 75000)`. That is, zero.
-
-Let's order the sampels decreasingly by the number of clusters (i.e., loci) with high
-depth, and see the number of high depth loci expected to be shared by chance among the
-$x$ first samples, as a function of $x$.
-
-```{r ExpectedSharedLoci}
-AssumedMaxLoci <- 75000
-crepi <- crepi[order(crepi$clusters_hidepth, decreasing = TRUE), ]
-crepi$fraction <- pmin(crepi$clusters_hidepth, AssumedMaxLoci) / AssumedMaxLoci
-crepi$shared <- sapply(1:dim(crepi)[1], function(x) AssumedMaxLoci * prod(crepi[1:x, 'fraction']))
-plot(crepi$shared, type ='l', ylab='Expected num. shared loci', log = 'y')
-abline(h = 1, lty = 2, col = 'red')
-```
-
-The good news is that there are about 20 samples that should share almost all loci, and
-there may be interesting analyses that can be done with those. The bad news is that we
-may have to through away about 50% of the samples to be able to work with a (small) common
-set of loci.
-
-Because reads have been mapped to the reference genome, many loci seem to be a composition
-of several nearby loci, with very variable coverage. Although in that case, I don't know how
-`ipyrad` can keep track of the phase. In any case, a representative number
-of samples per locus cannot be extracted directly from the `parasite/crepi_outfiles/crepi.loci`
-file, because samples listed in a locus in that file may contribute coverage to
-different parts of locus. Below I parse the VCF and extract the maximum number of samples
-genotyped per locus.
-
-```{bash MaxCoveragePerLocus}
-if [ ! -e MaxCoveragePerLocus.txt ]; then
-   gawk '(/^[^#]/){
-      split($3, A, /_/)
-      LOCUS = A[1]
-      if (LOCUS != LASTLOCUS) {
-         print LASTLOCUS "\t" MAXNUMSAMPLES
-         LASTLOCUS = LOCUS
-         MAXNUMSAMPLES = 0
-      }
-      split($8, B, /;/)
-      for (b in B) {
-         split(B[b], C, /=/)
-         if (C[1] == "NS") NUMSAMPLES = C[2]
-      }
-      if (NUMSAMPLES > MAXNUMSAMPLES) MAXNUMSAMPLES = NUMSAMPLES
-   }END{
-      print LASTLOCUS "\t" MAXNUMSAMPLES
-   }' parasite/crepi_outfiles/crepi.vcf > MaxCoveragePerLocus.txt
-fi
-```
-
-```{r MaxCovPerLocusHist}
-MaxCov <- read.table('MaxCoveragePerLocus.txt', skip = 1,
-                     col.names = c('Locus', 'NS'))
-barplot(table(MaxCov$NS), xlab = 'Number of samples',
-        ylab = 'Num. of loci covered in as many samples',
-        las = 2)
-```
-
-Below I try to use `finerad_input.py`, by Edgardo M. Ortiz, to generate the input for
-`fineRADstructure`. It's a script released under GNU GPLv3.0.
-
-```{bash finerad_input}
-if [ ! -e crepi.finerad ]; then
-   if [ ! -e finerad_input.py ]; then
-      wget https://github.com/edgardomortiz/fineRADstructure-tools/blob/master/finerad_input.py
-   fi
-   finerad_input.py -i parasite/crepi_outfiles/crepi.alleles \
-                    -o crepi.finerad \
-                    -n 10
-fi
-```
 
 ```{r SessionInfo}
 sessionInfo()

@@ -176,7 +176,21 @@ Ipyrad was run in Garnatxa with different clustering thresholds, between
 0.94 and 0.98. I reccommend using results for clustering threshold 0.95.
 
 # 2023-05-17
-This is the `ipyrad` run to demultiplex the FASTQ files.
+Here we run Ipyrad to demultiplex the original FASTQ files from the ddRAD
+experiment. The process was tricky because of how messy the sequencing
+design was. Unforgivable.
+
+Apparently data came from three sequencing runs, two of them yielding
+less than 5% of unassigned reads, but one yielding around 17% of reads
+unassigned. The quality control of the demultiplexed reads did not reveal
+any apparent reason for such a failure of the third sequencing run, although
+the issue was not researched in depth.
+
+Among *Crepidostomum* samples (others were present in the original files)
+only one had a much lower yield than the rest: N044Cx2, with just over
+one hundred thousand reads. All other samples got between 1 and 3 million
+reads if sequenced once, or around 4 million reads in the case of six
+samples that got sequenced twice.
 
 # 2023-05-15
 We use Illumina shotgun reads and `ntedit` with different values of *k*

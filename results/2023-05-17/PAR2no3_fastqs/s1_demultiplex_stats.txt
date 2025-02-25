@@ -1,58 +1,60 @@
 raw_file                               total_reads    cut_found  bar_matched
+PAR2no3_L2_R1_41.fastq                    13495395     13495395     11093484
+PAR2no3_L2_R2_41.fastq                    13495395     13495395     11093484
 PAR2no3_L8_R1_11.fastq                    12149921     12149921     11782067
 PAR2no3_L8_R2_11.fastq                    12149921     12149921     11782067
 PAR2no3_L8_R1_13.fastq                    13966060     13966060     13477811
 PAR2no3_L8_R2_13.fastq                    13966060     13966060     13477811
 
 sample_name                            total_reads
-B045Hxa                                     912215
-B115Hxa                                    1264755
-L043Cxd                                     886743
-L089Cma                                    1018898
-L089Cxd                                    1075809
-L090Cmb                                     909759
-L114Hxc                                     985599
-N005Pxc                                    1038066
-S003Cma                                    1682513
-S004Cmb                                    1502996
-S011Cxa                                     720268
-S011Cxf                                     993425
-S022Hxc                                    1007956
-S061Cmb                                    1209731
-S076Hxe                                     841290
-T011Pma                                    1144959
-T027Pxa                                     609243
-T060Pmb                                    1055381
-T079Pxd                                    1174560
-T081Pxb                                    1017711
-T083Pxb                                     770016
-T128Pxb                                    1150839
-T168Hxa                                    1039170
-W006Hxb                                    1247976
+B045Hxa                                    1544633
+B115Hxa                                    2099145
+L043Cxd                                    1628674
+L089Cma                                    1679598
+L089Cxd                                    1910168
+L090Cmb                                    1431850
+L114Hxc                                    1575804
+N005Pxc                                    1039092
+S003Cma                                    2360524
+S004Cmb                                    2394141
+S011Cxa                                    1241317
+S011Cxf                                    1662509
+S022Hxc                                    1625705
+S061Cmb                                    2039862
+S076Hxe                                    1332363
+T011Pma                                    1145506
+T027Pxa                                     610385
+T060Pmb                                    1056414
+T079Pxd                                    1175639
+T081Pxb                                    1019014
+T083Pxb                                     771299
+T128Pxb                                    1152067
+T168Hxa                                    1731551
+W006Hxb                                    2126102
 
 sample_name                               true_bar       obs_bar     N_records
-B045Hxa                                     AAGACC        AAGACC        912215
-B115Hxa                                     TCTGGT        TCTGGT       1264755
-L043Cxd                                     ATGAAT        ATGAAT        886743
-L089Cma                                     CTAACG        CTAACG       1018898
-L089Cxd                                     CAGCAG        CAGCAG       1075809
-L090Cmb                                     CGAATA        CGAATA        909759
-L114Hxc                                     GCAGGA        GCAGGA        985599
-N005Pxc                                     AATGGC        AATGGC       1038066
-S003Cma                                     AGGCTA        AGGCTA       1682513
-S004Cmb                                     GTATGC        GTATGC       1502996
-S011Cxa                                     GACGAT        GACGAT        720268
-S011Cxf                                     ACCTAA        ACCTAA        993425
-S022Hxc                                     TGCTTC        TGCTTC       1007956
-S061Cmb                                     CATTCA        CATTCA       1209731
-S076Hxe                                     AGAGCA        AGAGCA        841290
-T011Pma                                     TTGCGC        TTGCGC       1144959
-T027Pxa                                     CCTACT        CCTACT        609243
-T060Pmb                                     GGTCGG        GGTCGG       1055381
-T079Pxd                                     TGACCG        TGACCG       1174560
-T081Pxb                                     GAGAGT        GAGAGT       1017711
-T083Pxb                                     TTCGTT        TTCGTT        770016
-T128Pxb                                     GTCTAG        GTCTAG       1150839
-T168Hxa                                     TATTAG        TATTAG       1039170
-W006Hxb                                     CCGCTC        CCGCTC       1247976
-no_match                                         _             _        856103
+B045Hxa                                     AAGACC        AAGACC       1544633
+B115Hxa                                     TCTGGT        TCTGGT       2099145
+L043Cxd                                     ATGAAT        ATGAAT       1628674
+L089Cma                                     CTAACG        CTAACG       1679598
+L089Cxd                                     CAGCAG        CAGCAG       1910168
+L090Cmb                                     CGAATA        CGAATA       1431850
+L114Hxc                                     GCAGGA        GCAGGA       1575804
+N005Pxc                                     AATGGC        AATGGC       1039092
+S003Cma                                     AGGCTA        AGGCTA       2360524
+S004Cmb                                     GTATGC        GTATGC       2394141
+S011Cxa                                     GACGAT        GACGAT       1241317
+S011Cxf                                     ACCTAA        ACCTAA       1662509
+S022Hxc                                     TGCTTC        TGCTTC       1625705
+S061Cmb                                     CATTCA        CATTCA       2039862
+S076Hxe                                     AGAGCA        AGAGCA       1332363
+T011Pma                                     TTGCGC        TTGCGC       1145506
+T027Pxa                                     CCTACT        CCTACT        610385
+T060Pmb                                     GGTCGG        GGTCGG       1056414
+T079Pxd                                     TGACCG        TGACCG       1175639
+T081Pxb                                     GAGAGT        GAGAGT       1019014
+T083Pxb                                     TTCGTT        TTCGTT        771299
+T128Pxb                                     GTCTAG        GTCTAG       1152067
+T168Hxa                                     TATTAG        TATTAG       1731551
+W006Hxb                                     CCGCTC        CCGCTC       2126102
+no_match                                         _             _       3258014

@@ -1,6 +1,6 @@
 ------- ipyrad params file (v.0.9.96)-------------------------------------------
 PAR2no3                        ## [0] [assembly_name]: Assembly name. Used to name output directories for assembly steps
-/nata/mar/crepidostomum2/results/2023-05-17    ## [1] [project dir]
+/nata/joiglu/crepidostomum2/results/2023-05-17    ## [1] [project dir]
 /nata/mar/crepidostomum2/data/PARASIT_HiSeq_data_WINDU3/PAR2no3_*  ## [2] [raw_fastq_path]
 /nata/mar/proteocephalus/data/data_info/demultiplex/barcod_PAR2_no3.txt  ## [3] [barcodes_path]
                                ## [4] [sorted_fastq_path]: Location of demultiplexed/sorted fastq files
