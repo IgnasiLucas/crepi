@@ -167,13 +167,14 @@ Extraction of marker genes from an assembly supposed to be in `2023-05-12/ABYSS_
 which may have been moved to `2023-05-12/k90-kc2`.
 
 # 2023-05-18
-Mapping of demultiplexed FASTQ reads from 2023-05-17 to a reference genome in
-the `data/RefGenomes` folder that coincides with the assembly in `2023-05-12/k90-kc2`,
-with almost 6 million contigs. The SAM files could be erased.
+Mapping of demultiplexed FASTQ reads from 2023-05-17/crepi_edits to 
+the reference genome in 2023-05-15/assembly.fasta. In addition to the
+BAM files, a VCF is now being generated.
 
 # 2023-05-17b
 Ipyrad was run in Garnatxa with different clustering thresholds, between
 0.94 and 0.98. I reccommend using results for clustering threshold 0.95.
+This is a de novo assembly of ddRAD loci.
 
 # 2023-05-17
 Here we run Ipyrad to demultiplex the original FASTQ files from the ddRAD
@@ -198,9 +199,34 @@ to polish the ONT-PB assembly from 2023-05-12 (that is, the one obtained
 by using Nanopore data first and PacBio data for polishing). Note that
 the polishing removed a few contigs in addition to introducing a lot of
 editions. We retain the polishing made with $k=31$ and re-write the polished
-assembly descending length order of the contigs, after removing contigs
+assembly in descending length order of the contigs, after removing contigs
 suspected to have multiplicities higher than 1. The final, ordered assembly
 is saved in `assembly.fasta` and it is 206254914 nucleotides long.
+
+# 2023-05-13
+Just a close look at the two assemblies obtained in `2023-05-12`, to try
+to understand the reasons why they are so different and why the coverage
+per contig is so variable.
+
+The two assemblies (ONT_PB and PB_ONT) start with the same amount of data.
+It is only the last, polishing step where they diverge. When using Nanopore
+data for polishing, we get higher average coverage, and very few contigs
+get filtered out. But when using PacBio data for polishing, the average
+coverage is below the coverage threshold, and most contigs get discarded
+(I think). 
+
+In any case, the several or the few contigs kept in the assembly have a
+bimodal coverage distribution, with peaks at 4 and at 20. Results from
+`flye` suggest only contigs with coverage around 4 seem to represents
+fractions of the genome present only once (multiplicity 1), while coverage
+higher than 10 indicates higher and variable multiplicity. The reason
+for the second sharp coverage peak is unknown. I would feel more comfrotable
+BLASTing contigs against the *nr* database, to make sure they are neither
+vertebrate nor bacterial.
+
+There are some *circular* contigs. I don't remove them. But I do sugges
+removal of all contigs with multiplicity larger than 1. They are a small
+fraction of the assembly.
 
 # 2023-05-12
 Assembly of the reference genome using all available reads, despite of
