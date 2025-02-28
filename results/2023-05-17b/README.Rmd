@@ -30,15 +30,15 @@ if [ ! -d crepi_edits ]; then
    # Hard links not allowed for directories
    mkdir crepi_edits
 fi
-for f in $(ls -1 /nata/mar/crepidostomum2/results/2023-05-17/crepi_edits); do
+for f in $(ls -1 /nata/joiglu/crepidostomum2/results/2023-05-17/crepi_edits); do
    if [ ! -e crepi_edits/$f ]; then
-      ln /nata/mar/crepidostomum2/results/2023-05-17/crepi_edits/$f crepi_edits/$f
+      ln /nata/joiglu/crepidostomum2/results/2023-05-17/crepi_edits/$f crepi_edits/$f
    fi
 done
 
 if [ ! -e crepi.json ]; then
-   JSON=/nata/mar/crepidostomum2/results/2023-05-17/crepi.json
-   sed 's|/nata/mar/crepidostomum2/results/2023-05-17|../2023-05-17b|g' $JSON | \
+   JSON=/nata/joiglu/crepidostomum2/results/2023-05-17/crepi.json
+   sed 's|/nata/joiglu/crepidostomum2/results/2023-05-17|../2023-05-17b|g' $JSON | \
    sed 's|Merged: PAR2no10, PAR2no11, PAR2no12, PAR2no13, PAR2no14, PAR2no15, PAR2no16, PAR2no1, PAR2no2, PAR2no3, PAR2no4, PAR2no5, PAR2no6, PAR2no7, PAR2no8, PAR2no9||g' \
    > crepi.json
 fi
@@ -48,8 +48,8 @@ if [ ! -e ipopmap.txt ]; then
 fi
 
 if [ ! -e params-crepi.txt ]; then
-   PARAMS=/nata/mar/crepidostomum2/results/2023-05-17/params-crepi.txt
-   sed 's|/nata/mar/crepidostomum2/results/2023-05-17|../2023-05-17b|g' $PARAMS | \
+   PARAMS=/nata/joiglu/crepidostomum2/results/2023-05-17/params-crepi.txt
+   sed 's|/nata/joiglu/crepidostomum2/results/2023-05-17|../2023-05-17b|g' $PARAMS | \
    sed 's|Merged: PAR2no10, PAR2no11, PAR2no12, PAR2no13, PAR2no14, PAR2no15, PAR2no16, PAR2no1, PAR2no2, PAR2no3, PAR2no4, PAR2no5, PAR2no6, PAR2no7, PAR2no8, PAR2no9||g' \
    > params-crepi.txt
 fi
