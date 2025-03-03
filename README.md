@@ -174,6 +174,21 @@ mapped reads. It is mandatory to explore the VCF generated with GATK in
 2023-05-18 to identify the samples with too much missing data, and to get
 an idea of the number of SNPs genotyped in a certain fraction of samples.
 
+As expected, the following samples have much less data than the rest and
+must be removed:
+
+N044Cx2
+N048Cma
+N048Cmb
+N048Cmc
+S031Cmc
+T165Cxa
+
+Most SNPs are at very short distance from others. The thinning filter
+removes vasts amounts of data. Keeping SNPs at no less than 200 bases
+apart (which is close!) leaves us with only 4902 SNPs gentoyped in
+at least 2/3 of the remaining 90 samples.
+
 # 2023-05-18
 Mapping of demultiplexed FASTQ reads from `2023-05-17/crepi_edits` to 
 the reference genome in `2023-05-15/assembly.fasta`. In addition to the

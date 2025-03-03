@@ -1,0 +1,164 @@
+---
+title: 'Evaluation of the VCF result from GATK'
+author: "Mar Llaberia-Robledillo & J. Ignacio Lucas Lledó"
+date: "2023-05-23"
+output:
+  html_document:
+    toc: TRUE
+---
+
+On `2023-05-18` GATK obtained a large VCF with SNP calls among all the ddRAD
+samples. The VCF is a very incomplete matrix of genotypes. We need describe
+the missingness in that matrix. How many SNPs are genotyped in at least *n*
+samples? What samples have less than a certain fraction of SNPs genotyped?
+We use `vcftools` to answer these questions.
+
+# Individual Filtering Options 
+
+There may be some individuals with low data. Before deciding what individuals
+to remove from the data set (i) we need to see the proportion of sites per individual,
+and (ii) we need to see the proportion of data they miss.
+
+The `--missing-indv` option commands `vcftools` to  generate a file reporting
+the missingness on a per-individual basis. The file has the suffix ".imiss".
+
+```{bash}
+VCF=../2023-05-18/crepi.vcf
+if [ ! -e crepi.imiss ]; then
+   vcftools --vcf $VCF \
+            --out crepi \
+            --missing-indv 1> vcftools.log 2> vcftools.err
+fi
+```
+
+We graphically represent the results, and draw a threshold to determine the filter of the individuals.
+
+```{r}
+missingness <- read.table('crepi.imiss', header = TRUE)
+plot(ecdf(missingness$F_MISS),
+     xlab = 'Fraction of sites missing',
+     main = 'ECDF of fraction of sites missing per individual')
+abline(v = 0.95, col = 'red', lty = 2)
+VeryBad <- as.character(missingness[missingness$F_MISS > 0.95, 'INDV'])
+VeryBad
+write.table(VeryBad, file = 'VeryBad.txt', quote = FALSE, row.names = FALSE, col.names = FALSE)
+```
+
+Given the discontinuity in the distribution of missingness, it seems reasonable to
+draw a threshold at 95% of missing data. Out of 96 individuals, 90 are left.
+
+```{bash}
+VCF=../2023-05-18/crepi.vcf
+if [ ! -e crepi_indv.recode.vcf ]; then
+   vcftools --vcf $VCF \
+            --out crepi_indv \
+            --remove VeryBad.txt \
+            --recode \
+            --recode-INFO-all 1>> vcftools.log 2>> vcftools.err
+fi
+```
+
+# Sites Missing and Filtering 
+After having removed the individuals with very low amounts of data, we can check
+the missingness by sites, and filter sites. We start from over 7 million sites, and
+it is not surprising that most of them are not genotyped in a large portion of samples.
+
+## Missing Sites
+```{bash}
+if [ ! -e crepi.lmiss ]; then
+   vcftools --vcf crepi_indv.recode.vcf \
+            --out crepi \
+            --missing-site 1>> vcftools.log 2>> vcftools.err
+fi
+```
+
+```{r}
+missingsite <- read.table('crepi.lmiss', header = TRUE)
+plot(ecdf(missingsite$N_MISS/2),
+     xlab = 'Number of genotypes missing per site',
+     main = 'ECDF of number of sites missing')
+
+plot(0:40, dim(missingsite)[1] * ecdf(missingsite$N_MISS/2)(0:40), pch = 19,
+     ylab = 'Number of sites left', xlab = 'Allowed number of missing individuals out of 90')
+```
+
+I note that `vcftools` reports and filters missing chromosomes, not *genotypes*, and
+that's why I divide by 2 above, to keep count of (diploid) individuals, instead of
+their chromosomes. Allowing no more than 30 genotypes missing in a site retrieves more
+han 50000 sites, which is good enough. We could use the filter `--max-missing-count 60`
+(because, again, `vcftools` counts chromosomes!) or `--max-missing 0.667`, because the
+name of this parameter is misleading and it actually means the minimum fraction of
+genotypes (or chromosomes) with data. We also apply the following filtering options
+to generate a cleaner data set
+
+#### Position filtering
+`--thin` Specified distance between one site and the next.
+
+#### Variant type Filtering
+`--remove-indels` Exclude sites that contain an idel (any variant that alters the lenght of the REF allele).
+
+#### Info Field Filtering
+`--mac` Include only sites with Minor Allele Count higher or equal to <value>
+`--max-allels` Include only sites with a number of alleles lower or equal to <value>
+
+#### Genotype Value Filtering
+`--max-meanDP` Includes only sites with mean depth values (over all included individuals) lower or equal to the <value>. These options require that the "DP" FORMAT tag is included for each site.
+`--minGQ` Exclude all genotypes with a quality below the threshold specified. This option requires that the "GQ" FORMAT tag is specified for all sites.
+
+#### VCF Output Options
+`--recode` Generate a new .vcf file from the input after applying the filtering options specified.
+`--recode-INFO-all` Keep the INFO key present in the input file.
+
+```{bash}
+if [ ! -e summary_distances.txt ]; then
+   gawk 'BEGIN{
+      CURRENTCHROM = ""
+      LASTPOS = 0
+   }(/^[^#]/){
+      if (($1 == CURRENTCHROM) && (LASTPOS > 0)){
+         F[$2 - LASTPOS]++
+         LASTPOS = $2
+      } else {
+         CURRENTCHROM = $1
+         LASTPOS = $2
+      }
+   }END{
+      for (f in F) print f "\t" F[f]
+   }' crepi_indv.recode.vcf | \
+   sort -nk 1,1 > summary_distances.txt
+fi
+```
+
+```{r}
+distances <- read.table('summary_distances.txt',
+                        col.names = c('D', 'Freq'))
+plot(distances$D, distances$Freq, log = 'xy')
+abline(v = 200, col = 'red', lty = 2)
+```
+
+```{bash}
+if [ ! -e crepi_sites.recode.vcf ]; then
+   vcftools --vcf crepi_indv.recode.vcf \
+            --out crepi_sites \
+            --thin 200 \
+            --max-missing 0.667 \
+            --remove-indels \
+            --mac 2 \
+            --max-meanDP 1000 \
+            --recode --recode-INFO-all 1>> vcftools.log 2>> vcftools.err
+fi
+```
+
+The `--thin 200` filter actually removes a lot of data, without being specially strict.
+Many pairs of SNPs will still be in linkage disequilibrium.
+This prevents us from using the VCF in any meaningful subsequent analysis. But it conveys
+some information about the nature of variation within our samples. Definitely, SNPs are much
+more tightly clustered than if randomly distributed among contigs. This is in part a consequence
+of discovering SNPs only close to restriction enzyme cutting sites. Without the information of
+read positions, we cannot evaluate if the number of SNPs per locus is well distributed or not.
+But the distances gathered above tell us that 60% of adjacent SNP pairs are less than
+10 bases apart.
+
+```{r sessionInfo}
+sessionInfo()
+```
