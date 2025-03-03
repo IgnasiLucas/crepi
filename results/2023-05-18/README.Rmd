@@ -1,17 +1,17 @@
 ---
-title: 'Crepidostomum: Alignining with the reference genome & extracting SNPs with GATK'
-author: "Mar Llaberia-Robledillo"
+title: 'Alignment of ddRAD-seq reads to genome assembly.'
+author: "Mar Llaberia-Robledillo & J. Ignacio Lucas Lledó"
 date: "`r Sys.Date()`"
 output:
   html_document:
     toc: TRUE
 ---
 
-## Mapping and cleanning 
-The mapping of clean reads to the reference genome is done with `bwa-mem2` below.
+## Mapping 
+The mapping of reads to the reference genome is done with `bwa-mem2` below.
 
 ```{bash}
-ASM=../../data/RefGenomes/farionis-scaffolds.fa
+ASM=../2023-05-15/assembly.fasta
 PATHFQ=../2023-05-17/crepi_edits
 
 if [ ! -d BAM ]; then mkdir BAM; fi
@@ -25,17 +25,54 @@ for i in $(ls $PATHFQ/*.trimmed_R1_.fastq.gz); do
       if [ ! -e BAM/${SAMPLE}_on_ref.sam ]; then
          bwa-mem2 mem -t 24 $ASM ${PATHFQ}/${SAMPLE}.trimmed_R1_.fastq.gz \
                                  ${PATHFQ}/${SAMPLE}.trimmed_R2_.fastq.gz \
-                 -R "@RG\tID:${SAMPLE}\tSM:${SAMPLE}" > BAM/${SAMPLE}_on_ref.sam
+                 -R "@RG\tID:${SAMPLE}\tSM:${SAMPLE}" > BAM/${SAMPLE}_on_ref.sam \
+                 2>> bwamem2.err
       fi
       samtools sort BAM/${SAMPLE}_on_ref.sam -o BAM/temp_sorted.bam
       samtools view -b -F 4 -q 20 BAM/temp_sorted.bam > BAM/${SAMPLE}.bam
-      #rm BAM/temp_sorted.bam
+      rm BAM/temp_sorted.bam
    fi
    if [ ! -e BAM/${SAMPLE}.bam.bai ]; then
       samtools index BAM/${SAMPLE}.bam
    fi
 done
+#rm BAM/*.sam
 ```
+
+I didn't get mapping statistics before filtering the sorted BAM files. Thus,
+all reads in the currently saved BAM files must be mapped. In order to get the
+efficiency of the mapping, I need to compare the number of reads mapped (not
+the number of *mappings*, since some reads have supplemental or secondary mappings)
+with the number of reads filtered `2023-05-17/crepi_edits`.
+
+```{bash}
+S2=../2023-05-17/crepi_edits/s2_rawedit_stats.txt
+if [ ! -e summary_mapping.txt ]; then
+   echo -e "sample\ttotal\tmapped" > summary_mapping.txt
+   for SAMPLE in $(ls 1 BAM/*.bam | xargs basename -s .bam); do
+      TOTAL=$(grep $SAMPLE $S2 | gawk '{print $9}')
+      MAPPED=$(samtools flagstats BAM/$SAMPLE.bam | grep "primary mapped" | cut -d " " -f 1)
+      echo -e "$SAMPLE\t$TOTAL\t$MAPPED" >> summary_mapping.txt
+   done
+fi
+```
+
+```{r, fig.width=10}
+library(MetBrewer)
+mappings <- read.table('summary_mapping.txt', header = TRUE)
+mappings$unmapped <- mappings$total - mappings$mapped
+z <- as.matrix(t(mappings[, c('mapped', 'unmapped')]))
+colnames(z) <- mappings$sample
+barplot(z, col = met.brewer('Lakota', 2),
+        cex.names = 0.5, las = 2)
+legend(20, 3.5e+06, c('mapped', 'unmapped'), fill = met.brewer('Lakota', 2))
+```
+
+Curiously, the three samples from Bienne with a decent number of reads,
+N048Cma, N048Cmb and N048Cmc, get most of their reads wasted during mapping,
+as if they were more distant from the assembly than the rest.
+
+## SNP calling
 
 GATK4's `HaplotypeCaller` re-assembles every region with any evidence of variation. 
 I suppose that's why GATK4 does not implement the `IndelRealigner`.
@@ -43,13 +80,12 @@ I suppose that's why GATK4 does not implement the `IndelRealigner`.
 If `samtools` worked well, read groups must be correctly assigned, and we do not need
 to use `AddOrReplaceReadGroups`.
 
-```{bash INDEL, eval=FALSE}
-ASM=../2023-05-15/ntedit_k31_edited.fa
-PATHFQ=../2023-05-17/parasite/crepi_edits
+```{bash INDEL}
+ASM=../2023-05-15/assembly.fasta
+PATHFQ=../2023-05-17/crepi_edits
 GATK=/opt/gatk-4.4.0.0/gatk
 
-#$GATK CreateSequenceDictionary -R $ASM -O crepi_k31.dict
-DICT=$(dirname $ASM)/$(basename -s .fa $ASM).dict
+DICT=$(dirname $ASM)/$(basename -s .fasta $ASM).dict
 if [ ! -e $DICT ]; then
    $GATK CreateSequenceDictionary -R $ASM -O $DICT
 fi
@@ -69,27 +105,48 @@ if [ ! -e crepi.vcf ]; then
 fi
 ```
 
-### SNP calling
+## SNP filtering
 
 SNP calling: HaplotypeCaller GATK4
 SNP extraction: vcftools (keep bi-allelic SNP with a calling quality above 20 and shared
                 at least by 50% of the samples).
 
-```{bash eval=FALSE}
-ASM='../2023-05-15/ntedit_k31_edited.fa'
-
+```{bash}
 if [ ! -e crepi.recode.vcf ]; then
    vcftools --vcf crepi.vcf \
-            --keep list_samples \
-            --minGQ 20 \
+            --out crepi \
+            --minGQ 5 \
             --thin 200 \
-            --max-missing 0.5 \
+            --max-missing 0.2 \
             --min-alleles 2 \
             --max-alleles 2 \
             --remove-indels \
-            --recode --recode_INFO_all
+            --recode --recode-INFO-all 1> vcftools.log 2> vcftools.err
 fi
 ```
+
+```{r, fig.width=10, fig.height=30, warning=FALSE}
+library('vcfR')
+library('MetBrewer')
+vcf <- read.vcfR('crepi.recode.vcf', verbose = FALSE)
+gts <- matrix(
+   as.numeric(
+      sapply(strsplit(vcf@gt[,-1], ':'), '[', 4)
+   ),
+   ncol = ncol(vcf@gt)
+)
+image(t(gts), col = met.brewer('Hokusai3', 5),
+      axes = FALSE, main = 'Genotype qualities')
+axis(3, at = 0:95 / 95, labels = colnames(vcf@gt)[-1], las=2,
+     cex.axis = 0.4, tick = FALSE, line = FALSE)
+```
+
+The image of genotype qualities shows:
+
+1. Better genotype qualities in Suopatjavri than in Langfjordvatn.
+2. Individuals from Bienne or Thun with insufficient genotypes.
+3. Some individuals have genotypes only among the largest or among
+   the smallest contigs. Why?
 
 ```{r sessionInfo}
 sessionInfo()

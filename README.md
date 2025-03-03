@@ -163,13 +163,40 @@ Extraction of *cox1*, *lsrDNA* and *ITS2* genes from all samples, for
 identification of *Crepidostomum sp*.
 
 # 2023-06-22
-Extraction of marker genes from an assembly supposed to be in `2023-05-12/ABYSS_assembly/k90-kc2`,
-which may have been moved to `2023-05-12/k90-kc2`.
+Extraction of marker genes from an assembly. This needs to be repeated with
+the current assembly in `2023-05-15`.
+
+# 2023-05-23
+The variable mapping rate shown in `2023-05-18` has consequences for the
+way we determine what samples have or have not enough data. We cannot just
+use the number of reads, but we need to compare samples on the grounds of
+mapped reads. It is mandatory to explore the VCF generated with GATK in
+2023-05-18 to identify the samples with too much missing data, and to get
+an idea of the number of SNPs genotyped in a certain fraction of samples.
 
 # 2023-05-18
-Mapping of demultiplexed FASTQ reads from 2023-05-17/crepi_edits to 
-the reference genome in 2023-05-15/assembly.fasta. In addition to the
+Mapping of demultiplexed FASTQ reads from `2023-05-17/crepi_edits` to 
+the reference genome in `2023-05-15/assembly.fasta`. In addition to the
 BAM files, a VCF is now being generated.
+
+The statistics from the BAM files are compared to those from the
+demultiplexing (`2023-05-17`), to see what the mapping success was per
+individual. Curiously, the mapping success covaries with lake of origin.
+The highest mapping rates are observed in samples from Suopatjavri,
+suggesting a mostly *pseudofarionis*-like background of the assembly.
+They are followed closely by samples from Langfjordvatn, with only
+about 20% of reads unmapped. The only sample from Thun has a much lower
+mapping rate, near 50%. And the worst mapping rates are those of the
+four samples from Bienne, where we loose over 80% of reads. This is
+clearly indicating a very divergent nature of the *Crepidostomum*
+samples from Bienne, and also (to a lesser extent) from Thun. Are they
+a different species? Are they just very contaminated DNA extractions?
+Some BLAST searches are needed to determine they reason of low mapping
+rate from subalpine samples.
+
+A preliminary filtering of the VCF produced by GATK shows that samples
+from Bienne and Thun do not have enough data. Curiously, however, some
+samples have genotype data in only a subset of contigs. This is worrisome.
 
 # 2023-05-17b
 Ipyrad was run in Garnatxa with different clustering thresholds, between
