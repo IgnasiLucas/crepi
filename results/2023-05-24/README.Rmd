@@ -1,0 +1,119 @@
+---
+title: "BLAST analysis of the reference assembly"
+author: "J. Ignacio Lucas Lledó"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+
+## BLAST among contigs
+
+```{bash}
+if [ ! -e assembly.ndb ]; then
+   makeblastdb -dbtype nucl \
+               -in ../2023-05-15/assembly.fasta \
+               -out assembly
+fi
+
+if [ ! -e selfblast.txt ]; then
+   blastn -db assembly \
+          -query ../2023-05-15/assembly.fasta \
+          -out selfblast.txt \
+          -outfmt "6 qacc sacc pident length qlen slen gaps evalue bitscore" \
+          -evalue 1.0e-10 \
+          -num_threads 24 \
+          -max_hsps 1 \
+          -max_target_seqs 2 1>blastn.out 2> blastn.err
+   gawk '((/^contig/) && ($1 != $2)){
+      print $0
+   }' selfblast.txt > z1
+   mv z1 selfblast.txt
+fi
+```
+
+```{r, message=FALSE}
+library(Biostrings)
+assembly <- readDNAStringSet('../2023-05-15/assembly.fasta')
+info <- read.table(
+   '../2023-05-12/flye/ONT_PB/assembly_info.txt',
+   col.names = c('ctg', 'len', 'cov', 'circ', 'rep', 'mult', 'alt', 'graph'))
+info <- info[match(names(assembly), info$ctg), 1:6]
+selfblast <- read.table(
+   'selfblast.txt',
+   col.names = c('qacc', 'sacc', 'pident', 'length', 'qlen',
+                 'slen', 'gaps', 'evalue', 'bitscore'))
+info$besthit <- selfblast[match(info$ctg, selfblast$qacc), 'sacc']
+info$reciprocal <- info[match(info$besthit, info$ctg), 'besthit']
+info$is.rbh <- info$ctg == info$reciprocal
+info[is.na(info$is.rbh), 'is.rbh'] <- FALSE
+```
+
+Only `r sum(is.na(info$besthit))` contigs do not retrieve any BLAST
+hit among the other contigs. They all are shorter than average.
+Among the other `r sum(! is.na(info$besthit))` contigs, which do
+find similarity in others, only a subset of `r length(unique(info$besthit))`
+are themselves the best *hits* for other contigs. That is, there is
+a small fraction of *reciprocal best hits*. Precisely, there are
+only `r sum(info$ctg == info$reciprocal, na.rm = TRUE) / 2` pairs
+of reciprocal best hits. Most contigs are not the
+best hit of their own best hit. And it is a fraction of all contigs
+which accumulate most of the hits. The difference in length could
+explain this pattern: if a long contig holds homology to three other
+contigs, it may be the best hit of all them, while only one of those
+can be its own best hit. Not worth checking.
+
+### Self-alignable fraction of the genome
+Taken together, all best hits (reciprocal or not), what fraction of
+the assembly do they represent? Ignoring the small contribution of
+gaps to the length of the alignments, alignment lengths add up to
+`r sum(selfblast$length)` bases. Taking into account that every
+alignment takes two sequences, the fraction of the genome that is
+included among best hits is half that number, namely
+`r sprintf("%i", sum(selfblast$length) / 2)`, which represents
+`r round(100 * (sum(selfblast$length) / 2) / sum(info$len), 2)`%
+of the genome.
+
+This is small enough to forget about it. Most of the assembly is
+quite unique.
+
+```{r}
+library(ggplot2)
+RBH <- info[info$is.rbh, 'ctg']
+selfblast$is.rbh <- selfblast$qacc %in% RBH
+selfblast <- selfblast[order(selfblast$is.rbh),]
+ggplot(data = selfblast,
+       mapping = aes(x = length, y = pident, color = is.rbh)) +
+   geom_point() + scale_x_continuous(trans = 'log')
+```
+
+### Contigs where reads did not map
+
+```{bash}
+if [ ! -e used.txt ]; then
+   grep -v '^#' ../2023-05-18/crepi.vcf | \
+   cut -f 1 | uniq > used.txt
+fi
+```
+
+```{r}
+used <- scan('used.txt', what = 'character', quiet = TRUE)
+info$used <- info$ctg %in% used
+info$uniq <- is.na(info$besthit)
+table(info[, c('used', 'uniq')])
+```
+
+Among the `r length(assembly)` contigs in the assembly, most of
+them get ddRAD reads mapped to them: `r length(used)`. The
+`r sum(! info$used)` which did not constitute only the
+`r round(sum(info[! info$used, 'len']) / sum(info$len) * 100, 2)`%
+of the assembly's length. Quite irrelevant.
+
+## BLAST of contigs to the non-redudant nucleotide data base
+
+

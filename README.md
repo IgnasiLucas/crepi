@@ -166,12 +166,25 @@ identification of *Crepidostomum sp*.
 Extraction of marker genes from an assembly. This needs to be repeated with
 the current assembly in `2023-05-15`.
 
+# 2023-05-24
+This is a folder added a posteriori in this false cronological position
+in order to keep a logical order. The aim of this analysisi is to check
+the composition of the reference assembly to help make sense of the
+irregularities observed when mapping reads to it. In particular, there
+are a couple samples whose reads seem to map to only a fraction of the
+contigs, either in the top range of contig lengths or in the bottom one.
+
+A self-blast of all contigs helps confirm that the assembly is not dominated
+by duplicated regions. The best local alignments of any contig to any other
+one add up to only 6% of the assembly's length. Most alignments are shorter
+than 5000 bases, much shorter than the contigs involved, and highly identical.
+
 # 2023-05-23
 The variable mapping rate shown in `2023-05-18` has consequences for the
 way we determine what samples have or have not enough data. We cannot just
 use the number of reads, but we need to compare samples on the grounds of
 mapped reads. It is mandatory to explore the VCF generated with GATK in
-2023-05-18 to identify the samples with too much missing data, and to get
+`2023-05-18` to identify the samples with too much missing data, and to get
 an idea of the number of SNPs genotyped in a certain fraction of samples.
 
 As expected, the following samples have much less data than the rest and
