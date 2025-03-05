@@ -10,21 +10,26 @@ output:
 ## Coverage analysis
 I first generate a list of samples for which we have: a BAM file, enough coverage, and
 metainformation in the `../../data/IDs/Crepido_fish_IDs_all_data_2021Dec.txt` file. Note
-that some BAM files belong to samples for which we do not have metadata (17_Om05, 17_Om07,
-FU37, LR16504, LR18_06, and Mo18_05). And that some samples do not have enough coverage
-(listed in `../2023-05-23/VeryBad.txt`, including 17_Om05, 17_Om07, N044Cx2, N048Cma,
-N048Cmb, N048Cmc, S031Cmc, and T165Cxa).
+that some samples do not have enough coverage (listed in `../2023-05-23/VeryBad.txt`,
+including N044Cx2, N048Cma, N048Cmb, N048Cmc, S031Cmc and T165Cxa).
 
-Then, I use `samtools coverage` to get mean coverage among bases covered at least once
+Previous runs informed of an unexpected positive relationship between depth of coverage
+and heterozygosity. Suspecting that collapsed duplications could have been biasing
+the estimates of heterozygosity, we performed a depth analysis and tried to remove
+over-covered contigs. This is probably unnecessary, and difficult to justify. But
+I do it anyways.
+
+I use `samtools coverage` to get mean coverage among bases covered at least once
 per contig. Note that the output of `samtools coverage` is a 9-column text stream with:
 chromosome name, start position, end position, number of reads, number of bases covered
-at least once, percentage of covered bases, mean depth of coverage across the whole length,
-mean base quality and mean mapping quality ([see this link](http://www.htslib.org/doc/samtools-coverage.html)).
+at least once, percentage of covered bases, mean depth of coverage across the whole
+length, mean base quality and mean mapping quality
+([see this link](http://www.htslib.org/doc/samtools-coverage.html)).
 
-```{bash coverage, eval=FALSE}
+```{bash coverage}
 BAM=../2023-05-18/BAM
 INFO=../../data/IDs/Crepido_fish_IDs_all_data_2021Dec.txt
-BADSAMPLES=/nata/mar/crepidostomum/results/2023-05-23/VeryBad.txt
+BADSAMPLES=../2023-05-23/VeryBad.txt
 
 if [ ! -e samples.txt ]; then
    ls -1 ${BAM}/*.bam | xargs basename -s .bam | \
@@ -59,39 +64,79 @@ for (s in samples) {
 }
 row.names(DEPTH) <- read.table(paste0('coverage/', s, '.depth', collapse = ''))$V1
 TotalDepth <- rowSums(DEPTH)
-plot(density(TotalDepth, from = -1, to = 50))
-abline(v = 75, lty = 2, col = 'orange')
-abline(v = 375, lty = 2, col = 'orange')
-GoodContigs <- names(TotalDepth[TotalDepth >= 75 & TotalDepth <= 375])
-BadContigs  <- names(TotalDepth[TotalDepth < 75 | TotalDepth > 375])
-write.table(GoodContigs, file = 'GoodContigs.txt', quote = FALSE, row.names = FALSE, col.names = FALSE)
-write.table(BadContigs,  file = 'BadContigs.txt',  quote = FALSE, row.names = FALSE, col.names = FALSE)
+plot(density(TotalDepth, from = 0, to = 600))
+abline(v = 100, lty = 2, col = 'orange')
+abline(v = 500, lty = 2, col = 'orange')
+GoodContigs <- names(TotalDepth[TotalDepth >= 100 & TotalDepth <= 500])
+BadContigs  <- names(TotalDepth[TotalDepth < 100 | TotalDepth > 500])
+write.table(paste0(GoodContigs, ':'),
+            file = 'GoodContigs.txt',
+            quote = FALSE,
+            row.names = FALSE,
+            col.names = FALSE)
+write.table(BadContigs,
+            file = 'BadContigs.txt',
+            quote = FALSE,
+            row.names = FALSE,
+            col.names = FALSE)
 ```
 
 ## ANGSD
-```{bash angsd}
+I will run the following in Garnatxa. The strategy is the following:
+
+1. Get genotype likelihoods in all available sites.
+2. Estimate linkage disequilibrium among pairs of sites.
+3. Prune the sites to remove high LD pairs.
+4. Get genotype likelihoods in selected sites.
+5. Run PCangsd and NGSadmix.
+
+For genotype likelihood calculations, we should limit the number of
+sites also by a minimum coverage threshold and by a minimum number
+of samples with the required coverage. We did not run preliminary
+analysis to determine the best thresholds. I need to guess.
+
+```{bash likes1, eval=FALSE}
+#!/bin/bash
+#SBATCH --job-name=angsd1
+#SBATCH --output=angsd1.log
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=10G
+#SBATCH --qos=medium
+#SBATCH --time=5-00:00:00
+
+module load anaconda
+mamba activate bio
+module load angsd
+
+cd /scr/joiglu/2024-03-11
+
 BAM=../2023-05-18/BAM
-ASM=../../data/RefGenomes/farionis-scaffolds.fa
-BADSAMPLES=/nata/mar/crepidostomum/results/2023-05-23/VeryBad.txt
-## Contigs to keep 
-#CTK=GoodContigs.txt
+ASM=../2023-05-15/assembly.fasta
+EXCLUDE=../2023-05-23/VeryBad.txt
+GOODCTG=GoodContigs.txt
 
 if [ ! -e ARCTIC.list ]; then
-   ls -1 $BAM/*.bam | grep -E "L|S" | grep -v -F -f $BADSAMPLES | grep -v -E 'LR' > ARCTIC.list
+   ls -1 $BAM/*.bam | \
+   grep -E "L|S" | \
+   grep -v -F -f $EXCLUDE | \
+   grep -v -E 'LR' > ARCTIC.list
 fi
 
 if [ ! -d Likes1 ]; then mkdir Likes1; fi
-#MININD=$(( $(cat ARCTIC.list | wc -l) / 2 ))
-MININD=45
+MININD=60
+MINDEPTHIND=2
   if [ ! -e Likes1/ARCTIC.beagle.gz ]; then
     angsd -bam ARCTIC.list \
           -ref $ASM \
+          -rf $GOODCTG \
           -out Likes1/ARCTIC \
-          -only_proper_pairs 1 \
+          -only_proper_pairs 0 \
           -baq 1 \
-          -setMinDepth 20 \
+          -setMinDepthInd $MINDEPTHIND \
           -minInd $MININD \
-          -GL 2 \
+          -GL 1 \
           -doGlf 2 \
           -doIBS 1 \
           -doCounts 1 \
@@ -103,34 +148,58 @@ MININD=45
           -minMapQ 30 \
           -minQ 20 \
           -minMaf 0.05 \
-          -nThreads 24 \
+          -nThreads 8 \
           1> Likes1/ARCTIC.angsd.log \
           2> Likes1/ARCTIC.angsd.err
 fi
 ```
 
-```{bash Sites}
-ASM=../../data/farionis-scaffolds.fa
+```{bash Sites, eval=FALSE}
+#!/bin/bash
+#SBATCH --job-name=sites
+#SBATCH --output=sites.log
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=10G
+#SBATCH --qos=medium
+#SBATCH --time=5-00:00:00
+
+module load anaconda
+mamba activate bio
+module load angsd
+
+cd /scr/joiglu/2024-03-11
+
+ASM=../2023-05-15/assembly.fasta
+MININD=60
+MINDEPTHIND=2
+
 if [ ! -d Likes2 ]; then mkdir Likes2; fi
 if [ ! -d Sites ]; then mkdir Sites; fi
 
 if [ ! -e Likes2/ARCTIC.beagle.gz ]; then
    if [ ! -e Sites/ARCTIC_snp.sites ]; then
       if [ ! -e Sites/ARCTIC_snp.ld ]; then
-         gunzip -c Likes1/ARCTIC.mafs.gz | cut -f 1,2 | tail -n +2 > Sites/posFile.txt
+         gunzip -c Likes1/ARCTIC.mafs.gz | \
+         cut -f 1,2 | \
+         tail -n +2 > Sites/posFile.txt
          ngsLD --geno Likes1/ARCTIC.beagle.gz \
                --probs \
                --pos Sites/posFile.txt \
                --n_ind $(cat ARCTIC.list | wc -l) \
                --n_sites $(cat Sites/posFile.txt | wc -l) \
-               --n_threads 24 \
-               --out Sites/ARCTIC_snp.ld 1> Sites/ngsLD.ARCTIC.log 2> Sites/ngsLD.ARCTIC.err
+               --n_threads 8 \
+               --out Sites/ARCTIC_snp.ld \
+               1> Sites/ngsLD.ARCTIC.log \
+               2> Sites/ngsLD.ARCTIC.err
          head -n 1 Sites/ARCTIC_snp.ld > Sites/ARCTIC_snp.ld.header
          tail -n +2 Sites/ARCTIC_snp.ld > z
          mv z Sites/ARCTIC_snp.ld
          rm Sites/posFile.txt
       fi
-      prune_ngsLD.py --input Sites/ARCTIC_snp.ld \
+      ~/software/NGSTOOLS/ngsLD/scripts/prune_ngsLD.py \
+                     --input Sites/ARCTIC_snp.ld \
                      --output Sites/ARCTIC_snp.sites \
                      --max_dist 100000 \
                      --min_weight 0.85
@@ -145,8 +214,9 @@ if [ ! -e Likes2/ARCTIC.beagle.gz ]; then
          -out Likes2/ARCTIC \
          -only_proper_pairs 1 \
          -baq 1 \
-         -setMinDepth 20 \
-         -GL 2 \
+         -setMinDepthInd $MINDEPTHIND \
+         -minInd $MININD \
+         -GL 1 \
          -doGlf 2 \
          -doIBS 1 \
          -doCounts 1 \
@@ -154,23 +224,38 @@ if [ ! -e Likes2/ARCTIC.beagle.gz ]; then
          -makeMatrix 1 \
          -doMajorMinor 1 \
          -doMaf 1 \
-         -SNP_pval 2e-10 \
+         -SNP_pval 1.0e-6 \
          -minMapQ 30 \
          -minQ 20 \
          -minMaf 0.05 \
-         -nThreads 24 \
+         -nThreads 8 \
          1> Likes2/ARCTIC.angsd.log \
          2> Likes2/ARCTIC.angsd.err
 fi
 ```
 
-```{bash PopStruc}
+```{bash PopStruc, eval=FALSE}
+#!/bin/bash
+#SBATCH --job-name=popstruc
+#SBATCH --output=popstruc.log
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=10G
+#SBATCH --qos=medium
+#SBATCH --time=5-00:00:00
+
+module load anaconda
+mamba activate bio
+module load angsd
+
+cd /scr/joiglu/crepi/results/2024-03-11
 
 if [ ! -d PCangsd ]; then mkdir PCangsd; fi
 if [ ! -e PCangsd/ARCTIC.cov ]; then
    pcangsd --beagle Likes2/ARCTIC.beagle.gz \
            --out PCangsd/ARCTIC \
-           --threads 24 \
+           --threads 8 \
            1> PCangsd/ARCTIC.stdout \
            2> PCangsd/ARCTIC.stderr
 fi
@@ -178,9 +263,10 @@ fi
 if [ ! -d NGSadmix ]; then mkdir NGSadmix; fi
 for K in 2 3 4 5; do
    if [ ! -e NGSadmix/ARCTIC.K${K}.qopt ]; then
-      NGSadmix -likes Likes2/ARCTIC.beagle.gz \
+      ~/software/NGSTOOLS/angsd/misc/NGSadmix \
+               -likes Likes2/ARCTIC.beagle.gz \
                -K $K \
-               -P 24 \
+               -P 8 \
                -outfiles NGSadmix/ARCTIC.K${K} \
                -minMaf 0.05 \
                -maxiter 8000 \
@@ -197,7 +283,73 @@ for K in 2 3 4 5; do
                 -o NGSadmix/ARCTIC.K${K}.eval &
    fi
 done
+```
 
+## PCangsd results
+
+```{r}
+IndNames <- gsub('(../2023-05-18/BAM/|.bam)', '',
+                 scan('ARCTIC.list', what = 'character', quiet = TRUE))
+Lake <- factor(MetaData[IndNames, 'Lake'],
+               levels = c('Langfjordvatn', 'Suopatjavri'))
+cov <- as.matrix(read.table('PCangsd/ARCTIC.cov'))
+e   <- eigen(cov)
+layout(matrix(1:2, ncol = 2), width = c(4, 1), height = c(1, 1))
+par(mar = c(5.1, 4.1, 4.1, 1))
+plot(e$vectors[, c(1, 2)], col = Lake, pch = as.numeric(Region), cex = 2,
+     xlab = sprintf('PC1 (%.1f %%)', 100 * e$values[1] / sum(e$values)),
+     ylab = sprintf('PC2 (%.1f %%)', 100 * e$values[2] / sum(e$values)),
+     main = 'Arctic')
+par(mar = c(0, 0, 4.1, 0))
+plot(c(0, 1), c(0, 1), type = 'n', axes = FALSE, xlab = '', ylab = '')
+legend(0.1, 0.9, c('Langfjordvatn', 'Suohpatjavri'),
+       col = 1:2, cex = 1)
+```
+
+## NGSadmix results
+
+```{r}
+source('/data/joiglu/bin/evalAdmix/visFuns.R')
+# It seems safer to rely on the metadata than on the sample's initial to assign lakes.
+MetaData <- read.table('../../data/IDs/Crepido_fish_IDs_all_data_2021Dec.txt')
+row.names(MetaData) <- MetaData$P_code
+IndNames <- gsub('(../2023-05-18/BAM/|.bam)', '',
+                 scan('ARCTIC.list', what = 'character', quiet = TRUE))
+Lake <- MetaData[IndNames, 'Lake']
+QK2 <- read.table('NGSadmix/AREG.K2.qopt')
+QK3 <- read.table('NGSadmix/AREG.K3.qopt')
+QK4 <- read.table('NGSadmix/AREG.K4.qopt')
+QK5 <- read.table('NGSadmix/AREG.K5.qopt')
+
+ord <- orderInds(pop = Lake, q = QK3,
+                 popord = c('Langfjordvatn', 'Suopatjavri'))
+plotAdmix(QK2, pop = Lake, ord = ord, rotatelab = 15)
+r <- as.matrix(read.table('NGSadmix/AREG.K2.eval'))
+plotCorRes(cor_mat = r, pop = Lake, ord = ord,
+           title = 'Evaluation with K=2', min_z = -0.1,
+           max_z = 0.1, rotatelabpop = 20, cex.lab = 1,
+           pop_labels = c(FALSE, TRUE), cex.legend = 0.8)
+
+plotAdmix(QK3, pop = Lake, ord = ord, rotatelab = 15)
+r <- as.matrix(read.table('NGSadmix/AREG.K3.eval'))
+plotCorRes(cor_mat = r, pop = Lake, ord = ord,
+           title = 'Evaluation with K=3', min_z = -0.1,
+           max_z = 0.1, rotatelabpop = 20, cex.lab = 1,
+           pop_labels = c(FALSE, TRUE), cex.legend = 0.8)
+
+plotAdmix(QK4, pop = Lake, ord = ord, rotatelab = 15)
+r <- as.matrix(read.table('NGSadmix/AREG.K4.eval'))
+plotCorRes(cor_mat = r, pop = Lake, ord = ord,
+           title = 'Evaluation with K=4', min_z = -0.1,
+           max_z = 0.1, rotatelabpop = 20, cex.lab = 1,
+           pop_labels = c(FALSE, TRUE), cex.legend = 0.8)
+
+plotAdmix(QK5, pop = Lake, ord = ord, rotatelab = 15)
+r <- as.matrix(read.table('NGSadmix/AREG.K5.eval'))
+plotCorRes(cor_mat = r, pop = Lake, ord = ord,
+           title = 'Evaluation with K=5', min_z = -0.1,
+           max_z = 0.1, rotatelabpop = 20, cex.lab = 1,
+           pop_labels = c(FALSE, TRUE), cex.legend = 0.8)
 ```
 
 ```{r sessionInfo}

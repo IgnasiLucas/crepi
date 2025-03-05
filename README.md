@@ -138,8 +138,8 @@ Another placeholder for the ANGSD analysis of genetic structure. This time, the
 
 # 2024-03-11
 Attempt to determine the genetic structure of the sampels with ANGSD, departing
-from the BAM files in `2023-05-18/BAM`, which are mappings to the large, non-hybrid,
-assembly, with almost 6 million contigs. The analyses is not completed.
+from the BAM files in `2023-05-18/BAM`, which are mappings to the reference
+assembly. Analysis underway.
 
 # 2024-01-20
 Phylogenetic reconstruction with the 28S marker.
