@@ -48,8 +48,8 @@
             "_raw_fastq_path":"",
             "_barcodes_path":"",
             "_sorted_fastq_path":"",
-            "_assembly_method":"reference",
-            "_reference_sequence":"/nata/joiglu/crepidostomum2/results/2023-05-15/assembly.fasta",
+            "_assembly_method":"denovo",
+            "_reference_sequence":"",
             "_datatype":"pairddrad",
             "_restriction_overhang":{
                 "__tuple__":true,
@@ -106,7 +106,7 @@
                 "t",
                 "m"
             ],
-            "_pop_assign_file":"../2023-05-17b/ipopmap.txt",
+            "_pop_assign_file":"ipopmap.txt",
             "_reference_as_filter":""
         },
         "samples":[
