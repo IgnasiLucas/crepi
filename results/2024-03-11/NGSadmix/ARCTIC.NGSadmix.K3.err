@@ -1,0 +1,45 @@
+Input: lname=Likes2/ARCTIC.beagle.gz nPop=3, fname=(null) qname=(null) outfiles=NGSadmix/ARCTIC.K3
+Setup: seed=1741603624 nThreads=8 method=1
+Convergence: maxIter=8000 tol=0.000010 tolLike50=0.100000 dymBound=0
+Filters: misTol=0.050000 minMaf=0.050000 minLrt=0.000000 minInd=0
+Input file has dim: nsites=315642 nind=90
+Input file has dim (AFTER filtering): nsites=315642 nind=90
+iter[start] like is=36745125.242314
+iter[50] like is=-17080816.144534 thres=0.003289
+iter[100] like is=-17076647.177363 thres=0.002038
+iter[150] like is=-17075324.329566 thres=0.000603
+iter[200] like is=-17074748.627965 thres=0.001153
+iter[250] like is=-17074568.997887 thres=0.001016
+iter[300] like is=-17074535.388939 thres=0.000117
+iter[350] like is=-17074518.195641 thres=0.000115
+iter[400] like is=-17074487.810359 thres=0.000643
+iter[450] like is=-17074150.744306 thres=0.005855
+iter[500] like is=-17074112.172193 thres=0.000040
+iter[550] like is=-17074107.923430 thres=0.000883
+iter[600] like is=-17074105.938890 thres=0.000040
+iter[650] like is=-17074104.762537 thres=0.000115
+iter[700] like is=-17074103.802240 thres=0.000227
+iter[750] like is=-17074103.111661 thres=0.000135
+iter[800] like is=-17074102.694610 thres=0.000056
+iter[850] like is=-17074102.278742 thres=0.000013
+iter[900] like is=-17074101.949315 thres=0.000014
+iter[950] like is=-17074101.378528 thres=0.000026
+iter[1000] like is=-17074100.614849 thres=0.000042
+iter[1050] like is=-17074097.732635 thres=0.000320
+iter[1100] like is=-17074067.732276 thres=0.011117
+iter[1150] like is=-17073565.688571 thres=0.006331
+iter[1200] like is=-17073420.112035 thres=0.000329
+iter[1250] like is=-17073416.599249 thres=0.000610
+iter[1300] like is=-17073413.967860 thres=0.000080
+iter[1350] like is=-17073412.918954 thres=0.000036
+iter[1400] like is=-17073412.263619 thres=0.000013
+iter[1450] like is=-17073411.982663 thres=0.000092
+iter[1500] like is=-17073411.840650 thres=0.000005
+iter[1550] like is=-17073411.760819 thres=0.000020
+Convergence achived because log likelihooditer difference for 50 iteraction is less than 0.100000
+best like=-17073411.760819 after 1550 iterations
+	-> Dumpedfiles are: NGSadmix/ARCTIC.K3.log
+	-> Dumpedfiles are: NGSadmix/ARCTIC.K3.qopt
+	-> Dumpedfiles are: NGSadmix/ARCTIC.K3.fopt.gz
+	[ALL done] cpu-time used =  4734.79 sec
+	[ALL done] walltime used =  750.00 sec

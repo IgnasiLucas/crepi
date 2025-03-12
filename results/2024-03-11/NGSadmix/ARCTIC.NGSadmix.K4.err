@@ -1,0 +1,45 @@
+Input: lname=Likes2/ARCTIC.beagle.gz nPop=4, fname=(null) qname=(null) outfiles=NGSadmix/ARCTIC.K4
+Setup: seed=1741604374 nThreads=8 method=1
+Convergence: maxIter=8000 tol=0.000010 tolLike50=0.100000 dymBound=0
+Filters: misTol=0.050000 minMaf=0.050000 minLrt=0.000000 minInd=0
+Input file has dim: nsites=315642 nind=90
+Input file has dim (AFTER filtering): nsites=315642 nind=90
+iter[start] like is=35676543.056563
+iter[50] like is=-17079574.146972 thres=0.001703
+iter[100] like is=-17064572.843462 thres=0.002014
+iter[150] like is=-17035044.053225 thres=0.020787
+iter[200] like is=-16970869.597254 thres=0.001426
+iter[250] like is=-16933322.875370 thres=0.015036
+iter[300] like is=-16912973.232005 thres=0.000746
+iter[350] like is=-16912260.665964 thres=0.002549
+iter[400] like is=-16907735.161183 thres=0.004176
+iter[450] like is=-16905695.168092 thres=0.002477
+iter[500] like is=-16905211.095147 thres=0.000598
+iter[550] like is=-16905072.545277 thres=0.000937
+iter[600] like is=-16904972.495654 thres=0.000505
+iter[650] like is=-16904878.493888 thres=0.001821
+iter[700] like is=-16904797.666018 thres=0.000197
+iter[750] like is=-16904708.922672 thres=0.001422
+iter[800] like is=-16904523.503508 thres=0.001637
+iter[850] like is=-16903536.472368 thres=0.010341
+iter[900] like is=-16902590.474635 thres=0.009222
+iter[950] like is=-16900816.467473 thres=0.004272
+iter[1000] like is=-16900667.367951 thres=0.000288
+iter[1050] like is=-16900642.274018 thres=0.000147
+iter[1100] like is=-16900617.448648 thres=0.000323
+iter[1150] like is=-16900430.725560 thres=0.002590
+iter[1200] like is=-16899182.866737 thres=0.001223
+iter[1250] like is=-16898919.401341 thres=0.006065
+iter[1300] like is=-16898757.227239 thres=0.003792
+iter[1350] like is=-16898679.416199 thres=0.000542
+iter[1400] like is=-16898671.917049 thres=0.000126
+iter[1450] like is=-16898669.490731 thres=0.000009
+iter[1500] like is=-16898668.501118 thres=0.000013
+iter[1550] like is=-16898668.310034 thres=0.000001
+EM accelerated Thread has reached convergence with tol 0.000010
+best like=-16898668.295858 after 1558 iterations
+	-> Dumpedfiles are: NGSadmix/ARCTIC.K4.log
+	-> Dumpedfiles are: NGSadmix/ARCTIC.K4.qopt
+	-> Dumpedfiles are: NGSadmix/ARCTIC.K4.fopt.gz
+	[ALL done] cpu-time used =  4510.56 sec
+	[ALL done] walltime used =  728.00 sec
