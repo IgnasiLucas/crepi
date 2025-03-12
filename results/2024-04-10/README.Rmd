@@ -2,8 +2,8 @@
 title: "Crepidostomum: Creating the alignment input for BEAST"
 author: "Mar Llaberia-Robledillo"
 date: "`r Sys.Date()`"
-output: 
-  html_document: 
+output:
+  html_document:
     toc: TRUE
 ---
 # Preparing for demographic history analysis
@@ -14,14 +14,14 @@ So, first, extract the cox1 from the ddRAD sequences. And then, select them by p
 ```{bash LISTS, collapse = TRUE}
 # AREG
 BAM=../2023-05-18/BAM
-EXCLUDE=../2024-10-04/BadGuys.txt
+EXCLUDE=../2023-05-23/VeryBad.txt
 
 if [ ! -e AllArctic.list ]; then
    ls -1 $BAM/*.bam | grep -E "L|S" | grep -v -F -f $EXCLUDE > AllArctic.list
 fi
 
 ## updated without hybrids or changed individuals
-if [ ! -e FAR.list ]; then 
+if [ ! -e FAR.list ]; then
   paste AllArctic.list ../2024-10-05/NGSadmix/ARCTIC.K2.qopt | \
   gawk '($2 > 0.999){print $1}' | grep -E "L" | xargs basename -s .bam > FAR.list
 fi
@@ -30,19 +30,19 @@ if [ ! -e PSE.list ]; then
   gawk '($3 > 0.999){print $1}' | xargs basename -s .bam | grep -E 'S' > PSE.list
 fi
 
-if [ ! -e ARCTIC.list ]; then 
-  cat FAR.list PSE.list > ARCTIC_clean.list 
+if [ ! -e ARCTIC.list ]; then
+  cat FAR.list PSE.list > ARCTIC_clean.list
 fi
 
 ```
 
 # Alignment and extraction of Cox for species
 
-We had alreay several alignments to search the best extraction for 
-COI sequence in 2024-10-02. 
+We had alreay several alignments to search the best extraction for
+COI sequence in 2024-10-02.
 
-I'm going to take those alignments and concatenate only the samples 
-that belong to one species. 
+I'm going to take those alignments and concatenate only the samples
+that belong to one species.
 
 ```{bash}
 FAR_ALIN=../2023-10-02/COI_Cpse_align.fa
@@ -58,7 +58,8 @@ fi
 
 ```
 
-And then, align them: 
+And then, align them:
+
 ```{bash CREPI_ALIGN, results='hide'}
 FOLDER=Alignments
 if [ ! -d $FOLDER ]; then mkdir $FOLDER; fi
@@ -66,8 +67,7 @@ for i in FAR PSE; do
   if [ ! -e $FOLDER/AlignCOI_${i}_01.fa ]; then
     mafft --maxiterate 1000 --thread 24 --localpair AlignCOI_${i}_00.fa > $FOLDER/AlignCOI_${i}_01.fa
   fi
-done 
-
+done
 ```
 
 ```{r}
@@ -115,15 +115,15 @@ bestModels
 
 ## Running BEAST
 
-First, you need to make the input file for Beast with Beauti, with all the 
-specifications like model, number of generations, and other population parameters. 
+First, you need to make the input file for Beast with Beauti, with all the
+specifications like model, number of generations, and other population parameters.
 
 ```{bash eval = FALSE}
 
 ## Running the fist chain 
 
 for i in LAN SUO; do
-  if [ ! -e ${i}/EBSP.log ]; then 
+  if [ ! -e ${i}/EBSP.log ]; then
     beast -prefix ${i}/ -threads 4 -resume ${i}/$i.xml &> ${i}/screenlog.txt &
   fi
 done
@@ -132,7 +132,7 @@ wait
 ## Running the second chain
 
 for i in LAN SUO; do
-  if [ ! -e ${i}/chain2.log ]; then 
+  if [ ! -e ${i}/chain2.log ]; then
     beast -prefix ${i}/ -threads 4 ${i}/chain2.xml &> ${i}/screenlog2.txt &
   fi
 done
@@ -151,10 +151,10 @@ COL <- c("yellow2", "royalblue", "darkblue")
 for (i in 1:length(POP)) {
   plotEBSP(paste0("EBSP01/", POP[i], "/EBSP.log"),
            useHPD = FALSE,
-           log = "y", 
-           burnin = 0.1, 
-           plotPopFunctions = FALSE, 
-           popFunctionAlpha = 0.05, 
+           log = "y",
+           burnin = 0.1,
+           plotPopFunctions = FALSE,
+           popFunctionAlpha = 0.05,
            col = COL[i],
            #main = paste0(POP[i]), 
            xlab = "Time (M years)",
@@ -164,7 +164,7 @@ for (i in 1:length(POP)) {
 
 ```
 
-Second Chain 
+Second Chain
 ```{r SCHAIN}
 source("/nata/mar/phyllodistomum/bin/plotEBSP.R") ## Modify the script to change the color in the plot
 
@@ -173,10 +173,10 @@ COL <- c("yellow2", "royalblue", "darkblue")
 for (i in 1:length(POP)) {
   plotEBSP(paste0("EBSP02/", POP[i], "/EBSP.log"),
            useHPD = FALSE,
-           log = "y", 
-           burnin = 0.1, 
-           plotPopFunctions = FALSE, 
-           popFunctionAlpha = 0.05, 
+           log = "y",
+           burnin = 0.1,
+           plotPopFunctions = FALSE,
+           popFunctionAlpha = 0.05,
            col = COL[i],
            #main = paste0(POP[i]), 
            xlab = "Time (M years)",
@@ -196,10 +196,10 @@ COL <- c("yellow2", "royalblue")
 for (i in 1:length(POP)) {
   plotEBSP(paste0("EBSP03/", POP[i], "/EBSP.log"),
            useHPD = FALSE,
-           log = "y", 
-           burnin = 0.0, 
-           plotPopFunctions = FALSE, 
-           popFunctionAlpha = 0.05, 
+           log = "y",
+           burnin = 0.0,
+           plotPopFunctions = FALSE,
+           popFunctionAlpha = 0.05,
            col = COL[i],
            #main = paste0(POP[i]), 
            xlab = "Time (M years)",
@@ -209,7 +209,7 @@ for (i in 1:length(POP)) {
 
 ```
 
-Second Chain 
+Second Chain
 ```{r}
 source("/nata/mar/phyllodistomum/bin/plotEBSP.R") ## Modify the script to change the color in the plot
 
@@ -218,10 +218,10 @@ COL <- c("yellow2", "royalblue", "darkblue")
 for (i in 1:length(POP)) {
   plotEBSP(paste0("EBSP04/", POP[i], "/EBSP.log"),
            useHPD = FALSE,
-           log = "y", 
-           burnin = 0.9, 
-           plotPopFunctions = FALSE, 
-           popFunctionAlpha = 0.05, 
+           log = "y",
+           burnin = 0.9,
+           plotPopFunctions = FALSE,
+           popFunctionAlpha = 0.05,
            col = COL[i],
            #main = paste0(POP[i]), 
            xlab = "Time (M years)",
