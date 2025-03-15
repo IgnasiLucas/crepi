@@ -18,7 +18,7 @@ corresponding to a clustering threshold of 0.95. I first generate FASTA
 files for every locus, with different alleles of the same individual as
 different sequences. That is, I will start by distributing allelic
 sequences found in `../2023-05-17b/crepi95_outfiles/crepi95.alleles`
-in locus-specific FASTA files. 
+in locus-specific FASTA files.
 
 ```{bash}
 ALLELES=../2023-05-17b/crepi95_outfiles/crepi95.alleles
@@ -67,9 +67,9 @@ if [ ! -e consensus.fa ]; then
    if [ ! -d tmp ]; then mkdir tmp; fi
    for l in $(ls -1 alleles); do
       cons -sequence alleles/$l -outseq tmp/$l -name ${l:0:8} 2> /dev/null
+      cat tmp/$l >> consensus.fa
    done
-   cat tmp/*.fa > consensus.fa
-   rm -r tmp
+   #rm -r tmp
 fi
 ```
 
