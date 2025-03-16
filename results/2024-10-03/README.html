@@ -11,7 +11,7 @@
 
 <meta name="author" content="J. Ignacio Lucas Lledó" />
 
-<meta name="date" content="2025-03-15" />
+<meta name="date" content="2025-03-16" />
 
 <title>Preparing ddRAD loci for subsequent analyses</title>
 
@@ -582,7 +582,7 @@ pre code {
 
 <h1 class="title toc-ignore">Preparing ddRAD loci for subsequent analyses</h1>
 <h4 class="author">J. Ignacio Lucas Lledó</h4>
-<h4 class="date">2025-03-15</h4>
+<h4 class="date">2025-03-16</h4>
 
 </div>
 
@@ -608,9 +608,9 @@ if [ ! -e summary_alleles.txt ]; then
       split($0, A, /\|/)
       N1 = gsub(/*/, &quot;*&quot;, A[1])
       N2 = gsub(/-/, &quot;-&quot;, A[1])
-      FASTAOUT = sprintf(&quot;alleles/loc%05i.fa&quot;, A[2])
+      FASTAOUT = sprintf(&quot;alleles/loc%07i.fa&quot;, A[2])
       for (s in SEQ) print &quot;&gt;&quot; s &quot;\n&quot; SEQ[s] &gt;FASTAOUT
-      print sprintf(&quot;loc%05i.fa&quot;, A[2]) &quot;\t&quot; LEN &quot;\t&quot; N &quot;\t&quot; N1 + N2 + 0 &quot;\t&quot; N1 &gt;&gt;&quot;summary_alleles.txt&quot;
+      print sprintf(&quot;loc%07i.fa&quot;, A[2]) &quot;\t&quot; LEN &quot;\t&quot; N &quot;\t&quot; N1 + N2 + 0 &quot;\t&quot; N1 &gt;&gt;&quot;summary_alleles.txt&quot;
       delete SEQ
       N = 0
    }&#39; $ALLELES
@@ -1641,7 +1641,8 @@ Cumulative Sum
 <pre class="bash"><code>if [ ! -e consensus.fa ]; then
    if [ ! -d tmp ]; then mkdir tmp; fi
    for l in $(ls -1 alleles); do
-      cons -sequence alleles/$l -outseq tmp/$l -name ${l:0:8} 2&gt; /dev/null
+      NAME=$(basename -s .fa $l)
+      cons -sequence alleles/$l -outseq tmp/$l -name $NAME 2&gt; /dev/null
       cat tmp/$l &gt;&gt; consensus.fa
    done
    #rm -r tmp
