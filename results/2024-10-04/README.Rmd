@@ -40,8 +40,8 @@ for SAMPLE in $(cat samples.txt); do
             $FASTQDIR/${SAMPLE}.trimmed_R2_.fastq.gz \
             -R "@RG\tID:${SAMPLE}\tSM:${SAMPLE}" 1> BAM/${SAMPLE}.sam 2>> bwamem2.log
       fi
-      # Exclude (-F) unmapped reads (4) and secondary alignments (256). Include only proper pairs.
-      samtools view -F 260 -f 2 -u BAM/${SAMPLE}.sam | \
+      # Exclude (-F) unmapped reads (4) and secondary alignments (256).
+      samtools view -F 260 -u BAM/${SAMPLE}.sam | \
       samtools sort > BAM/${SAMPLE}.bam
       samtools index BAM/${SAMPLE}.bam
       if [ -e BAM/${SAMPLE}.sam ]; then rm BAM/${SAMPLE}.sam; fi
@@ -56,27 +56,24 @@ coverage.
 
 ```{bash}
 if [ ! -e coverage_matrix.txt ]; then
+   N=$(grep "^>" radloci.fa | wc -l)
+   if [ ! -e rownames.txt ]; then
+      echo "" > rownames.txt
+      for i in $(seq 0 $(( N - 1 ))); do
+         printf "loc%07i\n" $i >> rownames.txt
+      done
+   fi
    for i in $(cat samples.txt); do
-      echo $i > z_$i.txt
-      samtools view BAM/$i.bam | cut -f 3 | uniq | \
-      gawk 'BEGIN{
-         EXPECTED = 0
-      }{
-         CURRENT = substr($1, 4, 8) + 0
-         for (i = EXPECTED; i < CURRENT; i++) {
+      sdiff rownames.txt <(samtools view BAM/$i.bam | cut -f 3 | uniq) | \
+      gawk -v SAMPLE=$i '(NR == 1){
+         print SAMPLE
+      }(NR > 1){
+         if ($2 ~ /^loc/) {
+            print 1
+         } else {
             print 0
          }
-         print 1
-         EXPECTED = CURRENT + 1
-      }END{
-         for (i = EXPECTED; i <= 76849; i++) {
-            print 0
-         }
-      }' >> z_$i.txt
-   done
-   echo "" > rownames.txt
-   for i in $(seq 0 76849); do
-      printf "loc%05i\n" $i >> rownames.txt
+      }' > z_$i.txt
    done
    paste rownames.txt z_* > coverage_matrix.txt
    rm rownames.txt z_*
@@ -97,6 +94,7 @@ plot(PerLocusTab$NumInd, PerLocusTab$CumSum,
      ylab = 'Accumulated number of loci',
      main = 'Number of loci with at least so many individuals')
 ```
+
 ## May we remove any individual from analysis?
 
 ```{r}
@@ -104,18 +102,18 @@ barplot(table(PerLocus), xlab = 'Individuals covered', ylab = 'Number of loci')
 plot(ecdf(colSums(covMat)), xlab = 'Number of loci covered', ylab = 'Cumulative fraction of individuals', main = 'ECDF Number of loci per sample')
 ```
 
-There are a few samples with less than 30000 loci covered:
-`r names(which(colSums(covMat) < 30000))`.
+There are a few samples with less than 100000 loci covered:
+`r names(which(colSums(covMat) < 100000))`.
 There are also `r sum(rowSums(covMat) == 0)` loci not covered by any read in any sample. These
 are strange: mapping failure? Below I create a list of *bad guys* to be removed from analysis
 and a list of *good loci* with at least 5 samples. I need it for ANGSD, with the colon after
 the name of the locus.
 
 ```{r}
-write.table(names(which(colSums(covMat) < 30000)),
+write.table(names(which(colSums(covMat) < 100000)),
             file = 'BadGuys.txt', quote = FALSE,
             col.names = FALSE, row.names = FALSE)
-covMat2 <- covMat[, colSums(covMat) >= 30000]
+covMat2 <- covMat[, colSums(covMat) >= 100000]
 write.table(paste0(names(which(rowSums(covMat2) >= 5)), ":"),
             file = 'GoodLoci.txt', quote = FALSE,
             col.names = FALSE, row.names = FALSE)
@@ -123,8 +121,8 @@ covMat2 <- covMat2[rowSums(covMat2) >= 5,]
 ```
 
 ## Conclusions
-Most loci are not covered yet in more than 60 individuals (out of 96), but therer
-are more than 20000 loci covered at least by one read in more than 80 individuals,
+Most loci are covered in less than 80 individuals (out of 96), but there
+are more than 60000 loci covered at least by one read in more than 80 individuals,
 and that's the low-coverage kind of data that ANGSD can help us with. Let's run it,
 in a new folder.
 

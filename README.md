@@ -71,12 +71,12 @@ BAM files are all in `BAM` subfolder.
 Upon inspection of mapping results, an improvement of coverage
 with respect to `ipyrad`'s results is clear, as expected from the
 usage of `mindepth_majrule` 4 in `ipyrad`'s run in `2023-05-17b`.
-Most of the 76850 loci are not covered in more than 60 individuals,
-but over 20000 loci are covered by at least one read in more than
+Most of the 204618 loci are not covered in more than 80 individuals,
+but over 50000 loci are covered by at least one read in more than
 80 individuals.
 
-I select a subset of 70721 loci covered in at least 5 individuals
-after removing the 6 individuals with less than 30000 loci covered,
+I select a subset of 190266 loci covered in at least 5 individuals
+after removing the 6 individuals with less than 100000 loci covered,
 which are: N044Cx2, N048Cma, N048Cmb, N048Cmc, S031Cmc, and T165Cxa.
 
 # 2024-10-03
@@ -87,7 +87,7 @@ of the *de novo* assembly. Several goals:
 2. Extract a consensus sequence from every locus.
 
 The `consensus.fa` FASTA file contains the consensus sequence of
-76850 loci. It is intended to be used as a reference to map ddRADseq
+204618 loci. It is intended to be used as a reference to map ddRADseq
 reads. The reason for this double use of the FASTQ files is that
 `ipyrad` was run with `mindepth_majrule` set to 4, which was
 necessary to focus on reliable sites but wasted many reads that
