@@ -1,5 +1,21 @@
 (Note the inverse chronological order: more recent first)
 
+# 2025-03-15
+In order to use SNAPPER for Bayesian species delimitation, we need
+to call genoypes and prepare them in Nexus format. Here I prepare
+three Nexus files for species delimitation with SNAPPER:
+
+- **toRef.nex**: 10262 SNPs genotyped in at least 60 out of 90
+  individuals, selected among SNPs discovered by aligning ddRAD
+  sequences to the reference genome in `2023-05-15`.
+- **toRad.nex**: 21474 SNPs genotyped in at least 80 out of the
+  90 individuals, selected among SNPs discovered by re-aligning
+  ddRAD sequences to the consensus sequences of the ddRAD loci
+  assembled from those same reads. The original BAM files are
+  those in `2024-10-04`.
+- **toy.nex**: A random subset of 500 sites among those in
+  `toRad.nex`, just to facilitate testing runs of SNAPPER.
+
 # 2024-10-18
 Mar suspects the individual from which the Illumina reads were
 sequenced for the assembly of the reference genome could be

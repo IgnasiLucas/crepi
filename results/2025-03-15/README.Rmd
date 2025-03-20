@@ -1,0 +1,300 @@
+---
+title: "Preparation of SNP genotypes in Nexus format"
+author: "J. Ignacio Lucas Lledó"
+date: "`r Sys.Date()`"
+output: html_document
+bibliography: ../../doc/references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+For the purpose of Bayesian species delimitation, with SNAPPER [@Stoltz2020], we need to
+prepare the input file, which should be a Nexus file with SNP genotypes. Actually,
+I advance that we have several options for generating a matrix of SNP genotypes,
+and I think it's better to prepare more than one data set and run the same analysis
+on all them, to check for robustness.
+
+## Calling genotypes with ANGSD
+
+At least, we have two sets of BAM files: those aligned to the reference genome in
+`2023-05-18/BAM`, and those aligned to the set of ddRAD loci, in `2024-10-04/BAM`.
+
+We already have selected variable sites with limited linkage disequilibrium and with
+a minimum number of 60 samples with at least 2 reads covering the site. And we have
+the genotype likelihoods of those sites in `../2024-03-11/Likes2/ARCTIC.beagle.gz`.
+However, for some reason, ANGSD does not do the job when provided with the list of
+sites and the genotype likelihoods. We have to feed it the raw BAM files and compute
+the likelihoods all over again. I will filter later.
+
+The method implemented by @Stoltz2020 is based on that of @Bryant2012, where the authors
+explain very well how they compute the likelihoods. It turns out that the genotypes
+are turned to allele frequencies. The model assumes a Fisher-Wright population mating
+at random, but it does not model it explicitly. So, the important information in the
+data is not the distribution of genotypes, but the allele frequencies. Actually, the
+data file provided as an example suffers from a severe lack of heterozygotes. Thus,
+it is not essential to get accurate genotypes. SNAPPER would probably work equally well on
+haploids, or with a random sample of a single allele per site per individual. Thus, I
+should not be worried about some heterozygotes being called homozygous when coverage
+is low. I therefore accept the low coverage threshold of 2 per individual.
+
+When calling genotypes another important argument is the posterior probability cutoff.
+If the three possible genotypes were equally probable, the posteriors would be 0.33, and
+a cutoff at that level would produce no missing data at all, but would introduce noise.
+I am willing to confound a heterozygote for any of the homozygotes (with equal probability).
+But I am not willing to confound the two homozygous genotypes. I will try with a cutoff
+of 0.5, and see how much missing data we get.
+
+```{bash}
+SITES=../2024-03-11/Sites/ARCTIC_snp.sites
+if [ ! -e GoodContigs.txt ]; then
+   cut -f 1 $SITES | uniq | sed 's/$/:/' > GoodContigs.txt
+fi
+
+# Not excluding any individuals yet!
+if [ ! -e bamlist1.txt ]; then
+   ls -1 ../2023-05-18/BAM/*.bam > bamlist1.txt
+fi
+if [ ! -e toRef.geno ]; then
+   if [ ! -e toRef.geno.gz ]; then
+      angsd -bam bamlist1.txt \
+            -ref ../2023-05-15/assembly.fasta \
+            -rf GoodContigs.txt \
+            -sites ../2024-03-11/Sites/ARCTIC_snp.sites \
+            -out toRef \
+            -baq 1 \
+            -setMinDepthInd 2 \
+            -minInd 60 \
+            -GL 1 \
+            -doMaf 2 \
+            -doMajorMinor 1 \
+            -minMaf 0.05 \
+            -doGeno 2 \
+            -doPost 1 \
+            -nThreads 8 \
+            -postCutoff 0.50 1> toRef.log 2> toRef.err
+   fi
+   gunzip toRef.geno.gz
+fi
+
+if [ ! -e bamlist2.txt ]; then
+   ls -1 ../2024-10-04/BAM/*.bam > bamlist2.txt
+fi
+if [ ! -e toRad.geno ]; then
+   if [ ! -e toRad.geno.gz ]; then
+      angsd -bam bamlist2.txt \
+            -ref ../2024-10-03/consensus.fa \
+            -out toRad \
+            -baq 1 \
+            -setMinDepthInd 2 \
+            -minInd 60 \
+            -GL 1 \
+            -doMaf 2 \
+            -doMajorMinor 1 \
+            -minMaf 0.05 \
+            -doGeno 2 \
+            -doPost 1 \
+            -nThreads 8 \
+            -postCutoff 0.50 1> toRad.log 2> toRad.err
+   fi
+   gunzip toRad.geno.gz
+fi
+```
+
+## Filtering and preparing the input files for SNAPPER
+### From alignments to reference
+
+```{r}
+toRef <- read.table('toRef.geno')
+bams  <- scan('bamlist1.txt', what = 'character', quiet = TRUE)
+samples <- sub('.bam', '', basename(bams))
+rm(bams)
+loci <- toRef[, 1:2]
+names(loci) <- c('contig', 'pos')
+geno <- toRef[, -c(1,2)]
+names(geno) <- samples
+plot(ecdf(colSums(geno >= 0)), xlab = 'Number of loci genotyped per sample',
+     main = '', ylab = 'Cumulative fraction of samples')
+abline(v = 200000, lty = 2, col = 'red')
+```
+
+
+```{r}
+MinLoci <- 200000
+geno <- geno[, colSums(geno >= 0) > MinLoci]
+rm(toRef, samples)
+geno[geno == -1] <- NA
+loci$freqs <- rowSums(geno, na.rm = TRUE) / (2 * rowSums(geno >= 0, na.rm = TRUE))
+barplot(table(round(loci$freqs, 2)), las = 2, cex.names = 0.5, main = 'SFS')
+loci$completeness <- rowSums(geno >= 0, na.rm = TRUE)
+plot(ecdf(loci$completeness), xlab = 'Samples genotyped',
+     ylab = 'Cumulative fraction of loci', main = '')
+```
+
+The completeness and allele frequencies observed among called
+genotypes are close to the thresholds applied when running ANGSD.
+I still need to remove positions in close linkage from others. The
+strategy is to use the distances among adjacent loci. Such distances
+are mostly short within a *locus*, and eventually larger among different
+loci. Thus, I can assign a locus to every position and then select
+one SNP (with highest MAF) per locus. I arbitrary set the distance
+threshold to 1000, beyond which the SNPs are assigned different loci.
+Of course, they are also different loci if they are in different contigs.
+
+```{r}
+library(plyr)
+MinCompleteness <- 60
+MaxDist <- 1000
+f <- loci$completeness >= MinCompleteness
+loci <- loci[f,]
+geno <- geno[f,]
+numloci <- dim(loci)[1]
+loci$dist <- c(NA, loci[2:numloci, 'pos'] - loci[1:(numloci-1), 'pos'])
+lastcontig <- c('contig_null', loci[1:(numloci - 1), 'contig'])
+loci[loci$contig != lastcontig, 'dist'] <- NA
+rm(lastcontig, numloci)
+loci$locus <- cumsum(is.na(loci$dist) | loci$dist > MaxDist)
+
+selected <- ddply(loci, .(locus), function(x) x[which.max(x$freqs * x$completeness),])
+selIndex <- match(paste(selected$contig, selected$pos, ":"),
+                  paste(loci$contig, loci$pos, ":"))
+selGeno <- geno[selIndex,]
+GenoStrings <- sapply(selGeno,
+                      function(x) {
+                         x[is.na(x)] <- '-'
+                         paste0(x, collapse = '')
+                      })
+write('#NEXUS',
+      file = 'toRef.nex')
+write('BEGIN Data;',
+      file = 'toRef.nex', append = TRUE)
+write(sprintf('\tDIMENSIONS NTAX=%i NCHAR=%i',
+              length(GenoStrings), nchar(GenoStrings[1])),
+      file = 'toRef.nex', append = TRUE)
+write('\tFormat datatype=integerdata symbols="012" missing=-;',
+      file = 'toRef.nex', append = TRUE)
+write('\tMatrix',
+      file = 'toRef.nex', append = TRUE)
+write.table(data.frame(Sample = names(geno), Genotypes = GenoStrings),
+            'toRef.nex', quote = FALSE, row.names = FALSE,
+            col.names = FALSE, append = TRUE)
+write('\t;',
+      file = 'toRef.nex', append = TRUE)
+write('END;',
+      file = 'toRef.nex', append = TRUE)
+rm(list=ls())
+```
+
+### From alignments to ddRAD loci
+
+```{r}
+toRad <- read.table('toRad.geno')
+bams  <- scan('bamlist2.txt', what = 'character', quiet = TRUE)
+samples <- sub('.bam', '', basename(bams))
+rm(bams)
+loci <- toRad[, 1:2]
+names(loci) <- c('contig', 'pos')
+geno <- toRad[, -c(1,2)]
+names(geno) <- samples
+plot(ecdf(colSums(geno >= 0)), xlab = 'Number of loci genotyped per sample',
+     main = '', ylab = 'Cumulative fraction of samples')
+abline(v = 600000, lty = 2, col = 'red')
+```
+
+
+```{r}
+MinLoci <- 600000
+geno <- geno[, colSums(geno >= 0) > MinLoci]
+rm(toRad, samples)
+geno[geno == -1] <- NA
+loci$freqs <- rowSums(geno, na.rm = TRUE) / (2 * rowSums(geno >= 0, na.rm = TRUE))
+barplot(table(round(loci$freqs, 2)), las = 2, cex.names = 0.5, main = 'SFS')
+loci$completeness <- rowSums(geno >= 0, na.rm = TRUE)
+plot(ecdf(loci$completeness), xlab = 'Samples genotyped',
+     ylab = 'Cumulative fraction of loci', main = '')
+```
+
+The completeness and allele frequencies observed among called
+genotypes are close to the thresholds applied when running ANGSD.
+I still need to remove positions in close linkage from others. The
+strategy here is to keep only one SNP per ddRAD locus: the one that
+maximizes the product of minor allele frequency and completeness.
+
+I am more demanding on this larger data set: at least 80 (instead
+of 60) samples genotyped and loci with a MAF of at least 0.25.
+
+```{r}
+library(plyr)
+MinCompleteness <- 80
+MinFreq <- 0.25
+f <- loci$completeness >= MinCompleteness & loci$freqs >= MinFreq
+loci <- loci[f,]
+geno <- geno[f,]
+
+selected <- ddply(loci, .(contig), function(x) x[which.max(x$freqs * x$completeness),])
+selIndex <- match(paste(selected$contig, selected$pos, ":"),
+                  paste(loci$contig, loci$pos, ":"))
+selGeno <- geno[selIndex,]
+GenoStrings <- sapply(selGeno,
+                      function(x) {
+                         x[is.na(x)] <- '-'
+                         paste0(x, collapse = '')
+                      })
+write('#NEXUS',
+      file = 'toRad.nex')
+write('BEGIN Data;',
+      file = 'toRad.nex', append = TRUE)
+write(sprintf('\tDIMENSIONS NTAX=%i NCHAR=%i',
+              length(GenoStrings), nchar(GenoStrings[1])),
+      file = 'toRad.nex', append = TRUE)
+write('\tFormat datatype=integerdata symbols="012" missing=-;',
+      file = 'toRad.nex', append = TRUE)
+write('\tMatrix',
+      file = 'toRad.nex', append = TRUE)
+write.table(data.frame(Sample = names(geno), Genotypes = GenoStrings),
+            'toRad.nex', quote = FALSE, row.names = FALSE,
+            col.names = FALSE, append = TRUE)
+write('\t;',
+      file = 'toRad.nex', append = TRUE)
+write('END;',
+      file = 'toRad.nex', append = TRUE)
+```
+
+## Creation of a small data set for testing
+
+```{r}
+toy <- selected[sample(1:dim(selected)[1], 500),]
+toyIndex <- match(paste(toy$contig, toy$pos, ":"),
+                  paste(loci$contig, loci$pos, ":"))
+toyGeno <- geno[toyIndex,]
+toyStrings <- sapply(toyGeno,
+                      function(x) {
+                         x[is.na(x)] <- '-'
+                         paste0(x, collapse = '')
+                      })
+write('#NEXUS',
+      file = 'toy.nex')
+write('BEGIN Data;',
+      file = 'toy.nex', append = TRUE)
+write(sprintf('\tDIMENSIONS NTAX=%i NCHAR=%i',
+              length(toyStrings), nchar(toyStrings[1])),
+      file = 'toy.nex', append = TRUE)
+write('\tFormat datatype=integerdata symbols="012" missing=-;',
+      file = 'toy.nex', append = TRUE)
+write('\tMatrix',
+      file = 'toy.nex', append = TRUE)
+write.table(data.frame(Sample = names(geno), Genotypes = toyStrings),
+            'toy.nex', quote = FALSE, row.names = FALSE,
+            col.names = FALSE, append = TRUE)
+write('\t;',
+      file = 'toy.nex', append = TRUE)
+write('END;',
+      file = 'toy.nex', append = TRUE)
+```
+
+```{r}
+sessionInfo()
+```
+
+# References
