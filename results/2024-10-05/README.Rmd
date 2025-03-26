@@ -25,11 +25,11 @@ The following script was run in Garnatxa to generate genotype likelihoods:
 #SBATCH --job-name=angsd1
 #SBATCH --output=angsd1.log
 #SBATCH --nodes=1
-#SBATCH --ntasks=3
+#SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
-#SBATCH --mem=5G
-#SBATCH --qos=short
-#SBATCH --time=1-00:00:00
+#SBATCH --mem=15G
+#SBATCH --qos=medium
+#SBATCH --time=7-00:00:00
 
 module load anaconda
 mamba activate bio
@@ -37,17 +37,18 @@ module load angsd
 
 cd /scr/joiglu/crepi/2024-10-05
 
-BAM=BAM
-ASM=radloci.fa
-EXCLUDE=BadGuys.txt
-GOODLOCI=GoodLoci.txt
+BAM=../2024-10-04/BAM
+ASM=../2024-10-04/radloci.fa
+EXCLUDE=../2024-10-04/BadGuys.txt
+GOODLOCI=../2024-10-04/GoodLoci.txt
 
 if [ ! -e ARCTIC.list ]; then
    ls -1 $BAM/*.bam | grep -E "L|S" | grep -v -F -f $EXCLUDE > ARCTIC.list
 fi
 if [ ! -d Likes1 ]; then mkdir Likes1; fi
 for REGION in ARCTIC; do
-   MININD=$(( $(cat $REGION.list | wc -l) / 2))
+   MININD=60
+   MINDEPTHIND=2
    if [ ! -e Likes1/${REGION}.beagle.gz ]; then
       angsd -bam ${REGION}.list \
             -ref $ASM \
@@ -55,9 +56,9 @@ for REGION in ARCTIC; do
             -out Likes1/${REGION} \
             -only_proper_pairs 1 \
             -baq 1 \
-            -setMinDepth 20 \
+            -setMinDepthInd $MINDEPTHIND \
             -minInd $MININD \
-            -GL 2 \
+            -GL 1 \
             -doGlf 2 \
             -doIBS 1 \
             -doCounts 1 \
@@ -116,18 +117,19 @@ The following script was run in Garnatxa:
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
-#SBATCH --mem=5G
-#SBATCH --qos=short
-#SBATCH --time=1-00:00:00
+#SBATCH --mem=13G
+#SBATCH --qos=medium
+#SBATCH --time=7-00:00:00
 
 module load anaconda
+conda deactivate
 mamba activate bio
 module load angsd
 
-cd /scr/joiglu/crepi/2024-10-05
+cd /scr/joiglu/crepi/results/2024-10-05
 
-BAM=BAM
-ASM=radloci.fa
+BAM=../2024-10-04/BAM
+ASM=../2024-10-04/radloci.fa
 
 if [ ! -d Likes2 ]; then mkdir Likes2; fi
 for REGION in ARCTIC; do
@@ -146,8 +148,8 @@ for REGION in ARCTIC; do
             -out Likes2/${REGION} \
             -only_proper_pairs 1 \
             -baq 1 \
-            -setMinDepth 20 \
-            -GL 2 \
+            -setMinDepthInd 2 \
+            -GL 1 \
             -doGlf 2 \
             -doIBS 1 \
             -doCounts 1 \
@@ -161,10 +163,9 @@ for REGION in ARCTIC; do
             -minMaf 0.05 \
             -nThreads 8 \
             1> Likes2/${REGION}.angsd.log \
-            2> Likes2/${REGION}.angsd.err &
+            2> Likes2/${REGION}.angsd.err
    fi
 done
-wait
 
 if [ ! -d PCangsd ]; then mkdir PCangsd; fi
 for REGION in ARCTIC; do
@@ -222,7 +223,7 @@ grep 'Number of sites retained after filtering:' Likes2/ARCTIC.angsd.err
 ```{r AdmixArctic}
 source('/data/joiglu/bin/evalAdmix/visFuns.R')
 MetaData <- read.table('../../data/IDs/Crepido_fish_IDs_all_data_2021Dec.txt')
-IndNames <- gsub('(BAM/|.bam)', '',
+IndNames <- gsub('(../2024-10-04/BAM/|.bam)', '',
                  scan('ARCTIC.list', what = 'character', quiet = TRUE))
 MetaData <- MetaData[MetaData$P_code %in% IndNames, ]                 
 row.names(MetaData) <- MetaData$P_code
@@ -273,10 +274,7 @@ plotCorRes(cor_mat = r, pop = Lake, ord = ord,
 ## Results from PCangsd
 
 ```{r PCAartic, fig.width=8}
-IndNames <- gsub('(BAM/|.bam)', '',
-                 scan('ARCTIC.list', what = 'character', quiet = TRUE))
-Lake <- factor(MetaData[IndNames, 'Lake'],
-               levels = c('Langfjordvatn', 'Suopatjavri'))
+Lake <- as.factor(Lake)
 cov <- as.matrix(read.table('PCangsd/ARCTIC.cov'))
 e   <- eigen(cov)
 layout(matrix(1:2, ncol = 2), width = c(4, 1), height = c(1, 1))

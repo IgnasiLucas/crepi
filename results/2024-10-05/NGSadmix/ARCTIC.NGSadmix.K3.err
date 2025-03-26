@@ -1,28 +1,35 @@
 Input: lname=Likes2/ARCTIC.beagle.gz nPop=3, fname=(null) qname=(null) outfiles=NGSadmix/ARCTIC.K3
-Setup: seed=1728573673 nThreads=8 method=1
+Setup: seed=1742912645 nThreads=8 method=1
 Convergence: maxIter=8000 tol=0.000010 tolLike50=0.100000 dymBound=0
 Filters: misTol=0.050000 minMaf=0.050000 minLrt=0.000000 minInd=0
-Input file has dim: nsites=40991 nind=90
-Input file has dim (AFTER filtering): nsites=40991 nind=90
-iter[start] like is=4737065.814914
-iter[50] like is=-2250826.248814 thres=0.024001
-iter[100] like is=-2248813.638166 thres=0.014224
-iter[150] like is=-2248421.532102 thres=0.000646
-iter[200] like is=-2248270.280595 thres=0.000989
-iter[250] like is=-2248231.109850 thres=0.001734
-iter[300] like is=-2248123.471343 thres=0.004972
-iter[350] like is=-2247991.823539 thres=0.007383
-iter[400] like is=-2247900.826196 thres=0.000779
-iter[450] like is=-2247798.290726 thres=0.000340
-iter[500] like is=-2247780.384527 thres=0.000638
-iter[550] like is=-2247772.874834 thres=0.000275
-iter[600] like is=-2247772.401599 thres=0.000028
-iter[650] like is=-2247772.082523 thres=0.000007
-iter[700] like is=-2247771.993811 thres=0.000003
-Convergence achived because log likelihooditer difference for 50 iteraction is less than 0.100000
-best like=-2247771.993811 after 700 iterations
+Input file has dim: nsites=39698 nind=90
+Input file has dim (AFTER filtering): nsites=39698 nind=90
+iter[start] like is=4696518.978081
+iter[50] like is=-1930790.270934 thres=0.004605
+iter[100] like is=-1929983.548000 thres=0.002412
+iter[150] like is=-1929296.648461 thres=0.003143
+iter[200] like is=-1928957.487763 thres=0.003905
+iter[250] like is=-1928885.521112 thres=0.002021
+iter[300] like is=-1928804.046464 thres=0.002515
+iter[350] like is=-1928785.758443 thres=0.000242
+iter[400] like is=-1928782.411075 thres=0.002228
+iter[450] like is=-1928778.317196 thres=0.000706
+iter[500] like is=-1928770.868582 thres=0.000353
+iter[550] like is=-1928767.110182 thres=0.000433
+iter[600] like is=-1928761.534828 thres=0.000247
+iter[650] like is=-1928757.064876 thres=0.001056
+iter[700] like is=-1928752.181385 thres=0.000098
+iter[750] like is=-1928750.343860 thres=0.008105
+iter[800] like is=-1928749.931585 thres=0.000039
+iter[850] like is=-1928749.788702 thres=0.000037
+iter[900] like is=-1928749.615986 thres=0.000048
+iter[950] like is=-1928748.838577 thres=0.000112
+iter[1000] like is=-1928746.473135 thres=0.000265
+iter[1050] like is=-1928744.933785 thres=0.000042
+EM accelerated Thread has reached convergence with tol 0.000010
+best like=-1928744.572054 after 1091 iterations
 	-> Dumpedfiles are: NGSadmix/ARCTIC.K3.log
 	-> Dumpedfiles are: NGSadmix/ARCTIC.K3.qopt
 	-> Dumpedfiles are: NGSadmix/ARCTIC.K3.fopt.gz
-	[ALL done] cpu-time used =  216.68 sec
-	[ALL done] walltime used =  126.00 sec
+	[ALL done] cpu-time used =  391.54 sec
+	[ALL done] walltime used =  148.00 sec

@@ -1,28 +1,24 @@
 Input: lname=Likes2/ARCTIC.beagle.gz nPop=4, fname=(null) qname=(null) outfiles=NGSadmix/ARCTIC.K4
-Setup: seed=1728573673 nThreads=8 method=1
+Setup: seed=1742912793 nThreads=8 method=1
 Convergence: maxIter=8000 tol=0.000010 tolLike50=0.100000 dymBound=0
 Filters: misTol=0.050000 minMaf=0.050000 minLrt=0.000000 minInd=0
-Input file has dim: nsites=40991 nind=90
-Input file has dim (AFTER filtering): nsites=40991 nind=90
-iter[start] like is=4610340.401850
-iter[50] like is=-2232506.768465 thres=0.013113
-iter[100] like is=-2223660.350799 thres=0.004476
-iter[150] like is=-2223564.324646 thres=0.000568
-iter[200] like is=-2223537.260017 thres=0.004472
-iter[250] like is=-2223527.093733 thres=0.000129
-iter[300] like is=-2223521.168921 thres=0.002896
-iter[350] like is=-2223517.867518 thres=0.000107
-iter[400] like is=-2223515.664423 thres=0.000047
-iter[450] like is=-2223514.723571 thres=0.000158
-iter[500] like is=-2223513.969374 thres=0.000050
-iter[550] like is=-2223513.275641 thres=0.000656
-iter[600] like is=-2223512.734171 thres=0.000300
-iter[650] like is=-2223512.489429 thres=0.000043
-iter[700] like is=-2223512.401699 thres=0.000011
+Input file has dim: nsites=39698 nind=90
+Input file has dim (AFTER filtering): nsites=39698 nind=90
+iter[start] like is=4568609.700886
+iter[50] like is=-1919968.272117 thres=0.003745
+iter[100] like is=-1902066.334302 thres=0.009218
+iter[150] like is=-1901188.239972 thres=0.001245
+iter[200] like is=-1901153.055689 thres=0.003452
+iter[250] like is=-1901030.511783 thres=0.010961
+iter[300] like is=-1900987.158001 thres=0.004503
+iter[350] like is=-1900877.874287 thres=0.001155
+iter[400] like is=-1900860.041964 thres=0.000073
+iter[450] like is=-1900859.618161 thres=0.000035
+iter[500] like is=-1900859.518941 thres=0.000059
 Convergence achived because log likelihooditer difference for 50 iteraction is less than 0.100000
-best like=-2223512.401699 after 700 iterations
+best like=-1900859.518941 after 500 iterations
 	-> Dumpedfiles are: NGSadmix/ARCTIC.K4.log
 	-> Dumpedfiles are: NGSadmix/ARCTIC.K4.qopt
 	-> Dumpedfiles are: NGSadmix/ARCTIC.K4.fopt.gz
-	[ALL done] cpu-time used =  233.11 sec
-	[ALL done] walltime used =  131.00 sec
+	[ALL done] cpu-time used =  177.58 sec
+	[ALL done] walltime used =  68.00 sec
