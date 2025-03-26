@@ -46,13 +46,10 @@ we can do is to select one random SNP from every locus. But,
 because coverage is variable within loci, I made the choice
 among the SNPs with the most coverage in the locus.
 
-In all, 42810 SNPs are selected (it seems many loci were
-monomorphic, likely due to their low coverage). A second run
-of likelihood estimation on only those sites applied some filters,
-resulting in 40991 sites retained.
+In all, 39698 SNPs were used in the analysis.
 
 NGSadmix suggests *K=2* as a good fit to the genetic structure.
-It reveals the existence of the two species, that we think are
+It suggests the existence of the two species, that we think are
 *Crepidostomum farionis*, which predominates in Langfjordvatn,
 and *Crepidostomum pseudofarionis*, which predominates in
 Suopatjavri. Only 3 admixed individuals and one immigrant are
@@ -72,10 +69,12 @@ individual in Suopatjavri:
 | S061Cmb        | Immigrant (100% C.f)    |
 
 Table `summary.txt` shows the predicted ancestry composition of
-every individual with *K=2*.
+every individual with *K=2*. Curiously, all 4 admixed individuals
+have the same fractions of ancestries: about 63% C. pseudofarionis
+and about 37% C. farionis.
 
-PCangsd identifies one main component with 18% of variation that
-separates the two species and leaves the four admixed individuals
+PCangsd identifies one main component with 19% of variation that
+separates the two *species* and leaves the four admixed individuals
 near the middle. The second principal component only accounts for
 1.3% of variation. Suopatjavri seems to be more diverse.
 
