@@ -169,7 +169,7 @@ write('#NEXUS',
       file = 'toRef.nex')
 write('BEGIN Data;',
       file = 'toRef.nex', append = TRUE)
-write(sprintf('\tDIMENSIONS NTAX=%i NCHAR=%i',
+write(sprintf('\tDIMENSIONS NTAX=%i NCHAR=%i;',
               length(GenoStrings), nchar(GenoStrings[1])),
       file = 'toRef.nex', append = TRUE)
 write('\tFormat datatype=integerdata symbols="012" missing=-;',
@@ -245,7 +245,7 @@ write('#NEXUS',
       file = 'toRad.nex')
 write('BEGIN Data;',
       file = 'toRad.nex', append = TRUE)
-write(sprintf('\tDIMENSIONS NTAX=%i NCHAR=%i',
+write(sprintf('\tDIMENSIONS NTAX=%i NCHAR=%i;',
               length(GenoStrings), nchar(GenoStrings[1])),
       file = 'toRad.nex', append = TRUE)
 write('\tFormat datatype=integerdata symbols="012" missing=-;',
@@ -263,11 +263,19 @@ write('END;',
 
 ## Creation of a small data set for testing
 
+I originally thought that a toy dataset should contain just far fewer
+SNPs. Then, I learned that what actually reduces the speed of execution
+of SNAPPER is the reduction of the number of individuals per species.
+
 ```{r}
-toy <- selected[sample(1:dim(selected)[1], 500),]
+toy <- selected[sample(1:dim(selected)[1], 5000),]
 toyIndex <- match(paste(toy$contig, toy$pos, ":"),
                   paste(loci$contig, loci$pos, ":"))
-toyGeno <- geno[toyIndex,]
+hybrids  <- c('L019Cxa', 'L019Cxb', 'L088Cma', 'S023Cxd')
+farionis <- setdiff(grep('^L', colnames(geno), value = TRUE), hybrids)
+pseudofa <- setdiff(grep('^S', colnames(geno), value = TRUE), hybrids)
+few <- sort(c(hybrids, sample(farionis, 10), sample(pseudofa, 10)))
+toyGeno <- geno[toyIndex, few]
 toyStrings <- sapply(toyGeno,
                       function(x) {
                          x[is.na(x)] <- '-'
@@ -277,14 +285,14 @@ write('#NEXUS',
       file = 'toy.nex')
 write('BEGIN Data;',
       file = 'toy.nex', append = TRUE)
-write(sprintf('\tDIMENSIONS NTAX=%i NCHAR=%i',
+write(sprintf('\tDIMENSIONS NTAX=%i NCHAR=%i;',
               length(toyStrings), nchar(toyStrings[1])),
       file = 'toy.nex', append = TRUE)
 write('\tFormat datatype=integerdata symbols="012" missing=-;',
       file = 'toy.nex', append = TRUE)
 write('\tMatrix',
       file = 'toy.nex', append = TRUE)
-write.table(data.frame(Sample = names(geno), Genotypes = toyStrings),
+write.table(data.frame(Sample = few, Genotypes = toyStrings),
             'toy.nex', quote = FALSE, row.names = FALSE,
             col.names = FALSE, append = TRUE)
 write('\t;',
