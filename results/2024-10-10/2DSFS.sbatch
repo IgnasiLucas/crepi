@@ -4,15 +4,15 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
-#SBATCH --mem=1G
+#SBATCH --mem=2G
 #SBATCH --qos=short
-#SBATCH --time=02:00:00
+#SBATCH --time=10:00:00
 
 module load anaconda
 module load angsd
 mamba activate bio
 
-cd /scr/joiglu/crepi/2024-10-10
+cd /scr/joiglu/crepi/results/2024-10-10
 
 if [ ! -d 2D_SFS ]; then mkdir 2D_SFS; fi
 # Not in alphabetic order!

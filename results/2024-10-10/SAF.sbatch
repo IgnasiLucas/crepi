@@ -4,17 +4,17 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=6
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=10G
-#SBATCH --qos=long
-#SBATCH --time=1-00:00:00
+#SBATCH --mem=15G
+#SBATCH --qos=medium
+#SBATCH --time=5-00:00:00
 
 module load anaconda
 module load angsd
 mamba activate bio
 
-cd /scr/joiglu/crepi/2024-10-10
+cd /scr/joiglu/crepi/results/2024-10-10
 
-ASM=../2024-10-05/radloci.fa
+ASM=../2024-10-04/radloci.fa
 
 if [ ! -d SAF ]; then mkdir SAF; fi
 for pop in $(ls -1 *.list); do

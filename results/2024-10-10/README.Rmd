@@ -32,7 +32,7 @@ Considering results in `2024-10-05`, we have two putative species, one
 predominating in each lake. Thus, the comparison between lakes must also
 be a comparison between putative species. 
 
-```{r }
+```{r}
 structure <- read.table('../2024-10-05/summary.txt', header = TRUE)
 sp1 <- structure[structure$K2.1 > 0.95, 'Sample']
 sp2 <- structure[structure$K2.2 > 0.95, 'Sample']
@@ -59,6 +59,8 @@ if [ ! -e Suopatjavri.list ]; then
    cat Suopatjavri*.list > Suopatjavri.list
 fi
 ```
+
+To be run in Garnatxa:
 
 ```{bash SAF, eval=FALSE}
 ASM=../2024-10-05/radloci.fa
@@ -206,7 +208,7 @@ par(mfrow = c(1, 1), mar = c(5.1, 4.1, 4.1, 2.1))
 
 ## $F_{ST}$s
 
-```{bash FSTs, eval=FALSE}
+```{bash FSTs, eval=TRUE}
 # FSTs
 if [ ! -d FST ]; then mkdir FST; fi
 

@@ -1,6 +1,6 @@
 	-> angsd version: 0.941-19-g2d1c533 (htslib: 1.18-4-g5098983e) build(Jul 29 2024 17:23:26)
-	-> angsd -b Langfjordvatn.m.sp1.list -anc ../2024-10-05/radloci.fa -ref ../2024-10-05/radloci.fa -out SAF/Langfjordvatn.m.sp1 -doSaf 1 -gl 1 -minMapQ 30 -minQ 20 -only_proper_pairs 1 -baq 1 -minInd 22 -setMinDepthInd 1 -nThreads 4 
-	-> Sat Oct 12 19:35:45 2024
+	-> angsd -b Langfjordvatn.m.sp1.list -anc ../2024-10-04/radloci.fa -ref ../2024-10-04/radloci.fa -out SAF/Langfjordvatn.m.sp1 -doSaf 1 -gl 1 -minMapQ 30 -minQ 20 -only_proper_pairs 1 -baq 1 -minInd 22 -setMinDepthInd 1 -nThreads 4 
+	-> Fri Mar 28 13:17:51 2025
 ----------------
 multiReader.cpp:
 	-nLines	50	(Number of lines to read)
@@ -157,7 +157,7 @@ abcSaf.cpp:
 	   4: SAF calculation from genotype posteriors (input is beagle text format)
 	   5: SAF calculation conditioning on minor allele from -doMajorMinor
 	 -underFlowProtect	0
-	 -anc		../2024-10-05/radloci.fa	(ancestral fasta)
+	 -anc		../2024-10-04/radloci.fa	(ancestral fasta)
 	 -noTrans	0	(remove transitions)
 	 -pest		(null)	(prior SFS)
 	 -isHap		0	(samples are haploid; works with -doSaf 1 or 5)
@@ -176,5 +176,5 @@ abcHetPlas.cpp:
 		->"SAF/Langfjordvatn.m.sp1.saf.pos.gz"
 		->"SAF/Langfjordvatn.m.sp1.saf.idx"
 
-	[ALL done] cpu-time used =  940.09 sec
-	[ALL done] walltime used =  63659.00 sec
+	[ALL done] cpu-time used =  1614.76 sec
+	[ALL done] walltime used =  160177.00 sec
