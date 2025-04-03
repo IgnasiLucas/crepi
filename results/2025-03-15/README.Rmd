@@ -268,7 +268,7 @@ SNPs. Then, I learned that what actually reduces the speed of execution
 of SNAPPER is the reduction of the number of individuals per species.
 
 ```{r}
-toy <- selected[sample(1:dim(selected)[1], 5000),]
+toy <- selected[sample(1:dim(selected)[1], 500),]
 toyIndex <- match(paste(toy$contig, toy$pos, ":"),
                   paste(loci$contig, loci$pos, ":"))
 hybrids  <- c('L019Cxa', 'L019Cxb', 'L088Cma', 'S023Cxd')

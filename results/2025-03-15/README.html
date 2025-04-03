@@ -11,7 +11,7 @@
 
 <meta name="author" content="J. Ignacio Lucas Lledó" />
 
-<meta name="date" content="2025-04-01" />
+<meta name="date" content="2025-04-03" />
 
 <title>Preparation of SNP genotypes in Nexus format</title>
 
@@ -358,7 +358,7 @@ pre code {
 
 <h1 class="title toc-ignore">Preparation of SNP genotypes in Nexus format</h1>
 <h4 class="author">J. Ignacio Lucas Lledó</h4>
-<h4 class="date">2025-04-01</h4>
+<h4 class="date">2025-04-03</h4>
 
 </div>
 
@@ -560,7 +560,7 @@ write(&#39;END;&#39;,
 <div id="creation-of-a-small-data-set-for-testing" class="section level2">
 <h2>Creation of a small data set for testing</h2>
 <p>I originally thought that a toy dataset should contain just far fewer SNPs. Then, I learned that what actually reduces the speed of execution of SNAPPER is the reduction of the number of individuals per species.</p>
-<pre class="r"><code>toy &lt;- selected[sample(1:dim(selected)[1], 5000),]
+<pre class="r"><code>toy &lt;- selected[sample(1:dim(selected)[1], 500),]
 toyIndex &lt;- match(paste(toy$contig, toy$pos, &quot;:&quot;),
                   paste(loci$contig, loci$pos, &quot;:&quot;))
 hybrids  &lt;- c(&#39;L019Cxa&#39;, &#39;L019Cxb&#39;, &#39;L088Cma&#39;, &#39;S023Cxd&#39;)
