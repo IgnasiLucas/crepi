@@ -31,8 +31,8 @@ for pop in $(ls -1 *.list); do
             -minQ 20 \
             -only_proper_pairs 1 \
             -baq 1 \
-            -minInd $NUMIND \
-            -setMinDepthInd 1 \
+            -minInd $(( NUMIND * 4 / 5 )) \
+            -setMinDepthInd 4 \
             -nThreads 4 1> SAF/$NAME.log 2> SAF/$NAME.err &
    fi
 done

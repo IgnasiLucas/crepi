@@ -1,5 +1,5 @@
 	-> angsd version: 0.941-19-g2d1c533 (htslib: 1.18-4-g5098983e) build(Jul 29 2024 17:23:26)
-	-> angsd -b Suopatjavri.m.sp1.list -anc ../2024-10-04/radloci.fa -ref ../2024-10-04/radloci.fa -out SAF/Suopatjavri.m.sp1 -doSaf 1 -gl 1 -minMapQ 30 -minQ 20 -only_proper_pairs 1 -baq 1 -minInd 27 -setMinDepthInd 1 -nThreads 4 
+	-> angsd -b Suopatjavri.m.sp1.list -anc ../2024-10-04/radloci.fa -ref ../2024-10-04/radloci.fa -out SAF/Suopatjavri.m.sp1 -doSaf 1 -gl 1 -minMapQ 30 -minQ 20 -only_proper_pairs 1 -baq 1 -minInd 21 -setMinDepthInd 4 -nThreads 4 
 	-> Inputtype is BAM/CRAM
 [multiReader] 27 samples in 27 input files
 	-> Reading fasta: ../2024-10-04/radloci.fa
@@ -4087,9 +4087,9 @@
 		->"SAF/Suopatjavri.m.sp1.saf.gz"
 		->"SAF/Suopatjavri.m.sp1.saf.pos.gz"
 		->"SAF/Suopatjavri.m.sp1.saf.idx"
-	-> Sun Mar 30 16:00:30 2025
+	-> Sat Apr 12 15:14:27 2025
 	-> Arguments and parameters for all analysis are located in .arg file
 	-> Total number of sites analyzed: 32863747
-	-> Number of sites retained after filtering: 2566417 
-	[ALL done] cpu-time used =  2132.46 sec
-	[ALL done] walltime used =  178959.00 sec
+	-> Number of sites retained after filtering: 3238058 
+	[ALL done] cpu-time used =  1479.92 sec
+	[ALL done] walltime used =  178344.00 sec

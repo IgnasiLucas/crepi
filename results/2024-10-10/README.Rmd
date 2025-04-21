@@ -30,7 +30,7 @@ Dates of collection and dissection are very evenly distributed along september,
 
 Considering results in `2024-10-05`, we have two putative species, one
 predominating in each lake. Thus, the comparison between lakes must also
-be a comparison between putative species. 
+be a comparison between putative species.
 
 ```{r}
 structure <- read.table('../2024-10-05/summary.txt', header = TRUE)
@@ -63,7 +63,7 @@ fi
 To be run in Garnatxa:
 
 ```{bash SAF, eval=FALSE}
-ASM=../2024-10-05/radloci.fa
+ASM=../2024-10-04/radloci.fa
 
 if [ ! -d SAF ]; then mkdir SAF; fi
 for pop in $(ls -1 *.list); do
@@ -80,8 +80,8 @@ for pop in $(ls -1 *.list); do
             -minQ 20 \
             -only_proper_pairs 1 \
             -baq 1 \
-            -minInd $NUMIND \
-            -setMinDepthInd 1 \
+            -minInd $(( NUMIND * 4 /  5)) \
+            -setMinDepthInd 4 \
             -nThreads 4 1> SAF/$NAME.log 2> SAF/$NAME.err &
    fi
 done
@@ -240,7 +240,7 @@ if [ ! -e summaryFST.txt ]; then
    else
       echo -e "C. farionis (Lan)\tC. pseudofarionis (Suo)\tNA\tNA" >> summaryFST.txt
    fi
-   
+
    if [ -e FST/Langfjordvatn.f.sp1.Langfjordvatn.m.sp1.fst.idx ]; then
       LC_ALL=C printf "%s\t%s\t%.6f\t%.6f\n" \
       "C. farionis on females (Lan)" "C. farionis on males (Lan)" \
@@ -248,7 +248,7 @@ if [ ! -e summaryFST.txt ]; then
    else
       echo -e "C. farionis on females (Lan)\tC. farionis on males (Lan)\tNA\tNA" >> summaryFST.txt
    fi
-   
+
    if [ -e FST/Suopatjavri.f.sp2.Suopatjavri.m.sp2.fst.idx ]; then
       LC_ALL=C printf "%s\t%s\t%.6f\t%.6f\n" \
       "C. pseudofarionis on females (Suo)" "C. pseudofarionis on males (Suo)" \

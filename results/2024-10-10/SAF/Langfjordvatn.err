@@ -1,5 +1,5 @@
 	-> angsd version: 0.941-19-g2d1c533 (htslib: 1.18-4-g5098983e) build(Jul 29 2024 17:23:26)
-	-> angsd -b Langfjordvatn.list -anc ../2024-10-04/radloci.fa -ref ../2024-10-04/radloci.fa -out SAF/Langfjordvatn -doSaf 1 -gl 1 -minMapQ 30 -minQ 20 -only_proper_pairs 1 -baq 1 -minInd 34 -setMinDepthInd 1 -nThreads 4 
+	-> angsd -b Langfjordvatn.list -anc ../2024-10-04/radloci.fa -ref ../2024-10-04/radloci.fa -out SAF/Langfjordvatn -doSaf 1 -gl 1 -minMapQ 30 -minQ 20 -only_proper_pairs 1 -baq 1 -minInd 27 -setMinDepthInd 4 -nThreads 4 
 	-> Inputtype is BAM/CRAM
 [multiReader] 34 samples in 34 input files
 	-> Reading fasta: ../2024-10-04/radloci.fa
@@ -3778,9 +3778,9 @@
 		->"SAF/Langfjordvatn.saf.gz"
 		->"SAF/Langfjordvatn.saf.pos.gz"
 		->"SAF/Langfjordvatn.saf.idx"
-	-> Sun Mar 30 12:08:41 2025
+	-> Sat Apr 12 11:21:55 2025
 	-> Arguments and parameters for all analysis are located in .arg file
 	-> Total number of sites analyzed: 24069554
-	-> Number of sites retained after filtering: 2824432 
-	[ALL done] cpu-time used =  2311.48 sec
-	[ALL done] walltime used =  165050.00 sec
+	-> Number of sites retained after filtering: 3337971 
+	[ALL done] cpu-time used =  1615.96 sec
+	[ALL done] walltime used =  164392.00 sec

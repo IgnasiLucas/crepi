@@ -1,6 +1,6 @@
 	-> angsd version: 0.941-19-g2d1c533 (htslib: 1.18-4-g5098983e) build(Jul 29 2024 17:23:26)
-	-> angsd -b Suopatjavri.m.sp1.list -anc ../2024-10-04/radloci.fa -ref ../2024-10-04/radloci.fa -out SAF/Suopatjavri.m.sp1 -doSaf 1 -gl 1 -minMapQ 30 -minQ 20 -only_proper_pairs 1 -baq 1 -minInd 27 -setMinDepthInd 1 -nThreads 4 
-	-> Fri Mar 28 13:17:51 2025
+	-> angsd -b Suopatjavri.m.sp1.list -anc ../2024-10-04/radloci.fa -ref ../2024-10-04/radloci.fa -out SAF/Suopatjavri.m.sp1 -doSaf 1 -gl 1 -minMapQ 30 -minQ 20 -only_proper_pairs 1 -baq 1 -minInd 21 -setMinDepthInd 4 -nThreads 4 
+	-> Thu Apr 10 13:42:03 2025
 ----------------
 multiReader.cpp:
 	-nLines	50	(Number of lines to read)
@@ -64,8 +64,8 @@ abcFilter.cpp:
 	-sites		(null)	(File containing sites to keep (chr regStart regStop))
 	-sites		(null)	(File containing sites to keep (chr pos major minor))
 	-sites		(null)	(File containing sites to keep (chr pos major minor af ac an))
-	-minInd		27	Only use site if atleast minInd of samples has data
-	-setMinDepthInd	1	Only use site if atleast minInd of samples has this minimum depth 
+	-minInd		21	Only use site if atleast minInd of samples has data
+	-setMinDepthInd	4	Only use site if atleast minInd of samples has this minimum depth 
 	-capDepth	-1	Only use the first capDepth bases
 	-strict	1	 (experimental)
 	1) You can force major/minor by -doMajorMinor 3
@@ -114,7 +114,7 @@ abcGL.cpp:
 	-trim		0		(zero means no trimming)
 	-tmpdir		angsd_tmpdir/	(used by SOAPsnp)
 	-errors		(null)		(used by SYK)
-	-minInd		27		(0 indicates no filtering)
+	-minInd		21		(0 indicates no filtering)
 
 Filedumping:
 	-doGlf	0
@@ -137,7 +137,7 @@ abcGL.cpp:
 	-trim		0		(zero means no trimming)
 	-tmpdir		angsd_tmpdir/	(used by SOAPsnp)
 	-errors		(null)		(used by SYK)
-	-minInd		27		(0 indicates no filtering)
+	-minInd		21		(0 indicates no filtering)
 
 Filedumping:
 	-doGlf	0
@@ -176,5 +176,5 @@ abcHetPlas.cpp:
 		->"SAF/Suopatjavri.m.sp1.saf.pos.gz"
 		->"SAF/Suopatjavri.m.sp1.saf.idx"
 
-	[ALL done] cpu-time used =  2132.46 sec
-	[ALL done] walltime used =  178959.00 sec
+	[ALL done] cpu-time used =  1479.92 sec
+	[ALL done] walltime used =  178344.00 sec
