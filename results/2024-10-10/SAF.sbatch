@@ -26,10 +26,11 @@ for pop in $(ls -1 *.list); do
             -ref $ASM \
             -out SAF/$NAME \
             -doSaf 1 \
+            -doGlf 1 \
             -gl 1 \
             -minMapQ 30 \
             -minQ 20 \
-            -only_proper_pairs 1 \
+            -only_proper_pairs 0 \
             -baq 1 \
             -minInd $(( NUMIND * 4 / 5 )) \
             -setMinDepthInd 4 \

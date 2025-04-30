@@ -1,4 +1,4 @@
 Pop1	Pop2	FST.unweighted	FST.weighted
-C. farionis (Lan)	C. pseudofarionis (Suo)	0.017872	0.121732
-C. farionis on females (Lan)	C. farionis on males (Lan)	0.000211	-0.009355
-C. pseudofarionis on females (Suo)	C. pseudofarionis on males (Suo)	0.000073	-0.007175
+C. farionis (Lan)	C. pseudofarionis (Suo)	0.022496	0.125520
+C. farionis on females (Lan)	C. farionis on males (Lan)	0.000298	-0.008964
+C. pseudofarionis on females (Suo)	C. pseudofarionis on males (Suo)	0.000171	-0.007581

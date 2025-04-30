@@ -1,6 +1,6 @@
 	-> angsd version: 0.941-19-g2d1c533 (htslib: 1.18-4-g5098983e) build(Jul 29 2024 17:23:26)
-	-> angsd -b Langfjordvatn.list -anc ../2024-10-04/radloci.fa -ref ../2024-10-04/radloci.fa -out SAF/Langfjordvatn -doSaf 1 -gl 1 -minMapQ 30 -minQ 20 -only_proper_pairs 1 -baq 1 -minInd 27 -setMinDepthInd 4 -nThreads 4 
-	-> Thu Apr 10 13:42:03 2025
+	-> angsd -b Langfjordvatn.list -anc ../2024-10-04/radloci.fa -ref ../2024-10-04/radloci.fa -out SAF/Langfjordvatn -doSaf 1 -doGlf 1 -gl 1 -minMapQ 30 -minQ 20 -only_proper_pairs 0 -baq 1 -minInd 28 -setMinDepthInd 4 -nThreads 4 
+	-> Fri Apr 25 16:59:54 2025
 ----------------
 multiReader.cpp:
 	-nLines	50	(Number of lines to read)
@@ -33,7 +33,7 @@ parseArgs_bambi.cpp: bam reader:
 	-trim		0	Number of based to discard at both ends of the reads
 	-trim		0	Number of based to discard at 5' ends of the reads
 	-trim		0	Number of based to discard at 3' ends of the reads
-	-only_proper_pairs 1	Only use reads where the mate could be mapped
+	-only_proper_pairs 0	Only use reads where the mate could be mapped
 	-C		0	adjust mapQ for excessive mismatches (as SAMtools), supply -ref
 	-baq		1	adjust qscores around indels (1=normal baq 2= extended(as SAMtools)), supply -ref
 	-redo-baq		0 (recompute baq, instead of using BQ tag)
@@ -64,7 +64,7 @@ abcFilter.cpp:
 	-sites		(null)	(File containing sites to keep (chr regStart regStop))
 	-sites		(null)	(File containing sites to keep (chr pos major minor))
 	-sites		(null)	(File containing sites to keep (chr pos major minor af ac an))
-	-minInd		27	Only use site if atleast minInd of samples has data
+	-minInd		28	Only use site if atleast minInd of samples has data
 	-setMinDepthInd	4	Only use site if atleast minInd of samples has this minimum depth 
 	-capDepth	-1	Only use the first capDepth bases
 	-strict	1	 (experimental)
@@ -114,10 +114,10 @@ abcGL.cpp:
 	-trim		0		(zero means no trimming)
 	-tmpdir		angsd_tmpdir/	(used by SOAPsnp)
 	-errors		(null)		(used by SYK)
-	-minInd		27		(0 indicates no filtering)
+	-minInd		28		(0 indicates no filtering)
 
 Filedumping:
-	-doGlf	0
+	-doGlf	1
 	1: binary glf (10 log likes)	.glf.gz
 	2: beagle likelihood file	.beagle.gz
 	3: binary 3 times likelihood	.glf.gz
@@ -137,10 +137,10 @@ abcGL.cpp:
 	-trim		0		(zero means no trimming)
 	-tmpdir		angsd_tmpdir/	(used by SOAPsnp)
 	-errors		(null)		(used by SYK)
-	-minInd		27		(0 indicates no filtering)
+	-minInd		28		(0 indicates no filtering)
 
 Filedumping:
-	-doGlf	0
+	-doGlf	1
 	1: binary glf (10 log likes)	.glf.gz
 	2: beagle likelihood file	.beagle.gz
 	3: binary 3 times likelihood	.glf.gz
@@ -172,9 +172,10 @@ abcHetPlas.cpp:
 	-maxIter=100	(Max number of iterations)
 	-minLRT=-1.000000
 		->"SAF/Langfjordvatn.arg"
+		->"SAF/Langfjordvatn.glf.gz"
 		->"SAF/Langfjordvatn.saf.gz"
 		->"SAF/Langfjordvatn.saf.pos.gz"
 		->"SAF/Langfjordvatn.saf.idx"
 
-	[ALL done] cpu-time used =  1615.96 sec
-	[ALL done] walltime used =  164392.00 sec
+	[ALL done] cpu-time used =  4474.10 sec
+	[ALL done] walltime used =  171357.00 sec
