@@ -7,14 +7,14 @@ Questions/problems/suggestions? Please visit: https://groups.google.com/forum/#!
 
 System: Intel(R) Xeon(R) CPU E5-4620 0 @ 2.20GHz, 32 cores, 251 GB RAM
 
-RAxML-NG was called at 03-Dec-2024 17:00:23 as follows:
+RAxML-NG was called at 26-Mar-2025 10:33:03 as follows:
 
-raxml-ng --msa RAxML/28S_round03/AlignTree_Mafft.alg --model GTR+G --prefix RAxML/28S_round03/T2 --threads 24
+raxml-ng --msa RAxML/28S_round03/AlignTree_Mafft.alg --model GTR+G --prefix RAxML/28S_round03/T2 --threads 48
 
 Analysis options:
   run mode: ML tree search
   start tree(s): random (10) + parsimony (10)
-  random seed: 1733241623
+  random seed: 1742981583
   tip-inner: OFF
   pattern compression: ON
   per-rate scalers: OFF
@@ -25,188 +25,139 @@ Analysis options:
   fast CLV updates: ON
   branch lengths: proportional (ML estimate, algorithm: NR-FAST)
   SIMD kernels: AVX
-  parallelization: coarse-grained (auto), PTHREADS (24 threads), thread pinning: OFF
+  parallelization: coarse-grained (auto), PTHREADS (48 threads), thread pinning: OFF
 
 [00:00:00] Reading alignment from file: RAxML/28S_round03/AlignTree_Mafft.alg
-[00:00:00] Loaded alignment with 97 taxa and 925 sites
+[00:00:00] Loaded alignment with 97 taxa and 1254 sites
 
 WARNING: Sequences MT217147_C.farionis_RU and MW368688_C.farionis_RU are exactly identical!
 WARNING: Sequences MT217147_C.farionis_RU and MW368676_C.farionis_RU are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L043Cxb are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L043Cxc are exactly identical!
 WARNING: Sequences MT230576_C.farionis_JA and L043Cxd are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L047Cxc are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L059Cmb are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L059Cmc are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L059Cmd are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L061Cmb are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L061Cmc are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L064Cxa are exactly identical!
 WARNING: Sequences MT230576_C.farionis_JA and L064Cxb are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L074Cma are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L074Cme are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L074Cxb are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L074Cxc are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L087Cma are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L088Cmb are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L089Cma are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L089Cmb are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L089Cmc are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L089Cxc are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L090Cmb are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L090Cmc are exactly identical!
 WARNING: Sequences MT230576_C.farionis_JA and L098Cxc are exactly identical!
 WARNING: Sequences MT230576_C.farionis_JA and L098Cxd are exactly identical!
 WARNING: Sequences MT230576_C.farionis_JA and L115Cxc are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L131Cma are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and L134Cma are exactly identical!
 WARNING: Sequences MT230576_C.farionis_JA and S004Cma are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and S004Cmb are exactly identical!
-WARNING: Sequences MT230576_C.farionis_JA and S061Cmb are exactly identical!
-WARNING: Sequences L019Cxa and L088Cma are exactly identical!
-WARNING: Sequences L019Cxa and L131Cmb are exactly identical!
-WARNING: Sequences L019Cxa and S001Cma are exactly identical!
-WARNING: Sequences L019Cxa and S001Cmc are exactly identical!
-WARNING: Sequences L019Cxa and S002Cma are exactly identical!
-WARNING: Sequences L019Cxa and S002Cmc are exactly identical!
-WARNING: Sequences L019Cxa and S002Cme are exactly identical!
-WARNING: Sequences L019Cxa and S003Cmc are exactly identical!
-WARNING: Sequences L019Cxa and S003Cmd are exactly identical!
-WARNING: Sequences L019Cxa and S005Cma are exactly identical!
-WARNING: Sequences L019Cxa and S005Cmb are exactly identical!
-WARNING: Sequences L019Cxa and S006Cxa are exactly identical!
-WARNING: Sequences L019Cxa and S006Cxb are exactly identical!
-WARNING: Sequences L019Cxa and S009Cxa are exactly identical!
-WARNING: Sequences L019Cxa and S011Cxf are exactly identical!
-WARNING: Sequences L019Cxa and S011Cxh are exactly identical!
-WARNING: Sequences L019Cxa and S012Cxa are exactly identical!
-WARNING: Sequences L019Cxa and S012Cxb are exactly identical!
-WARNING: Sequences L019Cxa and S016Cxb are exactly identical!
-WARNING: Sequences L019Cxa and S016Cxc are exactly identical!
-WARNING: Sequences L019Cxa and S019Cxd are exactly identical!
-WARNING: Sequences L019Cxa and S020Cxc are exactly identical!
-WARNING: Sequences L019Cxa and S020Cxd are exactly identical!
-WARNING: Sequences L019Cxa and S022Cxa are exactly identical!
-WARNING: Sequences L019Cxa and S022Cxb are exactly identical!
-WARNING: Sequences L019Cxa and S023Cxc are exactly identical!
-WARNING: Sequences L019Cxa and S023Cxd are exactly identical!
-WARNING: Sequences L019Cxa and S027Cxa are exactly identical!
-WARNING: Sequences L019Cxa and S027Cxd are exactly identical!
-WARNING: Sequences L019Cxa and S031Cma are exactly identical!
-WARNING: Sequences L019Cxa and S083Cxb are exactly identical!
-WARNING: Sequences L019Cxa and S108Cxc are exactly identical!
-WARNING: Sequences L019Cxa and S116Cma are exactly identical!
-WARNING: Sequences L019Cxa and S116Cmb are exactly identical!
-WARNING: Sequences L019Cxa and S117Cma are exactly identical!
-WARNING: Sequences L019Cxa and S117Cmb are exactly identical!
-WARNING: Sequences L019Cxa and S118Cma are exactly identical!
-WARNING: Sequences L019Cxa and S118Cmc are exactly identical!
-WARNING: Sequences L019Cxa and S119Cma are exactly identical!
-WARNING: Sequences L019Cxa and S119Cmc are exactly identical!
-WARNING: Sequences L019Cxa and S125Cma are exactly identical!
-WARNING: Sequences L019Cxa and S125Cmc are exactly identical!
-WARNING: Sequences L019Cxa and S126Cma are exactly identical!
-WARNING: Sequences L019Cxa and S127Cma are exactly identical!
-WARNING: Sequences L065Cxa and L090Cma are exactly identical!
-WARNING: Sequences L065Cxa and S061Cma are exactly identical!
-WARNING: Sequences L074Cmd and L088Cmc are exactly identical!
+WARNING: Sequences L059Cmb and L061Cmc are exactly identical!
+WARNING: Sequences L065Cxa and L087Cma are exactly identical!
+WARNING: Sequences L065Cxa and L089Cma are exactly identical!
+WARNING: Sequences L065Cxa and L134Cma are exactly identical!
+WARNING: Sequences L131Cmb and S011Cxa are exactly identical!
+WARNING: Sequences S005Cmb and S012Cxa are exactly identical!
+WARNING: Sequences S005Cmb and S126Cma are exactly identical!
+WARNING: Sequences S006Cxa and S006Cxb are exactly identical!
+WARNING: Sequences S006Cxa and S009Cxa are exactly identical!
+WARNING: Sequences S006Cxa and S011Cxf are exactly identical!
+WARNING: Sequences S006Cxa and S019Cxd are exactly identical!
+WARNING: Sequences S006Cxa and S020Cxd are exactly identical!
+WARNING: Sequences S006Cxa and S022Cxb are exactly identical!
+WARNING: Sequences S006Cxa and S023Cxc are exactly identical!
+WARNING: Sequences S006Cxa and S027Cxd are exactly identical!
+WARNING: Sequences S006Cxa and S108Cxc are exactly identical!
+WARNING: Sequences S031Cma and S118Cma are exactly identical!
+WARNING: Sequences S083Cxb and S117Cmb are exactly identical!
 WARNING: Sequences MT196347_C.metoecus_JA and MT196350_C.metoecus_JA are exactly identical!
-WARNING: Duplicate sequences found: 81
+WARNING: Duplicate sequences found: 27
 
 NOTE: Reduced alignment (with duplicates and gap-only sites/taxa removed) 
 NOTE: was saved to: /nata/mar/crepidostomum2/results/2024-01-17/RAxML/28S_round03/T2.raxml.reduced.phy
 
-Alignment comprises 1 partitions and 50 patterns
+Alignment comprises 1 partitions and 222 patterns
 
 Partition 0: noname
 Model: GTR+FO+G4m
-Alignment sites / patterns: 925 / 50
-Gaps: 0.52 %
-Invariant sites: 94.38 %
+Alignment sites / patterns: 1254 / 222
+Gaps: 2.43 %
+Invariant sites: 87.48 %
 
 
 NOTE: Binary MSA file created: RAxML/28S_round03/T2.raxml.rba
 
-Parallelization scheme autoconfig: 12 worker(s) x 2 thread(s)
+Parallelization scheme autoconfig: 16 worker(s) x 3 thread(s)
 
 [00:00:00] Generating 10 random starting tree(s) with 97 taxa
 [00:00:00] Generating 10 parsimony starting tree(s) with 97 taxa
-Parallel parsimony with 24 threads
+Parallel parsimony with 48 threads
 Parallel reduction/worker buffer size: 1 KB  / 0 KB
 
-[00:00:00] Data distribution: max. partitions/sites/weight per thread: 1 / 25 / 400
+[00:00:00] Data distribution: max. partitions/sites/weight per thread: 1 / 74 / 1184
 [00:00:00] Data distribution: max. searches per worker: 2
 
 Starting ML tree search with 20 distinct starting trees
 
-[00:00:00 -6142.557889] Initial branch length optimization
-[00:00:00 -2875.689251] Model parameter optimization (eps = 10.000000)
-[00:00:00 -2472.573057] AUTODETECT spr round 1 (radius: 5)
-[00:00:00 -1781.427907] AUTODETECT spr round 2 (radius: 10)
-[00:00:01 -1659.495088] AUTODETECT spr round 3 (radius: 15)
-[00:00:01 -1604.967223] AUTODETECT spr round 4 (radius: 20)
-[00:00:01] [worker #11] ML tree search #12, logLikelihood: -1591.718764
-[00:00:01 -1604.966858] SPR radius for FAST iterations: 15 (autodetect)
-[00:00:01 -1604.966858] Model parameter optimization (eps = 3.000000)
-[00:00:01] [worker #10] ML tree search #11, logLikelihood: -1591.717060
-[00:00:01 -1593.625003] FAST spr round 1 (radius: 15)
-[00:00:02 -1593.622817] Model parameter optimization (eps = 1.000000)
-[00:00:02 -1593.622806] SLOW spr round 1 (radius: 5)
-[00:00:02] [worker #5] ML tree search #6, logLikelihood: -1591.714168
-[00:00:02] [worker #4] ML tree search #5, logLikelihood: -1591.712921
-[00:00:02] [worker #6] ML tree search #7, logLikelihood: -1591.711884
-[00:00:02] [worker #3] ML tree search #4, logLikelihood: -1593.624116
-[00:00:02] [worker #2] ML tree search #3, logLikelihood: -1591.715169
-[00:00:02] [worker #8] ML tree search #9, logLikelihood: -1591.715660
-[00:00:02] [worker #9] ML tree search #10, logLikelihood: -1591.712341
-[00:00:03 -1593.622608] SLOW spr round 2 (radius: 10)
-[00:00:03] [worker #1] ML tree search #2, logLikelihood: -1591.711088
-[00:00:03] [worker #7] ML tree search #8, logLikelihood: -1591.713797
-[00:00:03] [worker #5] ML tree search #18, logLikelihood: -1591.717060
-[00:00:03 -1593.622608] SLOW spr round 3 (radius: 15)
-[00:00:03] [worker #4] ML tree search #17, logLikelihood: -1591.716143
-[00:00:04 -1593.622608] SLOW spr round 4 (radius: 20)
-[00:00:04] [worker #6] ML tree search #19, logLikelihood: -1591.714186
-[00:00:04] [worker #3] ML tree search #16, logLikelihood: -1591.714748
-[00:00:04] [worker #2] ML tree search #15, logLikelihood: -1591.716579
-[00:00:04 -1593.622608] SLOW spr round 5 (radius: 25)
-[00:00:04] [worker #1] ML tree search #14, logLikelihood: -1591.717060
-[00:00:04] [worker #7] ML tree search #20, logLikelihood: -1591.713356
-[00:00:04 -1593.622608] Model parameter optimization (eps = 0.100000)
+[00:00:00 -9878.359483] Initial branch length optimization
+[00:00:00 -6198.129183] Model parameter optimization (eps = 10.000000)
+[00:00:01 -5210.487480] AUTODETECT spr round 1 (radius: 5)
+[00:00:01 -4011.539335] AUTODETECT spr round 2 (radius: 10)
+[00:00:02 -3550.862866] AUTODETECT spr round 3 (radius: 15)
+[00:00:02 -3501.763868] AUTODETECT spr round 4 (radius: 20)
+[00:00:03 -3501.237312] AUTODETECT spr round 5 (radius: 25)
+[00:00:03 -3501.236122] SPR radius for FAST iterations: 20 (autodetect)
+[00:00:03 -3501.236122] Model parameter optimization (eps = 3.000000)
+[00:00:04 -3491.254995] FAST spr round 1 (radius: 20)
+[00:00:04 -3439.815627] FAST spr round 2 (radius: 20)
+[00:00:05 -3434.144585] Model parameter optimization (eps = 1.000000)
+[00:00:05 -3433.983281] SLOW spr round 1 (radius: 5)
+[00:00:05] [worker #12] ML tree search #13, logLikelihood: -3433.835658
+[00:00:05] [worker #14] ML tree search #15, logLikelihood: -3440.128069
+[00:00:05] [worker #11] ML tree search #12, logLikelihood: -3432.723589
+[00:00:06] [worker #10] ML tree search #11, logLikelihood: -3444.203187
+[00:00:06] [worker #13] ML tree search #14, logLikelihood: -3432.594819
+[00:00:06 -3433.924299] SLOW spr round 2 (radius: 10)
+[00:00:06] [worker #3] ML tree search #4, logLikelihood: -3439.238347
+[00:00:06] [worker #15] ML tree search #16, logLikelihood: -3434.055616
+[00:00:06] [worker #1] ML tree search #2, logLikelihood: -3433.799664
+[00:00:07 -3433.923567] SLOW spr round 3 (radius: 15)
+[00:00:07] [worker #9] ML tree search #10, logLikelihood: -3432.593089
+[00:00:07] [worker #2] ML tree search #3, logLikelihood: -3434.348178
+[00:00:07] [worker #7] ML tree search #8, logLikelihood: -3432.239215
+[00:00:07] [worker #5] ML tree search #6, logLikelihood: -3440.689490
+[00:00:08 -3433.923488] SLOW spr round 4 (radius: 20)
+[00:00:08] [worker #4] ML tree search #5, logLikelihood: -3435.519801
+[00:00:08 -3433.923469] SLOW spr round 5 (radius: 25)
+[00:00:09] [worker #6] ML tree search #7, logLikelihood: -3433.800463
+[00:00:09 -3433.923462] Model parameter optimization (eps = 0.100000)
 
-[00:00:04] [worker #0] ML tree search #1, logLikelihood: -1593.622607
+[00:00:09] [worker #0] ML tree search #1, logLikelihood: -3433.913225
 
-[00:00:04 -5265.036671] Initial branch length optimization
-[00:00:04 -1622.308075] Model parameter optimization (eps = 10.000000)
-[00:00:04 -1591.717919] AUTODETECT spr round 1 (radius: 5)
-[00:00:04 -1591.717887] SPR radius for FAST iterations: 5 (autodetect)
-[00:00:04 -1591.717887] Model parameter optimization (eps = 3.000000)
-[00:00:04 -1591.717100] FAST spr round 1 (radius: 5)
-[00:00:05 -1591.717099] Model parameter optimization (eps = 1.000000)
-[00:00:05 -1591.717066] SLOW spr round 1 (radius: 5)
-[00:00:05 -1591.717066] SLOW spr round 2 (radius: 10)
-[00:00:05 -1591.717066] SLOW spr round 3 (radius: 15)
-[00:00:05 -1591.717066] SLOW spr round 4 (radius: 20)
-[00:00:05 -1591.717066] SLOW spr round 5 (radius: 25)
-[00:00:06 -1591.717066] Model parameter optimization (eps = 0.100000)
+[00:00:09 -8048.450090] Initial branch length optimization
+[00:00:09 -3593.136447] Model parameter optimization (eps = 10.000000)
+[00:00:10 -3497.281786] AUTODETECT spr round 1 (radius: 5)
+[00:00:10 -3451.890955] AUTODETECT spr round 2 (radius: 10)
+[00:00:10 -3446.166069] AUTODETECT spr round 3 (radius: 15)
+[00:00:10 -3442.417263] AUTODETECT spr round 4 (radius: 20)
+[00:00:10] [worker #8] ML tree search #9, logLikelihood: -3433.803090
+[00:00:11 -3442.404841] SPR radius for FAST iterations: 15 (autodetect)
+[00:00:11 -3442.404841] Model parameter optimization (eps = 3.000000)
+[00:00:11 -3441.608039] FAST spr round 1 (radius: 15)
+[00:00:11] [worker #1] ML tree search #18, logLikelihood: -3435.096637
+[00:00:11 -3438.040185] Model parameter optimization (eps = 1.000000)
+[00:00:11 -3438.020866] SLOW spr round 1 (radius: 5)
+[00:00:12 -3438.020218] SLOW spr round 2 (radius: 10)
+[00:00:13 -3438.019093] SLOW spr round 3 (radius: 15)
+[00:00:13] [worker #2] ML tree search #19, logLikelihood: -3433.463025
+[00:00:13] [worker #3] ML tree search #20, logLikelihood: -3434.947701
+[00:00:13 -3434.149096] SLOW spr round 4 (radius: 20)
+[00:00:14 -3434.149093] SLOW spr round 5 (radius: 25)
+[00:00:14 -3434.149091] Model parameter optimization (eps = 0.100000)
 
-[00:00:06] [worker #0] ML tree search #13, logLikelihood: -1591.717060
+[00:00:15] [worker #0] ML tree search #17, logLikelihood: -3434.007458
 
 
 Optimized model parameters:
 
    Partition 0: noname
-   Rate heterogeneity: GAMMA (4 cats, mean),  alpha: 0.104709 (ML),  weights&rates: (0.250000,0.000001) (0.250000,0.001471) (0.250000,0.106634) (0.250000,3.891894) 
-   Base frequencies (ML): 0.186700 0.236602 0.317890 0.258809 
-   Substitution rates (ML): 0.392366 1.677949 1.182575 0.580258 3.901623 1.000000 
+   Rate heterogeneity: GAMMA (4 cats, mean),  alpha: 0.020125 (ML),  weights&rates: (0.250000,0.000000) (0.250000,0.000000) (0.250000,0.000001) (0.250000,3.999999) 
+   Base frequencies (ML): 0.212458 0.221791 0.303154 0.262597 
+   Substitution rates (ML): 0.910876 2.494144 1.754420 0.417043 2.823438 1.000000 
 
 
-Final LogLikelihood: -1591.711088
+Final LogLikelihood: -3432.239215
 
-AIC score: 3583.422176 / AICc score: 3694.471900 / BIC score: 4549.380923
+AIC score: 7264.478430 / AICc score: 7340.831707 / BIC score: 8291.297174
 Free parameters (model + branch lengths): 200
 
-WARNING: Best ML tree contains 89 near-zero branches!
+WARNING: Best ML tree contains 54 near-zero branches!
 
 Best ML tree with collapsed near-zero branches saved to: /nata/mar/crepidostomum2/results/2024-01-17/RAxML/28S_round03/T2.raxml.bestTreeCollapsed
 Best ML tree saved to: /nata/mar/crepidostomum2/results/2024-01-17/RAxML/28S_round03/T2.raxml.bestTree
@@ -215,7 +166,7 @@ Optimized model saved to: /nata/mar/crepidostomum2/results/2024-01-17/RAxML/28S_
 
 Execution log saved to: /nata/mar/crepidostomum2/results/2024-01-17/RAxML/28S_round03/T2.raxml.log
 
-Analysis started: 03-Dec-2024 17:00:23 / finished: 03-Dec-2024 17:00:29
+Analysis started: 26-Mar-2025 10:33:03 / finished: 26-Mar-2025 10:33:18
 
-Elapsed time: 6.073 seconds
+Elapsed time: 15.047 seconds
 

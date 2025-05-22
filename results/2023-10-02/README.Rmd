@@ -93,7 +93,7 @@ List of ITS2 sequences for C. farionis and C. pseudofarionis
 
 ```{bash}
 
-PATHFQ=../2023-05-17/crepi_edits
+PATHFQ=/nata/joiglu/crepidostomum2/results/2023-05-17/crepi_edits
 
 for REF in COI_MW_Cfar COI_OL_Cfar COI_Cfar COI_Cpse lsrDNA_MT_Cfar lsrDNA_MW_Cfar lsrDNA_OP_Cpse lsrDNA_MT_Cpse ITS2_MT_Cfar ITS2_MT_Cpse; do
   if [ ! -d BAM_$REF ]; then mkdir BAM_$REF; fi
@@ -157,23 +157,23 @@ done
 ## Phylogenetic reconstruction
 
 Filter and trim the alignments with Gblocks 
-```{bash eval=FALSE}
-for COI in COI_MW_Cfar_align.fa COI_OL_Cfa_align.fa COI_Cfar_align.fa COI_Cpse_align.fa; then 
-  if [ ! -e GB/$COI-gb1 ]; then
+```{bash}
+for COI in COI_MW_Cfar_align.fa COI_OL_Cfar_align.fa COI_Cfar_align.fa COI_Cpse_align.fa; do 
+  #if [ ! -e GB/$COI-gb1 ]; then
      Gblocks GB/$COI -t=d -b1=46 -b2=60 -b4=10 -e=-gb1 -d=y -v=1000 -b3=10 -b5=h
-  fi
+  #fi
 done
 
-for lsrDNA in lsrDNA_MT_Cfar_align.fa lsrDNA_MW_Cfar_align.fa lsrDNA_OP_Cpse_align.fa lsrDNA_MT_Cpse_align.fa ; then 
-  if [ ! -e GB/$lsrDNA-gb1 ]; then
+for lsrDNA in lsrDNA_MT_Cfar_align.fa lsrDNA_MW_Cfar_align.fa lsrDNA_OP_Cpse_align.fa lsrDNA_MT_Cpse_align.fa; do 
+  #if [ ! -e GB/$lsrDNA-gb1 ]; then
      Gblocks GB/$lsrDNA -t=d -b1=65 -b2=91 -b4=10 -e=-gb1 -d=y -v=1500 -b3=50 -b5=h
-  fi
+  #fi
 done
 
-for ITS in ITS2_MT_Cfar_align.fa ITS2_MT_Cpse_align.fa; then 
-  if [ ! -e GB/$ITS-gb1 ]; then
+for ITS in ITS2_MT_Cfar_align.fa ITS2_MT_Cpse_align.fa; do 
+  #if [ ! -e GB/$ITS-gb1 ]; then
      Gblocks GB/$ITS -t=d -b1=59 -b2=80 -b4=10 -e=-gb1 -d=y -v=1000 -b3=10 -b5=h
-  fi
+  #fi
 done
 ```
 

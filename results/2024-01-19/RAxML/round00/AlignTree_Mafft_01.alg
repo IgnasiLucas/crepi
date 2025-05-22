@@ -151,7 +151,7 @@ cattttcattatgttt--------------------------------------------
 ------------------------------------------------------------
 ------------------------------------------------------------
 ---------------------------
->L064Cxa_C._farionis_NO_Langfjordvatn*
+>L064Cxd_C._farionis_NO_Langfjordvatn*
 nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
 nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
 nnnnnnnnnnnnnnnnnnnnnnnnnnnnnngtgtgagctcatcatatgtttatggtaggt

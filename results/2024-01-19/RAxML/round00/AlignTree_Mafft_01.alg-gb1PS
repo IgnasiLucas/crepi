@@ -42,11 +42,11 @@ newpath
 30 100 moveto
 (Blocks found by Gblocks version 0.91b for the file AlignTree_Mafft_01.alg-gb1PS) show
 30 80 moveto
-(Parameters used: 9 11 8 10 2) show
+(Parameters used: 9 13 8 10 2) show
 
 1 sh1 927 sh2 seq
 
-40 sh1 509 sh2 block
+151 sh1 434 sh2 block
 
 grestore
 showpage

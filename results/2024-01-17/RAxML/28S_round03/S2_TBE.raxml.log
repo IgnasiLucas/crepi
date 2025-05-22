@@ -7,16 +7,16 @@ Questions/problems/suggestions? Please visit: https://groups.google.com/forum/#!
 
 System: Intel(R) Xeon(R) CPU E5-4620 0 @ 2.20GHz, 32 cores, 251 GB RAM
 
-RAxML-NG was called at 03-Dec-2024 17:21:37 as follows:
+RAxML-NG was called at 26-Mar-2025 11:14:33 as follows:
 
-raxml-ng --support --tree RAxML/28S_round03/T2.raxml.bestTree --bs-trees RAxML/28S_round03/S2_bestTree.raxml.bootstraps --prefix RAxML/28S_round03/S2_TBE --threads 24 --bs-metric tbe
+raxml-ng --support --tree RAxML/28S_round03/T2.raxml.bestTree --bs-trees RAxML/28S_round03/S2_bestTree.raxml.bootstraps --prefix RAxML/28S_round03/S2_TBE --threads 48 --bs-metric tbe
 
 Analysis options:
   run mode: Compute bipartition support (Transfer Bootstrap)
   start tree(s): user
-  random seed: 1733242897
+  random seed: 1742984073
   SIMD kernels: AVX
-  parallelization: coarse-grained (auto), PTHREADS (24 threads), thread pinning: OFF
+  parallelization: coarse-grained (auto), PTHREADS (48 threads), thread pinning: OFF
 
 Reading reference tree from file: RAxML/28S_round03/T2.raxml.bestTree
 Reference tree size: 97
@@ -28,7 +28,7 @@ Best ML tree with Transfer bootstrap (TBE) support values saved to: /nata/mar/cr
 
 Execution log saved to: /nata/mar/crepidostomum2/results/2024-01-17/RAxML/28S_round03/S2_TBE.raxml.log
 
-Analysis started: 03-Dec-2024 17:21:37 / finished: 03-Dec-2024 17:21:40
+Analysis started: 26-Mar-2025 11:14:33 / finished: 26-Mar-2025 11:14:36
 
-Elapsed time: 2.857 seconds
+Elapsed time: 2.901 seconds
 

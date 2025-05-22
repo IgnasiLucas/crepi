@@ -46,8 +46,7 @@ newpath
 
 1 sh1 1262 sh2 seq
 
-1 sh1 153 sh2 block
-473 sh1 1254 sh2 block
+1 sh1 1254 sh2 block
 
 grestore
 showpage

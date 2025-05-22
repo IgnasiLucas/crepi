@@ -14,6 +14,7 @@ the Crepidostomum genus phylogenetic reconstruction.
 Additionally, Ignasi created a list with the belonging of the samples
 to the species C. farionis and C. pseudofarionis. I make sure that the 
 haplotypes I choose for each of the lakes are pure for one of the two species.
+
 ```{r}
 suppressWarnings(library(stringr))
 suppressWarnings(library(Biostrings))
@@ -41,6 +42,7 @@ those sequences with more data.
 ```{r}
 CrepiCOI <- readDNAStringSet("../2023-10-02/GB/COI_MW_Cfar_align.fa")
 CrepiCOI <- CrepiCOI[names(CrepiCOI)[-grep("S031Cmc", names(CrepiCOI))]]
+CrepiCOI <- CrepiCOI[names(CrepiCOI)[-grep("L019Cxb", names(CrepiCOI))]]
 ## Remove thos sequences with les than 50% of data
 # Length 843, aprox 50% = 400 bp
 CrepiCOI <- CrepiCOI[which(rowSums(alphabetFrequency(CrepiCOI)[,1:4]) > 400)]
@@ -52,8 +54,6 @@ far2 <- hapList$Accession[1][[1]][grep("S", hapList$Accession[1][[1]], fixed = T
 pse2 <- hapList$Accession[3][[1]][grep("L", hapList$Accession[3][[1]], fixed = TRUE)]
 
 ## REPRESENTATIVES
-far3 <- 
-pse3 <- c(pse2[1], pse2.1[1])
 writeLines(c(far1, far2), "farionis.txt")
 writeLines(c(pse1, pse2), "pseudo.txt")
 ```
@@ -92,7 +92,7 @@ if [ ! -e pseSamp.fa ]; then cat SampCOI_pseudo/*.fa > pseSamp.fa; fi
 suppressWarnings(library(Biostrings))
 ## Edit the sequences names
 farSamp <- readDNAStringSet("farSamp.fa")
-names(farSamp)[1] <- "L064Cxa_C._farionis_NO_Langfjordvatn*"
+names(farSamp)[1] <- "L064Cxd_C._farionis_NO_Langfjordvatn*"
 names(farSamp)[2] <- "S004Cma_C._farionis_NO_Suohpatjávri*"
 writeXStringSet(farSamp, "farSamp.fa")
 
@@ -108,7 +108,7 @@ writeXStringSet(pseSamp, "pseSamp.fa")
 Done in 2023-06-22 folder. 
 ```{r message=FALSE, collapse=TRUE, eval=FALSE}
 suppressWarnings(library(Biostrings))
-markers <- readDNAStringSet("../2023-10-02/markers/Cox1_Cfar_ASM.fa")
+markers <- readDNAStringSet("../2023-10-02/markers/COI_MW_Cfar.fa")
 names(markers) <- "C.farionis_NO_Takvatn*"
 
 writeXStringSet(markers, "Cox1_RefGen.fa")
@@ -270,7 +270,7 @@ fi
 ```{bash}
 FOLDER=RAxML/round00
 #if [ ! -e AlignTree_Mafft_01.alg-gb1 ]; then
-  Gblocks $FOLDER/AlignTree_Mafft_01.alg -t=d -b1=9 -b2=11 -e=-gb1 -d=y -v=1000 -b5=h
+  Gblocks $FOLDER/AlignTree_Mafft_01.alg -t=d -b1=9 -b2=13 -e=-gb1 -d=y -v=1000 -b5=h
   #mv $FOLDER/AlignTree_Mafft_01.alg-gb1 $FOLDER/AlignTree_Mafft_02.alg
 #fi
 ```

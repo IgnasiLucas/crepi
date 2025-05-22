@@ -42,11 +42,11 @@ newpath
 30 100 moveto
 (Blocks found by Gblocks version 0.91b for the file ITS2_MT_Cfar_align.fa-gb1PS) show
 30 80 moveto
-(Parameters used: 59 80 10 10 2) show
+(Parameters used: 73 82 10 50 2) show
 
 1 sh1 457 sh2 seq
 
-1 sh1 140 sh2 block
+1 sh1 158 sh2 block
 348 sh1 457 sh2 block
 
 grestore

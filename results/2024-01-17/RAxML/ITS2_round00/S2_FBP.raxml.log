@@ -7,14 +7,14 @@ Questions/problems/suggestions? Please visit: https://groups.google.com/forum/#!
 
 System: Intel(R) Xeon(R) CPU E5-4620 0 @ 2.20GHz, 32 cores, 251 GB RAM
 
-RAxML-NG was called at 10-Dec-2024 10:36:59 as follows:
+RAxML-NG was called at 26-Mar-2025 10:18:36 as follows:
 
 raxml-ng --support --tree RAxML/ITS2_round00/T2.raxml.bestTree --bs-trees RAxML/ITS2_round00/S2_bestTree.raxml.bootstraps --prefix RAxML/ITS2_round00/S2_FBP --threads 48 --bs-metric fbp
 
 Analysis options:
   run mode: Compute bipartition support (Felsenstein Bootstrap)
   start tree(s): user
-  random seed: 1733823419
+  random seed: 1742980716
   SIMD kernels: AVX
   parallelization: coarse-grained (auto), PTHREADS (48 threads), thread pinning: OFF
 
@@ -28,7 +28,7 @@ Best ML tree with Felsenstein bootstrap (FBP) support values saved to: /nata/mar
 
 Execution log saved to: /nata/mar/crepidostomum2/results/2024-01-17/RAxML/ITS2_round00/S2_FBP.raxml.log
 
-Analysis started: 10-Dec-2024 10:36:59 / finished: 10-Dec-2024 10:37:02
+Analysis started: 26-Mar-2025 10:18:36 / finished: 26-Mar-2025 10:18:39
 
-Elapsed time: 2.871 seconds
+Elapsed time: 3.214 seconds
 

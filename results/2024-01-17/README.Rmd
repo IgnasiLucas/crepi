@@ -87,6 +87,7 @@ Choosed marker: COI_MW_Cfar - MW729433 from Russia
 
 RefGen_COI <- readDNAStringSet("../2023-10-02/markers/COI_MW_Cfar.fa")
 GB_far <- readDNAStringSet("GenBank_COI_farionis.fa")
+
 ## Sequences sent by Isabel (all Crepidostomum sp.)
 Extra_Cox1 <- readDNAStringSet("../../data/SeqCox1_Crepido_spp_Isabel.fa")
 Extra2_Cox1 <- readDNAStringSet("../../data/SeqCox1_Crepido_spp_Kristine.fas")
@@ -97,7 +98,7 @@ Outgroup <-  readDNAStringSet("Outgroups.fa")
 CrepiCOI <- readDNAStringSet("../2023-10-02/GB/COI_MW_Cfar_align.fa-gb1")
 CrepiCOI <- CrepiCOI[names(CrepiCOI)[-grep("S031Cmc", names(CrepiCOI))]]# without data
 
-AllSequences_TreeR <- c(RefGen_COI, GB_far, CrepiCOI, Extra_Cox1, Extra2_Cox1, Outgroup)
+AllSequences_TreeR <- c(RefGen_COI, GB_far, CrepiCOI, Extra_Cox1, Extra2_Cox1)
 ## Removing gaps 
 AllSeq_Tree_Ngaps <- DNAStringSet(chartr("-", "N", as.character(AllSequences_TreeR)))
 
@@ -108,7 +109,7 @@ writeXStringSet(AllSequences_TreeR, "AllSeq_Tree.fa")
 ```
 
 ```{bash, collapse = TRUE}
-FOLDER=RAxML/COI_round001
+FOLDER=RAxML/COI_round01
 ## "Probably most accurate L-INS-i
 if [ ! -d RAxML ]; then mkdir RAxML; fi
 if [ ! -d $FOLDER ]; then mkdir $FOLDER; fi
@@ -118,20 +119,21 @@ fi
 ```
 
 ### Trimm the alignment
+
+```{bash}
+Gblocks RAxML/COI_round01/AlignTree_Mafft_01.alg -t=d -b1=65 -b2=92 -b4=10 -e=-gb1 -d=y -v=1500 -b3=50 -b5=h
+```
+
 ```{r, collapse = TRUE}
-if (file.exists("RAxML/COI_round01/AlignTree_Mafft.alg") == FALSE) {
-  Align <- readDNAStringSet("RAxML/COI_round01/AlignTree_Mafft_01.alg")
-  #BrowseSeqs(subseq(Align, start = 249, end = 395))
-  #Align <- subseq(Align, start = 249, end = 395)
-  Align <- DNAStringSet(sapply(Align, function(seq) {
-    paste0(subseq(seq, 248, 402), subseq(seq, 453, 511)) 
-    }))
+#if (file.exists("RAxML/COI_round01/AlignTree_Mafft.alg") == FALSE) {
+  Align <- readDNAStringSet("RAxML/COI_round01/AlignTree_Mafft_01.alg-gb1")
+  #BrowseSeqs(Align)
   Freq <- alphabetFrequency(Align)
-  #Remove from the alignment those seq with more than 50% of gaps + N
-  Freq <- which((Freq[,15] + Freq[,16]) > (length(Align[[1]]) * 0.50))
+  #Remove from the alignment those seq with more than 75% of gaps + N
+  Freq <- which((Freq[,15] + Freq[,16]) > (length(Align[[1]]) * 0.25))
   Align <- Align[-Freq]
   writeXStringSet(Align, "RAxML/COI_round01/AlignTree_Mafft.alg")
-}
+#}
 ```
 
 ```{bash, collapse = TRUE}
@@ -264,11 +266,11 @@ if (file.exists("RAxML/28S_round03/AlignTree_Mafft.alg") == FALSE) {
   Align <- readDNAStringSet("RAxML/28S_round03/AlignTree_Mafft_01.alg")
   #BrowseSeqs(subseq(Align, start = 249, end = 395))
     Align <- DNAStringSet(sapply(Align, function(seq) {
-    paste0(subseq(seq, 78, 218), subseq(seq, 538, 1321)) 
+    paste0(subseq(seq, 68, 1321)) 
     }))
-  #Freq <- alphabetFrequency(Align)
+  Freq <- alphabetFrequency(Align)
   #Remove from the alignment those seq with more than 50% of gaps + N
-  #Freq <- which((Freq[,15] + Freq[,16]) > (length(Align[[1]]) * 0.75))
+  Freq <- which((Freq[,15] + Freq[,16]) > (length(Align[[1]]) * 0.15))
   #Align <- Align[-Freq]
   writeXStringSet(Align, "RAxML/28S_round03/AlignTree_Mafft.alg")
 }
@@ -386,7 +388,6 @@ GB_ITS2 <- readDNAStringSet("GenBank_ITS2_Crep.fa")
 ## Our samples 
 CrepiITS2 <- readDNAStringSet("../2023-10-02/GB/ITS2_MT_Cpse_align.fa-gb1")
 CrepiITS2 <- CrepiITS2[names(CrepiITS2)[-grep("S031Cmc", names(CrepiITS2))]] # without data
-CrepiITS2 <- CrepiITS2[names(CrepiITS2)[-grep("N048Cmb", names(CrepiITS2))]] # without data
 
 
 AllSequences_TreeR <- c(RefGen_ITS2, GB_ITS2, CrepiITS2)
@@ -429,7 +430,7 @@ raxml-ng --msa $FOLDER/AlignTree_Mafft.alg --model GTR+G --prefix $FOLDER/T2 --t
 ## Compute and map bootstrap support values to the best ML tree (S1.raxml.bestTree)
 raxml-ng --bootstrap --msa $FOLDER/AlignTree_Mafft.alg --model GTR+G --prefix $FOLDER/S2_bestTree --tree $FOLDER/T2.raxml.bestTree --threads 48 --bs-trees 10000
 
-# Recompute support values using the Transfer Bootstrap Expectation (TBE) algorithm. Did this change the support values?
+# Recompute support values using the Transfer Bootstrap Expectation (TBE) algorithm.
 raxml-ng --support --tree $FOLDER/T2.raxml.bestTree --bs-trees $FOLDER/S2_bestTree.raxml.bootstraps --prefix $FOLDER/S2_FBP --threads 48 --bs-metric fbp
 raxml-ng --support --tree $FOLDER/T2.raxml.bestTree --bs-trees $FOLDER/S2_bestTree.raxml.bootstraps --prefix $FOLDER/S2_TBE --threads 48 --bs-metric tbe 
 

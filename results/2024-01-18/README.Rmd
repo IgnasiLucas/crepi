@@ -31,6 +31,7 @@ suppressWarnings(library(htmltools))
 
 CrepiCOI <- readDNAStringSet("../2023-10-02/GB/COI_MW_Cfar_align.fa-gb1")
 CrepiCOI <- CrepiCOI[names(CrepiCOI)[-grep("S031Cmc", names(CrepiCOI))]] #insuff data
+CrepiCOI <- CrepiCOI[names(CrepiCOI)[-grep("L019Cxb", names(CrepiCOI))]] #insuff data
 
 ## Remove thos sequences with les than 75% of data
 CrepiCOI <- CrepiCOI[which(rowSums(alphabetFrequency(CrepiCOI)[,1:4]) > 160)]
@@ -39,7 +40,7 @@ CrepiCOI <- subseq(CrepiCOI, start = 37, end = 214)
 # Recortar las posiciones 148 a 155 - Ns
 CrepiCOI <- DNAStringSet(
   lapply(CrepiCOI, function(seq) {
-    DNAString(paste0(subseq(seq, start = 1, end = 111), subseq(seq, start = 120)))
+    DNAString(paste0(subseq(seq, start = 1, end = 105), subseq(seq, start = 119)))
   })
 )
 # Guardar el alineamiento recortado
