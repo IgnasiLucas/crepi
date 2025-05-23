@@ -4,18 +4,19 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
-#SBATCH --mem=5G
-#SBATCH --qos=short
-#SBATCH --time=1-00:00:00
+#SBATCH --mem=13G
+#SBATCH --qos=medium
+#SBATCH --time=7-00:00:00
 
 module load anaconda
+conda deactivate
 mamba activate bio
 module load angsd
 
-cd /scr/joiglu/crepi/2024-10-05
+cd /scr/joiglu/crepi/results/2024-10-05
 
-BAM=BAM
-ASM=radloci.fa
+BAM=../2024-10-04/BAM
+ASM=../2024-10-04/radloci.fa
 
 if [ ! -d Likes2 ]; then mkdir Likes2; fi
 for REGION in ARCTIC; do
@@ -34,8 +35,8 @@ for REGION in ARCTIC; do
             -out Likes2/${REGION} \
             -only_proper_pairs 1 \
             -baq 1 \
-            -setMinDepth 20 \
-            -GL 2 \
+            -setMinDepthInd 2 \
+            -GL 1 \
             -doGlf 2 \
             -doIBS 1 \
             -doCounts 1 \
@@ -49,10 +50,9 @@ for REGION in ARCTIC; do
             -minMaf 0.05 \
             -nThreads 8 \
             1> Likes2/${REGION}.angsd.log \
-            2> Likes2/${REGION}.angsd.err &
+            2> Likes2/${REGION}.angsd.err
    fi
 done
-wait
 
 if [ ! -d PCangsd ]; then mkdir PCangsd; fi
 for REGION in ARCTIC; do
@@ -61,10 +61,9 @@ for REGION in ARCTIC; do
               --out PCangsd/${REGION} \
               --threads 8 \
               1> PCangsd/${REGION}.stdout \
-              2> PCangsd/${REGION}.stderr &
+              2> PCangsd/${REGION}.stderr
    fi
 done
-wait
 
 if [ ! -d NGSadmix ]; then mkdir NGSadmix; fi
 for REGION in ARCTIC; do
@@ -77,10 +76,9 @@ for REGION in ARCTIC; do
                   -minMaf 0.05 \
                   -maxiter 8000 \
                   1> NGSadmix/${REGION}.NGSadmix.K${K}.log \
-                  2> NGSadmix/${REGION}.NGSadmix.K${K}.err &
+                  2> NGSadmix/${REGION}.NGSadmix.K${K}.err
       fi
    done
-   wait
 done
 
 for REGION in ARCTIC; do
@@ -90,9 +88,9 @@ for REGION in ARCTIC; do
                    -fname NGSadmix/$REGION.K$K.fopt.gz \
                    -qname NGSadmix/$REGION.K$K.qopt \
                    -o NGSadmix/$REGION.K$K.eval \
+                   -P 8 \
                    1> NGSadmix/$REGION.K$K.eval.log \
-                   2> NGSadmix/$REGION.K$K.eval.err &
+                   2> NGSadmix/$REGION.K$K.eval.err
       fi
    done
-   wait
 done

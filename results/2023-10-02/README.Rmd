@@ -1,5 +1,5 @@
 ---
-title: "Extraction of **COI**, **lsrDNA** ans **ITS2** of all samples for identification of Crepidsotomum sp"
+title: "Extraction of COI, lsrDNA and ITS2 of all samples for identification of Crepidsotomum sp"
 author: "Mar Llaberia-Robledillo"
 date: "2023-10-02"
 output:

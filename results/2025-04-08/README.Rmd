@@ -1,0 +1,257 @@
+---
+title: "Population statistics"
+author: "J. Ignacio Lucas Lledó"
+date: "`r Sys.Date()`"
+output: html_document
+bibliography: ../../doc/references.bib
+nocite: |
+   @Weir1984
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## $F_{ST}$ from estimated ancestral allele frequencies
+
+On `2024-03-11` we run NGSadmix on variable sites identified from
+mappings to the RAD loci. K = 2 was determined as a good fit. The
+program not only yields the ancestry proportions of every individual
+(the $N \times K$ $Q$ matrix) but also the estimated allele frequencies
+in the ancestral populations. Thus, we can estimate the $F_{ST}$
+among those presumed ancestral populations. I would do this just to
+check that the $F_{ST}$ estimated on `2024-10-10` between what we
+call *C. farionis* (most abundant in Langfjordvatn) and *C. pseudofarionis*
+(most abundant in Suohpatjavri), namely 0.12, is consistent with
+the NGSadmix analysis.
+
+To estimate $F_{ST}$ from estimated allele frequencies, I assume
+Hardy-Weinberg equilibrium in all 315642 loci included in the
+NGSadmix analysis. Unfortunately, the number of chromosomes used
+in each locus to estimate allele frequencies is unknown. At most,
+all 90 individuals had good data, but most probably, the amount
+of data is variable across sites. I believe smaller sample sizes
+produced downwardly biased estimates. Thus, if I specify the largest
+possible sample sizes, I will get the largest estimates.
+
+In any case, the (at most) 90 current individuals represent different
+sample sizes of the two ancestral populations assumed when $K=2$.
+I assume that the two ancestries are represented by population sizes
+proportional to the overall current fraction of the genomes inherited
+from them. 
+
+```{r}
+source('formulas.R')
+K2 <- read.table('../2024-03-11/NGSadmix/ARCTIC.K2.fopt.gz',
+                 col.names = c('farionis', 'pseudofarionis'))
+Q2 <- read.table('../2024-03-11/NGSadmix/ARCTIC.K2.qopt',
+                 col.names = c('farionis', 'psuedofarionis'))
+proportions <- colSums(Q2) / dim(Q2)[1]
+# maximum number of chromosomes used to estimate frequencies:
+n.max <- round(2 * dim(Q2)[1] * proportions)
+
+NumRep <- 250
+if (file.exists('FST.Rds')) {
+   FST <- readRDS('FST.Rds')
+} else {
+   FST <- list(
+      estimates = sapply(1:5, function(x) WC84w(K2, n.max / x)),
+      bootstrap = sapply(1:5, function(x) {
+         replicate(NumRep, WC84w(K2[sample(1:dim(K2)[1], 5000, replace = TRUE),], n.max / x))
+      })
+   )
+   saveRDS(FST, file = 'FST.Rds')
+}
+plot(c(0,6), range(FST[['bootstrap']]), type = 'n',
+     axes = FALSE, xlab = 'Assumed sample size',
+     ylab = 'FST')
+nulldev <- lapply(1:5, function(x) {
+   points(rnorm(NumRep, 6 - x, 0.15), FST[['bootstrap']][,x], col = 'gray')
+   points(6 - x, FST[['estimates']][x], col = 'red')
+})
+axis(2)
+axis(1, at = 1:5, labels = c('n/5', 'n/4', 'n/3', 'n/2', 'n'))
+text(5, 0.15, labels = sprintf("n = (%i, %i)", n.max[1], n.max[2]))
+```
+
+Grey dots are bootstrap pseudo-replicates, obtained with only 5000 sites.
+
+The two ancestral populations estimated with NGSadmix on `2024-03-11` seem
+to have diverged to an $F_{ST} \leq 0.176$, which is higher than the 0.12
+value obtained in `2024-10-10` between current populations. The difference
+is unlikely to be due to recent admixture, because on `2024-10-10` only
+non-admixed individuals were used. I assume the estimate here is higher for
+two reasons: first, because the algorithm in NGSadmix must maximize the
+differences between hypotheized ancestral populations. And second, because
+estimates with `realSFS` (in `2024-10-10`) may take into account the variable
+and limited sample size across sites, while I naively assume all loci have
+data in either all or a constant fraction of individuals. The smaller the
+fraction, the lower the estimate.
+
+## Nucleotide diversity from the SFS
+
+```{r}
+PiTajima <- function(x, folded = TRUE){
+   n <- length(x) - 1  # the SFS includes invariable sites and 0 values for i > n/2
+   a <- 1:(n/2)
+   Theta <- (2/(n * (n-1))) * sum(x[2:(n/2 + 1)] * a * (n - a)) / sum(x)
+   return(Theta)
+}
+Lan.sfs <- scan('../2024-10-10/SFS/Langfjordvatn.sfs', quiet = TRUE)
+Suo.sfs <- scan('../2024-10-10/SFS/Suopatjavri.sfs',   quiet = TRUE)
+Lan.n <- length(Lan.sfs) - 1
+Suo.n <- length(Suo.sfs) - 1
+Lan.pi <- PiTajima(Lan.sfs)
+Suo.pi <- PiTajima(Suo.sfs)
+par(mfrow=c(1,2))
+barplot(Lan.sfs[1:(1 + Lan.n / 2)], main = 'C. farionis in Langfjordvatn', log = 'y')
+text(25, 2.0e+05, bquote(pi==.(Lan.pi)))
+barplot(Suo.sfs[1:(1 + Suo.n / 2)], main = 'C. pseudofarionis in Suopatjavri', log = 'y')
+text(30, 2.0e+05, bquote(pi==.(Suo.pi)))
+```
+
+Both SFSs show a deficit of singletons, which must be due to missed heterozygous
+sites or confusion of singletons with sequencing errors. And they show an excess
+of high frequency SNPs, which must be the cause of such high $\pi$ values. Note
+that I originally included very low-coverage sites in the estimates. Because I
+suspected the lack of singletons could be due to such low-coverage sites hiding
+heterozygotes, I re-estimated the SFSs in the `2024-10-10` folder, using a minimum
+coverage of 4 per individual, and a minimum number of individuals equal to 4/5 the
+total number, in each population. The results are essentially the same, with a
+small increase of heterozygosity.
+
+The SFSs suggest that invariable sites (first category of the SFS) are about
+`r round(Suo.sfs[1] / sum(Suo.sfs[-1]), 2)` or `r round(Lan.sfs[1] / sum(Lan.sfs[-1]), 2)`
+times more abundant than variable sites, in *C. pseudofarionis* (Suopatjavri)
+and *C. farionis* (Langfjordvatn), respectively.
+
+Assuming the lack of singletons is an artifact, the remaining question is why
+there is an excess of high frequency SNPs. Note that part of that excess is shared
+or correlated between the two populations (see `2024-10-10`). One possibility is
+balancing selection.
+
+## Individual heterozygosity
+I want to see if there is any excess of heterozygosity. I will run ANGSD again to obtain
+posterior probabilities of genotypes in both populations. I will also obtain posterior
+genotype probabilities of the inbred individuals, to see their genomic distribution
+of heterozygosity (I expect long runs of excess of heterozygosity). I should
+probably run this in Garnatxa.
+
+### With alignments to ddRAD loci
+
+```{bash}
+ASM=../2024-10-04/radloci.fa
+BAM=../2024-10-04/BAM
+# C. farionis only from Langfjordvatn (I exclude S004Cma, S004Cmb, S061Cma and S061Cmb)
+if [ ! -e farionis.txt ]; then
+   gawk '((NR > 1) && ($3 > 0.95) && ($1 ~ /^L/)){
+      print $1
+   }' ../2024-10-05/summary.txt | sort > farionis.txt
+fi
+# C. pseudofarionis only from Suopatjavri (I exclude L131Cmb)
+if [ ! -e pseudofarionis.txt ]; then
+   gawk '((NR > 1) && ($2 > 0.95) && ($1 ~ /^S/)){
+      print $1
+   }' ../2024-10-05/summary.txt | sort > pseudofarionis.txt
+fi
+# Hybrids are L019Cxa, L019Cxb, L088Cma and S023Cxd:
+if [ ! -e hybrids.txt ]; then
+   gawk '((NR > 1) && ($2 < 0.95) && ($3 < 0.95)){
+      print $1
+   }' ../2024-10-05/summary.txt | sort > hybrids.txt
+fi
+
+if [ ! -d toRadPOST ]; then mkdir toRadPOST; fi
+if [ ! -e farionis.sfs ]; then
+   ln -s ../2024-10-10/SFS/Langfjordvatn.sfs farionis.sfs
+fi
+if [ ! -e pseudofarionis.sfs ]; then
+   ln -s ../2024-10-10/SFS/Suopatjavri.sfs pseudofarionis.sfs
+fi
+
+for pop in farionis pseudofarionis hybrids; do
+   if [ ! -e $pop.toRad.list ]; then
+      find $BAM -name '*.bam' | grep -f $pop.txt | sort > $pop.toRad.list
+   fi
+done
+
+if [ ! -e hybrids.sfs ]; then
+   # We need to estimate the SFS for the hybrids!
+   if [ ! -e hybrids.saf.idx ]; then
+      angsd -b hybrids.toRad.list \
+            -anc $ASM \
+            -ref $ASM \
+            -out hybrids \
+            -doSaf 1 \
+            -doGlf 1 \
+            -gl 1 \
+            -minMapQ 30 \
+            -minQ 20 \
+            -only_proper_pairs 1 \
+            -baq 1 \
+            -minInd 4 \
+            -setMinDepthInd 4 \
+            -nThreads 4 1> hybrids.saf.log 2> hybrids.saf.err &
+   fi
+   realSFS -fold 1 \
+           -nSites 5000000 \
+           hybrids.saf.idx 1> hybrids.sfs 2> hybrids.sfs.log
+fi
+for pop in farionis pseudofarionis hybrids; do
+   MININD=$(( $(cat $pop.txt | wc -l) * 4 / 5 ))
+   if [ $MININD -lt 4 ]; then MININD=4; fi
+   if [ ! -e toRadPOST/$pop.geno.gz ]; then
+      angsd -bam $pop.toRad.list \
+            -ref $ASM \
+            -out toRadPOST/$pop \
+            -doGeno 13 \
+            -GL 1 \
+            -doPost 3 \
+            -skipMissing 0 \
+            -pest $pop.sfs \
+            -doMajorMinor 1 \
+            -doMaf 1 \
+            -minMapQ 30 \
+            -minQ 20 \
+            -baq 1 \
+            -minInd $MININD \
+            -setMinDepthInd 4 \
+            -nThreads 8 1> toRadPOST/$pop.stdout 2> toRadPOST/$pop.stderr
+   fi
+done
+```
+
+### With alignments to reference genome
+
+```{bash}
+ASM=../2023-05-15/assembly.fasta
+BAM=../2023-05-18/BAM
+if [ ! -d toRefPOST ]; then mkdir toRefPOST; fi
+for pop in farionis pseudofarionis hybrids; do
+   if [ ! -e $pop.toRef.list ]; then
+      find $BAM -name '*.bam' | grep -f $pop.txt | sort > $pop.toRef.list
+   fi
+   MININD=$(( $(cat $pop.txt | wc -l) * 4 / 5 ))
+   if [ $MININD -lt 4 ]; then MININD=4; fi
+   if [ ! -e toRadPOST/$pop.geno.gz ]; then
+      angsd -bam $pop.toRef.list \
+            -ref $ASM \
+            -out toRefPOST/$pop \
+            -doGeno 13 \
+            -GL 1 \
+            -doPost 3 \
+            -skipMissing 0 \
+            -pest $pop.sfs \
+            -doMajorMinor 1 \
+            -doMaf 1 \
+            -minMapQ 30 \
+            -minQ 20 \
+            -baq 1 \
+            -minInd $MININD \
+            -setMinDepthInd 4 \
+            -nThreads 8 1> toRefPOST/$pop.stdout 2> toRefPOST/$pop.stderr
+   fi
+done
+```
+
+# References

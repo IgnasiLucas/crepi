@@ -4,15 +4,15 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
-#SBATCH --mem=10G
-#SBATCH --qos=medium
-#SBATCH --time=5-00:00:00
+#SBATCH --mem=5G
+#SBATCH --qos=short
+#SBATCH --time=05:00:00
 
 module load anaconda
 mamba activate bio
 module load angsd
 
-cd /scr/joiglu/2024-03-11
+cd /scr/joiglu/crepi/results/2024-03-11
 
 ASM=../2023-05-15/assembly.fasta
 MININD=60

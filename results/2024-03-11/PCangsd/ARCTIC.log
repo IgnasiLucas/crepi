@@ -1,0 +1,7 @@
+PCAngsd v1.35
+Time: 10/03/2025 11:46:05
+Directory: /scr/joiglu/crepi/results/2024-03-11
+Options:
+	--beagle Likes2/ARCTIC.beagle.gz
+	--threads 8
+	--out PCangsd/ARCTIC

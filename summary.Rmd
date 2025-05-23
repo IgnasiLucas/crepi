@@ -48,47 +48,32 @@ title <- read.table('titles.txt', row.names = 1, col.names = c('ID', 'title'))
 nodes$title <- title[nodes$ID, 'title']
 # Some folders may call input from deleted, wrong or not-pulled folders:
 ghosts <- setdiff(links$from, nodes$ID)
-if (length(ghosts) > 0) {
-   nodes <- data.frame(ID = sort(c(nodes$ID, ghosts)))
-   nodes$ghost <- nodes$ID %in% ghosts
-   nodes$title <- title[nodes$ID, 'title']
-   links$ghost <- links$from %in% ghosts
-}
+nodes <- data.frame(ID = sort(c(nodes$ID, ghosts)))
+nodes$ghost <- nodes$ID %in% ghosts
+nodes$title <- title[nodes$ID, 'title']
+links$ghost <- links$from %in% ghosts
 g <- graph_from_data_frame(d = links, vertices = nodes)
 ggraph(g, layout = 'fabric', sort.by = name) + 
-  geom_node_range(color = 'gray', aes(x=0, xend=35)) +
+  geom_node_range(color = 'gray', aes(x=0, xend=50)) +
   geom_edge_span(end_shape = 'square', aes(edge_colour = ghost)) + 
-  xlim(-25, 35) +
+  xlim(-25, 50) +
   geom_node_label(aes(label = title, x = -6), size = 2, hjust = 1) +
   geom_node_label(aes(label = name, x = -5.5), size = 2, hjust = 0) +
   coord_fixed() + theme(legend.position = 'none') +
   ggtitle("Fabric plot of the project's folders")
 ```
 
-The blue, ghost folders are the following:
-
-- `2023-04-19`: In `/nata/mar/crepidostomum/`, it is the base calling with GUPPY, to
-  generate the FASTQ files of one data set needed for assembly.
-- `2023-05-15`: Also, from the first version of the *Crepidostomum* analysis. It is a
-  folder with the original assembly of the reference genome. Not actually used here,
-  but it's referenced by a non-evaluated, old piece of code.
-- `2023-05-23`: A folder from `/nata/mar/crepidostomum/` with a couple VCFs. It is
-  cited in `2024-03-11` and `2024-03-11b` because it contains a list of low quality
-  samples to be excluded from analysis. But this folders are not fully run, yet.
-- `2023-06-22`: Real folder, awaiting commit and pull in Mar's copy of the repository.
-- `2023-10-02`: idem.
-- `2024-02-23`: Cited in an old, not-run piece of code in `2024-01-20`. 
 
 ## Linear layout with archs
 
-```{r linear}
+```{r linear, fig.width=10}
 ggraph(g, layout = 'linear', sort.by = name) +
   geom_edge_arc(arrow = arrow(type = 'closed', angle = 10,
                               length=unit(0.1, 'inches')),
                 color = 'orange', strength = 0.4, fold = TRUE) +
   geom_node_label(aes(label = name), angle = -45, y = -0.5,
                   nudge_x = 1) +
-  ylim(-1, 4) +
+  ylim(-1, 5) +
   theme_void()
 ```
 
@@ -102,7 +87,7 @@ ggraph(g, layout = data.frame(x = rep(10.1, N), y = N:1)) +
                 fold = TRUE)+
   geom_node_label(aes(label = title), x = 7.9, hjust = 1) +
   geom_node_label(aes(label = name), x = 10, hjust = 1) +
-  theme(legend.position = 'none') + xlim(-1, 15)
+  theme(legend.position = 'none') + xlim(-3, 17)
 ```
 
 ```{bash cleaning, eval=TRUE}

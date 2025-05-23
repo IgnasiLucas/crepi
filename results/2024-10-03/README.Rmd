@@ -18,7 +18,7 @@ corresponding to a clustering threshold of 0.95. I first generate FASTA
 files for every locus, with different alleles of the same individual as
 different sequences. That is, I will start by distributing allelic
 sequences found in `../2023-05-17b/crepi95_outfiles/crepi95.alleles`
-in locus-specific FASTA files. 
+in locus-specific FASTA files.
 
 ```{bash}
 ALLELES=../2023-05-17b/crepi95_outfiles/crepi95.alleles
@@ -33,9 +33,9 @@ if [ ! -e summary_alleles.txt ]; then
       split($0, A, /\|/)
       N1 = gsub(/*/, "*", A[1])
       N2 = gsub(/-/, "-", A[1])
-      FASTAOUT = sprintf("alleles/loc%05i.fa", A[2])
+      FASTAOUT = sprintf("alleles/loc%07i.fa", A[2])
       for (s in SEQ) print ">" s "\n" SEQ[s] >FASTAOUT
-      print sprintf("loc%05i.fa", A[2]) "\t" LEN "\t" N "\t" N1 + N2 + 0 "\t" N1 >>"summary_alleles.txt"
+      print sprintf("loc%07i.fa", A[2]) "\t" LEN "\t" N "\t" N1 + N2 + 0 "\t" N1 >>"summary_alleles.txt"
       delete SEQ
       N = 0
    }' $ALLELES
@@ -66,11 +66,13 @@ locus.
 if [ ! -e consensus.fa ]; then
    if [ ! -d tmp ]; then mkdir tmp; fi
    for l in $(ls -1 alleles); do
-      cons -sequence alleles/$l -outseq tmp/$l -name ${l:0:8} 2> /dev/null
+      NAME=$(basename -s .fa $l)
+      cons -sequence alleles/$l -outseq tmp/$l -name $NAME 2> /dev/null
+      cat tmp/$l >> consensus.fa
    done
-   cat tmp/*.fa > consensus.fa
-   rm -r tmp
+   #rm -r tmp
 fi
+samtools faidx consensus.fa
 ```
 
 The file `consensus.fa` contains all loci, irrespective of how few

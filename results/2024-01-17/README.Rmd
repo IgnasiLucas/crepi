@@ -1,5 +1,5 @@
 ---
-title: "Phylogeny of **COI**, **lsrDNA** and **ITS2** of all samples for identification of Crepidsotomum spp."
+title: "Phylogeny of COI, lsrDNA and ITS2 of all samples for identification of Crepidsotomum spp."
 author: "Mar Llaberia-Robledillo"
 date: "2023-10-04"
 output:

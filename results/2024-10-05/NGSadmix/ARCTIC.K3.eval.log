@@ -1,2 +1,2 @@
 evalAdmix version 0.962
-evalAdmix -beagle Likes2/ARCTIC.beagle.gz -fname NGSadmix/ARCTIC.K3.fopt.gz -qname NGSadmix/ARCTIC.K3.qopt -o NGSadmix/ARCTIC.K3.eval 
+evalAdmix -beagle Likes2/ARCTIC.beagle.gz -fname NGSadmix/ARCTIC.K3.fopt.gz -qname NGSadmix/ARCTIC.K3.qopt -o NGSadmix/ARCTIC.K3.eval -P 8 

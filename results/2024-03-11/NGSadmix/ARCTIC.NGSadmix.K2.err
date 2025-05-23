@@ -1,0 +1,15 @@
+Input: lname=Likes2/ARCTIC.beagle.gz nPop=2, fname=(null) qname=(null) outfiles=NGSadmix/ARCTIC.K2
+Setup: seed=1741603569 nThreads=8 method=1
+Convergence: maxIter=8000 tol=0.000010 tolLike50=0.100000 dymBound=0
+Filters: misTol=0.050000 minMaf=0.050000 minLrt=0.000000 minInd=0
+Input file has dim: nsites=315642 nind=90
+Input file has dim (AFTER filtering): nsites=315642 nind=90
+iter[start] like is=38930260.454294
+iter[50] like is=-17185826.190580 thres=0.000950
+EM accelerated Thread has reached convergence with tol 0.000010
+best like=-17185696.539432 after 100 iterations
+	-> Dumpedfiles are: NGSadmix/ARCTIC.K2.log
+	-> Dumpedfiles are: NGSadmix/ARCTIC.K2.qopt
+	-> Dumpedfiles are: NGSadmix/ARCTIC.K2.fopt.gz
+	[ALL done] cpu-time used =  255.53 sec
+	[ALL done] walltime used =  55.00 sec

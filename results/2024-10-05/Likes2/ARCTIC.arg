@@ -1,6 +1,6 @@
 	-> angsd version: 0.941-19-g2d1c533 (htslib: 1.18-4-g5098983e) build(Jul 29 2024 17:23:26)
-	-> angsd -bam ARCTIC.list -ref radloci.fa -sites Sites/ARCTIC_snp.sites -rf Sites/ARCTIC_contigs.txt -out Likes2/ARCTIC -only_proper_pairs 1 -baq 1 -setMinDepth 20 -GL 2 -doGlf 2 -doIBS 1 -doCounts 1 -doCov 1 -makeMatrix 1 -doMajorMinor 1 -doMaf 1 -SNP_pval 2e-10 -minMapQ 30 -minQ 20 -minMaf 0.05 -nThreads 8 
-	-> Thu Oct 10 14:43:46 2024
+	-> angsd -bam ARCTIC.list -ref ../2024-10-04/radloci.fa -sites Sites/ARCTIC_snp.sites -rf Sites/ARCTIC_contigs.txt -out Likes2/ARCTIC -only_proper_pairs 1 -baq 1 -setMinDepthInd 2 -GL 1 -doGlf 2 -doIBS 1 -doCounts 1 -doCov 1 -makeMatrix 1 -doMajorMinor 1 -doMaf 1 -SNP_pval 2e-10 -minMapQ 30 -minQ 20 -minMaf 0.05 -nThreads 8 
+	-> Tue Mar 25 13:09:15 2025
 ----------------
 multiReader.cpp:
 	-nLines	50	(Number of lines to read)
@@ -65,7 +65,7 @@ abcFilter.cpp:
 	-sites		Sites/ARCTIC_snp.sites	(File containing sites to keep (chr pos major minor))
 	-sites		Sites/ARCTIC_snp.sites	(File containing sites to keep (chr pos major minor af ac an))
 	-minInd		0	Only use site if atleast minInd of samples has data
-	-setMinDepthInd	1	Only use site if atleast minInd of samples has this minimum depth 
+	-setMinDepthInd	2	Only use site if atleast minInd of samples has this minimum depth 
 	-capDepth	-1	Only use the first capDepth bases
 	-strict	1	 (experimental)
 	1) You can force major/minor by -doMajorMinor 3
@@ -77,11 +77,11 @@ abcCounts.cpp:
 	-minQfile	(null)	 file with individual quality score thresholds)
 	-setMaxDepth	-1	(If total depth is larger then site is removed from analysis.
 				 -1 indicates no filtering)
-	-setMinDepth	20	(If total depth is smaller then site is removed from analysis.
+	-setMinDepth	-1	(If total depth is smaller then site is removed from analysis.
 				 -1 indicates no filtering)
 	-setMaxDepthInd	-1	(If depth persample is larger then individual is removed from analysis (from site).
 				 -1 indicates no filtering)
-	-setMinDepthInd	-1	(If depth persample is smaller then individual is removed from analysis (from site).
+	-setMinDepthInd	2	(If depth persample is smaller then individual is removed from analysis (from site).
 				 -1 indicates no filtering)
 	-minInd		0	(Discard site if effective sample size below value.
 				 0 indicates no filtering)
@@ -103,7 +103,7 @@ Filedumping:
 	-ffile	(null)	(Only for -iCounts 2)
 ---------------------
 abcGL.cpp:
-	-GL=2: 
+	-GL=1: 
 	1: SAMtools
 	2: GATK
 	3: SOAPsnp
@@ -126,7 +126,7 @@ Filedumping:
 
 ---------------------
 abcGL.cpp:
-	-GL=2: 
+	-GL=1: 
 	1: SAMtools
 	2: GATK
 	3: SOAPsnp
@@ -181,7 +181,7 @@ Filters:
 	-forceMaf	0	(Write .mafs file when running -doAsso (by default does not output .mafs file with -doAsso))
 	-skipMissing	1	(Set post to 0.33 if missing (do not use freq as prior))
 Extras:
-	-ref	radloci.fa	(Filename for fasta reference)
+	-ref	../2024-10-04/radloci.fa	(Filename for fasta reference)
 	-anc	(null)	(Filename for fasta ancestral)
 	-eps	0.001000 [Only used for -doMaf &8]
 	-beagleProb	0 (Dump beagle style postprobs)
@@ -216,5 +216,5 @@ Optional
 		->"Likes2/ARCTIC.ibsMat"
 		->"Likes2/ARCTIC.covMat"
 
-	[ALL done] cpu-time used =  4867.33 sec
-	[ALL done] walltime used =  9439.00 sec
+	[ALL done] cpu-time used =  6455.86 sec
+	[ALL done] walltime used =  8072.00 sec

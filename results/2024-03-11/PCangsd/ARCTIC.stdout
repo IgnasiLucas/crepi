@@ -1,0 +1,28 @@
+PCAngsd v1.11
+Jonas Meisner and Anders Albrechtsen.
+Using 8 thread(s).
+
+Parsing Beagle file.
+Loaded 315642 sites and 90 individuals.
+Estimating minor allele frequencies.
+EM (MAF) converged at iteration: 9
+Number of sites after MAF filtering (0.05): 315642
+
+Estimating covariance matrix.
+Using 1 principal components (MAP test).
+Individual allele frequencies estimated (1).
+Individual allele frequencies estimated (2). RMSE=0.007152215822330118
+Individual allele frequencies estimated (3). RMSE=0.003343903248150727
+Individual allele frequencies estimated (4). RMSE=0.0016213763409270638
+Individual allele frequencies estimated (5). RMSE=0.0008111546681333628
+Individual allele frequencies estimated (6). RMSE=0.0004196509366264694
+Individual allele frequencies estimated (7). RMSE=0.00022376750624481374
+Individual allele frequencies estimated (8). RMSE=0.00012115999192343541
+Individual allele frequencies estimated (9). RMSE=6.659256415261384e-05
+Individual allele frequencies estimated (10). RMSE=3.6872333977203595e-05
+Individual allele frequencies estimated (11). RMSE=2.0629183782919633e-05
+Individual allele frequencies estimated (12). RMSE=1.1414123513056976e-05
+Individual allele frequencies estimated (13). RMSE=6.8585197090896185e-06
+PCAngsd converged.
+Saved covariance matrix as PCangsd/ARCTIC.cov (Text).
+

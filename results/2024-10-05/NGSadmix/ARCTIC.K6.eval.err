@@ -1,12 +1,12 @@
 Going to read beagle file
-Input file has dim: nsites=40991 nind=90
-		->K=6	nSites=40991	nInd=90
+Input file has dim: nsites=39698 nind=90
+		->K=6	nSites=39698	nInd=90
 opening : NGSadmix/ARCTIC.K6.qopt with x=90 y=6
-opening : NGSadmix/ARCTIC.K6.fopt.gz with x=40991 y=6
+opening : NGSadmix/ARCTIC.K6.fopt.gz with x=39698 y=6
 Finished calculating normal residuals
-Estimating freqs without ind 0Estimating freqs without ind 1Estimating freqs without ind 2Estimating freqs without ind 3Estimating freqs without ind 4Estimating freqs without ind 5Estimating freqs without ind 6Estimating freqs without ind 7Estimating freqs without ind 8Estimating freqs without ind 9Estimating freqs without ind 10Estimating freqs without ind 11Estimating freqs without ind 12Estimating freqs without ind 13Estimating freqs without ind 14Estimating freqs without ind 15Estimating freqs without ind 16Estimating freqs without ind 17Estimating freqs without ind 18Estimating freqs without ind 19Estimating freqs without ind 20Estimating freqs without ind 21Estimating freqs without ind 22Estimating freqs without ind 23Estimating freqs without ind 24Estimating freqs without ind 25Estimating freqs without ind 26Estimating freqs without ind 27Estimating freqs without ind 28Estimating freqs without ind 29Estimating freqs without ind 30Estimating freqs without ind 31Estimating freqs without ind 32Estimating freqs without ind 33Estimating freqs without ind 34Estimating freqs without ind 35Estimating freqs without ind 36Estimating freqs without ind 37Estimating freqs without ind 38Estimating freqs without ind 39Estimating freqs without ind 40Estimating freqs without ind 41Estimating freqs without ind 42Estimating freqs without ind 43Estimating freqs without ind 44Estimating freqs without ind 45Estimating freqs without ind 46Estimating freqs without ind 47Estimating freqs without ind 48Estimating freqs without ind 49Estimating freqs without ind 50Estimating freqs without ind 51Estimating freqs without ind 52Estimating freqs without ind 53Estimating freqs without ind 54Estimating freqs without ind 55Estimating freqs without ind 56Estimating freqs without ind 57Estimating freqs without ind 58Estimating freqs without ind 59Estimating freqs without ind 60Estimating freqs without ind 61Estimating freqs without ind 62Estimating freqs without ind 63Estimating freqs without ind 64Estimating freqs without ind 65Estimating freqs without ind 66Estimating freqs without ind 67Estimating freqs without ind 68Estimating freqs without ind 69Estimating freqs without ind 70Estimating freqs without ind 71Estimating freqs without ind 72Estimating freqs without ind 73Estimating freqs without ind 74Estimating freqs without ind 75Estimating freqs without ind 76Estimating freqs without ind 77Estimating freqs without ind 78Estimating freqs without ind 79Estimating freqs without ind 80Estimating freqs without ind 81Estimating freqs without ind 82Estimating freqs without ind 83Estimating freqs without ind 84Estimating freqs without ind 85Estimating freqs without ind 86Estimating freqs without ind 87Estimating freqs without ind 88
+Correcting frequencies with 8 threads...
 Finished, going to write all correlations
 Correlation matrix has been written to NGSadmix/ARCTIC.K6.eval
-	[ALL done] cpu-time used =  32.72 sec
-	[ALL done] walltime used =  33.00 sec
+	[ALL done] cpu-time used =  66.89 sec
+	[ALL done] walltime used =  11.00 sec
 	[ALL done] results have been outputted to NGSadmix/ARCTIC.K6.eval

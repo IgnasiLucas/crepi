@@ -7,9 +7,9 @@ output: html_document
 
 # PCA
 
-The following analyses are performed after removing contigs with extreme values of coverage, 
-taking into accounf Linkage Desequilibrium and with SNPs shaerd by 50% of the samples.
-Once the execution is finished, we represent the results.
+The following results come from the analysis of 39698 SNPs, on different loci,
+selected among 190266 ddRAD loci, where at least 60 (out of 90) individuals
+have a coverage depth of at least 2.
 
 ### Arctic region (ARCTIC)
 
@@ -17,7 +17,7 @@ Once the execution is finished, we represent the results.
 library(ape)
 library(plyr)
 library(ggplot2)
-bams <- scan('ARCTIC.list', what = 'character')
+bams <- scan('ARCTIC.list', what = 'character', quiet = TRUE)
 Labels <- gsub('^.*/(.*)\\.bam$', '\\1', bams)
 Lake <- factor(substring(Labels, 1, 1), levels = c('L', 'S'), ordered = TRUE)
 Lake <- revalue(Lake, c("L"="Langfjordvatn", "S"="Suohpatjávri"))
@@ -123,22 +123,23 @@ dev.off()
 
 ```
 
-# MDS by sampling only one read per site per individual (alternative to fineRADstructure)
+# IBS by sampling only one read per site per individual (alternative to fineRADstructure)
 
 ### Arctic region (ARCTIC)
 
-```{r PCA_MDS, fig.width=6, fig.height=6, collapse=TRUE}
+```{r PCA_MDS, fig.width=8, fig.height=8, collapse=TRUE}
 Labels <- scan('ARCTIC.list', what = 'character', quiet = TRUE)
 Labels <- gsub('^.*/(.*)\\.bam$', '\\1', Labels)
 m1 <- as.matrix(read.table('Likes2/ARCTIC.ibsMat'))
 row.names(m1) <- Labels
 colnames(m1)  <- Labels
-heatmap(m1)
+heatmap(m1, scale = 'none', Colv = 'Rowv', symm = TRUE, cexRow = 0.5, cexCol = 0.5)
 
 
 ```
 
 Saving the results:
+
 ```{r SAVE_HEATMAP, eval=FALSE, collapse=TRUE}
 library(pheatmap)
 library(RColorBrewer)
@@ -172,7 +173,7 @@ heatmap(m1, symm = TRUE, revC = TRUE, labRow = '', labCol = '',
 png('PLOTS/HEATMAP_ARTIC_SYM.png', width = 3000, height = 3000, units = 'px', res = 500)
 heatmap(m1, symm = TRUE, revC = TRUE, labRow = '', labCol = '',
         RowSideColors = paleta[Lake], ColSideColors = paleta[Lake], 
-        col = colorRampPalette(brewer.pal(9, "YlOrRd"))(12)))
+        col = colorRampPalette(brewer.pal(9, "YlOrRd"))(12))
 #legend(x="left", legend=c("min", "med", "max"), fill= colorRampPalette(brewer.pal(9, "YlOrRd"))(12))
 
 dev.off()

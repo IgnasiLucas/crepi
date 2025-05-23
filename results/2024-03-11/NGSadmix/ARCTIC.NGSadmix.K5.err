@@ -1,0 +1,63 @@
+Input: lname=Likes2/ARCTIC.beagle.gz nPop=5, fname=(null) qname=(null) outfiles=NGSadmix/ARCTIC.K5
+Setup: seed=1741605102 nThreads=8 method=1
+Convergence: maxIter=8000 tol=0.000010 tolLike50=0.100000 dymBound=0
+Filters: misTol=0.050000 minMaf=0.050000 minLrt=0.000000 minInd=0
+Input file has dim: nsites=315642 nind=90
+Input file has dim (AFTER filtering): nsites=315642 nind=90
+iter[start] like is=35117577.166719
+iter[50] like is=-16871917.093007 thres=0.011048
+iter[100] like is=-16839879.107765 thres=0.002734
+iter[150] like is=-16825605.495768 thres=0.002411
+iter[200] like is=-16820710.020107 thres=0.005711
+iter[250] like is=-16817689.113217 thres=0.002322
+iter[300] like is=-16815891.225072 thres=0.000688
+iter[350] like is=-16813696.546603 thres=0.007213
+iter[400] like is=-16810926.513863 thres=0.004814
+iter[450] like is=-16809356.885592 thres=0.000732
+iter[500] like is=-16808941.920136 thres=0.000950
+iter[550] like is=-16808634.636752 thres=0.000871
+iter[600] like is=-16808299.932190 thres=0.000215
+iter[650] like is=-16808231.200642 thres=0.000370
+iter[700] like is=-16808137.211017 thres=0.000921
+iter[750] like is=-16807580.433003 thres=0.007842
+iter[800] like is=-16807225.670780 thres=0.001122
+iter[850] like is=-16807023.567944 thres=0.002001
+iter[900] like is=-16806843.692435 thres=0.001170
+iter[950] like is=-16806664.293575 thres=0.000088
+iter[1000] like is=-16806610.421608 thres=0.000127
+iter[1050] like is=-16806542.861040 thres=0.000663
+iter[1100] like is=-16806315.821535 thres=0.001179
+iter[1150] like is=-16806002.640164 thres=0.000845
+iter[1200] like is=-16805534.104658 thres=0.005930
+iter[1250] like is=-16801235.086609 thres=0.010091
+iter[1300] like is=-16799991.319747 thres=0.006638
+iter[1350] like is=-16793951.646525 thres=0.011995
+iter[1400] like is=-16793050.277112 thres=0.002169
+iter[1450] like is=-16792910.225671 thres=0.000462
+iter[1500] like is=-16792890.364942 thres=0.000186
+iter[1550] like is=-16792887.384209 thres=0.000087
+iter[1600] like is=-16792867.704042 thres=0.000217
+iter[1650] like is=-16787066.011071 thres=0.005766
+iter[1700] like is=-16780619.835419 thres=0.004440
+iter[1750] like is=-16780415.004518 thres=0.000122
+iter[1800] like is=-16780323.897284 thres=0.002721
+iter[1850] like is=-16780067.727600 thres=0.000371
+iter[1900] like is=-16780036.790118 thres=0.000278
+iter[1950] like is=-16780010.323816 thres=0.000985
+iter[2000] like is=-16779985.025528 thres=0.000288
+iter[2050] like is=-16779972.642308 thres=0.000110
+iter[2100] like is=-16779963.591923 thres=0.000143
+iter[2150] like is=-16779929.968332 thres=0.008292
+iter[2200] like is=-16779855.204427 thres=0.005307
+iter[2250] like is=-16779846.138270 thres=0.000844
+iter[2300] like is=-16779844.451967 thres=0.000027
+iter[2350] like is=-16779843.208678 thres=0.000019
+iter[2400] like is=-16779842.560634 thres=0.000019
+iter[2450] like is=-16779842.211091 thres=0.000032
+EM accelerated Thread has reached convergence with tol 0.000010
+best like=-16779841.974320 after 2494 iterations
+	-> Dumpedfiles are: NGSadmix/ARCTIC.K5.log
+	-> Dumpedfiles are: NGSadmix/ARCTIC.K5.qopt
+	-> Dumpedfiles are: NGSadmix/ARCTIC.K5.fopt.gz
+	[ALL done] cpu-time used =  9650.98 sec
+	[ALL done] walltime used =  1461.00 sec

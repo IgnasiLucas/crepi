@@ -3,35 +3,24 @@ Jonas Meisner and Anders Albrechtsen.
 Using 8 thread(s).
 
 Parsing Beagle file.
-Loaded 40991 sites and 90 individuals.
+Loaded 39698 sites and 90 individuals.
 Estimating minor allele frequencies.
-EM (MAF) converged at iteration: 13
-Number of sites after MAF filtering (0.05): 40991
+EM (MAF) converged at iteration: 9
+Number of sites after MAF filtering (0.05): 39698
 
 Estimating covariance matrix.
 Using 1 principal components (MAP test).
 Individual allele frequencies estimated (1).
-Individual allele frequencies estimated (2). RMSE=0.004147825737067193
-Individual allele frequencies estimated (3). RMSE=0.0025408081727134116
-Individual allele frequencies estimated (4). RMSE=0.001794292100632334
-Individual allele frequencies estimated (5). RMSE=0.0013491733474727174
-Individual allele frequencies estimated (6). RMSE=0.21081600398972242
-Individual allele frequencies estimated (7). RMSE=0.0007658427845537238
-Individual allele frequencies estimated (8). RMSE=0.0005628617556681857
-Individual allele frequencies estimated (9). RMSE=0.00040842609216277273
-Individual allele frequencies estimated (10). RMSE=0.0002983966990639239
-Individual allele frequencies estimated (11). RMSE=0.0002180171941856269
-Individual allele frequencies estimated (12). RMSE=0.00015898986230749687
-Individual allele frequencies estimated (13). RMSE=0.00011694676237355707
-Individual allele frequencies estimated (14). RMSE=8.58215403317529e-05
-Individual allele frequencies estimated (15). RMSE=6.272657919840207e-05
-Individual allele frequencies estimated (16). RMSE=4.644654655215072e-05
-Individual allele frequencies estimated (17). RMSE=3.428009460733596e-05
-Individual allele frequencies estimated (18). RMSE=2.5276300841726164e-05
-Individual allele frequencies estimated (19). RMSE=1.8630844581627714e-05
-Individual allele frequencies estimated (20). RMSE=1.3953470038163999e-05
-Individual allele frequencies estimated (21). RMSE=1.0293942415961724e-05
-Individual allele frequencies estimated (22). RMSE=7.607987051808887e-06
+Individual allele frequencies estimated (2). RMSE=0.004038224183314224
+Individual allele frequencies estimated (3). RMSE=0.001791463559453861
+Individual allele frequencies estimated (4). RMSE=0.0008340813231443735
+Individual allele frequencies estimated (5). RMSE=0.0003984134790411971
+Individual allele frequencies estimated (6). RMSE=0.00019533024125307903
+Individual allele frequencies estimated (7). RMSE=9.999711751561094e-05
+Individual allele frequencies estimated (8). RMSE=5.0289354900103655e-05
+Individual allele frequencies estimated (9). RMSE=2.6304244988769256e-05
+Individual allele frequencies estimated (10). RMSE=1.4615079675152789e-05
+Individual allele frequencies estimated (11). RMSE=8.248866153747219e-06
 PCAngsd converged.
 Saved covariance matrix as PCangsd/ARCTIC.cov (Text).
 

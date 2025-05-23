@@ -1,5 +1,21 @@
 (Note the inverse chronological order: more recent first)
 
+# 2025-03-15
+In order to use SNAPPER for Bayesian species delimitation, we need
+to call genoypes and prepare them in Nexus format. Here I prepare
+three Nexus files for species delimitation with SNAPPER:
+
+- **toRef.nex**: 10262 SNPs genotyped in at least 60 out of 90
+  individuals, selected among SNPs discovered by aligning ddRAD
+  sequences to the reference genome in `2023-05-15`.
+- **toRad.nex**: 21474 SNPs genotyped in at least 80 out of the
+  90 individuals, selected among SNPs discovered by re-aligning
+  ddRAD sequences to the consensus sequences of the ddRAD loci
+  assembled from those same reads. The original BAM files are
+  those in `2024-10-04`.
+- **toy.nex**: A random subset of 500 sites among those in
+  `toRad.nex`, just to facilitate testing runs of SNAPPER.
+
 # 2024-10-18
 Mar suspects the individual from which the Illumina reads were
 sequenced for the assembly of the reference genome could be
@@ -30,13 +46,10 @@ we can do is to select one random SNP from every locus. But,
 because coverage is variable within loci, I made the choice
 among the SNPs with the most coverage in the locus.
 
-In all, 42810 SNPs are selected (it seems many loci were
-monomorphic, likely due to their low coverage). A second run
-of likelihood estimation on only those sites applied some filters,
-resulting in 40991 sites retained.
+In all, 39698 SNPs were used in the analysis.
 
 NGSadmix suggests *K=2* as a good fit to the genetic structure.
-It reveals the existence of the two species, that we think are
+It suggests the existence of the two species, that we think are
 *Crepidostomum farionis*, which predominates in Langfjordvatn,
 and *Crepidostomum pseudofarionis*, which predominates in
 Suopatjavri. Only 3 admixed individuals and one immigrant are
@@ -56,10 +69,12 @@ individual in Suopatjavri:
 | S061Cmb        | Immigrant (100% C.f)    |
 
 Table `summary.txt` shows the predicted ancestry composition of
-every individual with *K=2*.
+every individual with *K=2*. Curiously, all 4 admixed individuals
+have the same fractions of ancestries: about 63% C. pseudofarionis
+and about 37% C. farionis.
 
-PCangsd identifies one main component with 18% of variation that
-separates the two species and leaves the four admixed individuals
+PCangsd identifies one main component with 19% of variation that
+separates the two *species* and leaves the four admixed individuals
 near the middle. The second principal component only accounts for
 1.3% of variation. Suopatjavri seems to be more diverse.
 
@@ -71,12 +86,12 @@ BAM files are all in `BAM` subfolder.
 Upon inspection of mapping results, an improvement of coverage
 with respect to `ipyrad`'s results is clear, as expected from the
 usage of `mindepth_majrule` 4 in `ipyrad`'s run in `2023-05-17b`.
-Most of the 76850 loci are not covered in more than 60 individuals,
-but over 20000 loci are covered by at least one read in more than
+Most of the 204618 loci are not covered in more than 80 individuals,
+but over 50000 loci are covered by at least one read in more than
 80 individuals.
 
-I select a subset of 70721 loci covered in at least 5 individuals
-after removing the 6 individuals with less than 30000 loci covered,
+I select a subset of 190266 loci covered in at least 5 individuals
+after removing the 6 individuals with less than 100000 loci covered,
 which are: N044Cx2, N048Cma, N048Cmb, N048Cmc, S031Cmc, and T165Cxa.
 
 # 2024-10-03
@@ -87,7 +102,7 @@ of the *de novo* assembly. Several goals:
 2. Extract a consensus sequence from every locus.
 
 The `consensus.fa` FASTA file contains the consensus sequence of
-76850 loci. It is intended to be used as a reference to map ddRADseq
+204618 loci. It is intended to be used as a reference to map ddRADseq
 reads. The reason for this double use of the FASTQ files is that
 `ipyrad` was run with `mindepth_majrule` set to 4, which was
 necessary to focus on reliable sites but wasted many reads that

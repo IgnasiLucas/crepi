@@ -26,13 +26,16 @@ of them come from *L* fish, and only two from *P* fish. Thus, there is no
 point in attempting an estimation of $F_{ST}$ between the two ecomorphs.
 If anything, we can estimate $F_{ST}$s between lakes and between sexes.
 Dates of collection and dissection are very evenly distributed along september,
-2017.
+2017. Note that only 84 (instead of 90) parasites were found on fish with
+sex assigned. There are 6 individuals whose host is of unknown sex.
 
 Considering results in `2024-10-05`, we have two putative species, one
-predominating in each lake. Thus, the comparison between lakes must also
-be a comparison between putative species. 
+predominating in each lake. The most meaningful comparison is that between
+individuals of one putative species in one lake and individuals of the other
+putative species in the other lake. I will make some additional comparisons,
+just as negative controls.
 
-```{r }
+```{r}
 structure <- read.table('../2024-10-05/summary.txt', header = TRUE)
 sp1 <- structure[structure$K2.1 > 0.95, 'Sample']
 sp2 <- structure[structure$K2.2 > 0.95, 'Sample']
@@ -49,19 +52,22 @@ null <- lapply(names(byLakeSexSpecies), function(x) {
                   row.names = FALSE, col.names = FALSE)
    }
 })
+write.table(paste0('../2024-10-04/BAM/',
+                   Crepido[Crepido$Lake == 'Langfjordvatn' & Crepido$Species == 'sp2', 'P_code'],
+                   '.bam'),
+            'Langfjordvatn.list',
+            quote = FALSE, row.names = FALSE, col.names = FALSE)
+write.table(paste0('../2024-10-04/BAM/',
+                   Crepido[Crepido$Lake == 'Suopatjavri' & Crepido$Species == 'sp1', 'P_code'],
+                   '.bam'),
+            'Suopatjavri.list',
+            quote = FALSE, row.names = FALSE, col.names = FALSE)
 ```
 
-```{bash}
-if [ ! -e Langfjordvatn.list ]; then
-   cat Langfjordvatn*.list > Langfjordvatn.list
-fi
-if [ ! -e Suopatjavri.list ]; then
-   cat Suopatjavri*.list > Suopatjavri.list
-fi
-```
+To be run in Garnatxa:
 
 ```{bash SAF, eval=FALSE}
-ASM=../2024-10-05/radloci.fa
+ASM=../2024-10-04/radloci.fa
 
 if [ ! -d SAF ]; then mkdir SAF; fi
 for pop in $(ls -1 *.list); do
@@ -73,13 +79,14 @@ for pop in $(ls -1 *.list); do
             -ref $ASM \
             -out SAF/$NAME \
             -doSaf 1 \
+            -doGlf 1 \
             -gl 1 \
             -minMapQ 30 \
             -minQ 20 \
             -only_proper_pairs 1 \
             -baq 1 \
-            -minInd $NUMIND \
-            -setMinDepthInd 1 \
+            -minInd $(( NUMIND * 4 /  5)) \
+            -setMinDepthInd 4 \
             -nThreads 4 1> SAF/$NAME.log 2> SAF/$NAME.err &
    fi
 done
@@ -206,21 +213,20 @@ par(mfrow = c(1, 1), mar = c(5.1, 4.1, 4.1, 2.1))
 
 ## $F_{ST}$s
 
-```{bash FSTs, eval=FALSE}
-# FSTs
-if [ ! -d FST ]; then mkdir FST; fi
+```{bash FSTs, eval=TRUE}
+POPS=(Langfjordvatn.f.sp1 Langfjordvatn.m.sp1 Langfjordvatn Suopatjavri.f.sp2 Suopatjavri.m.sp2 Suopatjavri)
 
-POPS=(Bie.C.confusus Bri.C.alpinus Bri.C.fatioi Lan.D Lan.L Lan.P Suo.L Suo.P Thu.C.acrinasus Thu.C.profundus Thu.C.steinmanni Wal.C.duplex)
+if [ ! -d FST ]; then mkdir FST; fi
 for j in $(seq 1 $(( ${#POPS[@]} - 1 )) ); do
    for i in $(seq 0 $(( j - 1 )) ); do
       if [ ! -e FST/${POPS[i]}.${POPS[j]}.fst.idx ]; then
-         realSFS fst index \
+         /home/joiglu/software/NGSTOOLS/angsd/misc/realSFS fst index \
                  SAF/${POPS[i]}.saf.idx \
                  SAF/${POPS[j]}.saf.idx \
                  -sfs 2D_SFS/${POPS[i]}.${POPS[j]}.ml \
                  -fstout FST/${POPS[i]}.${POPS[j]} \
                  -whichFst 1 \
-                 -cores 24 \
+                 -cores 8 \
                  1> FST/${POPS[i]}.${POPS[j]}.log \
                  2> FST/${POPS[i]}.${POPS[j]}.err
       fi
@@ -238,7 +244,7 @@ if [ ! -e summaryFST.txt ]; then
    else
       echo -e "C. farionis (Lan)\tC. pseudofarionis (Suo)\tNA\tNA" >> summaryFST.txt
    fi
-   
+
    if [ -e FST/Langfjordvatn.f.sp1.Langfjordvatn.m.sp1.fst.idx ]; then
       LC_ALL=C printf "%s\t%s\t%.6f\t%.6f\n" \
       "C. farionis on females (Lan)" "C. farionis on males (Lan)" \
@@ -246,7 +252,7 @@ if [ ! -e summaryFST.txt ]; then
    else
       echo -e "C. farionis on females (Lan)\tC. farionis on males (Lan)\tNA\tNA" >> summaryFST.txt
    fi
-   
+
    if [ -e FST/Suopatjavri.f.sp2.Suopatjavri.m.sp2.fst.idx ]; then
       LC_ALL=C printf "%s\t%s\t%.6f\t%.6f\n" \
       "C. pseudofarionis on females (Suo)" "C. pseudofarionis on males (Suo)" \
