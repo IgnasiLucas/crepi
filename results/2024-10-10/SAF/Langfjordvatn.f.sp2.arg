@@ -1,6 +1,6 @@
 	-> angsd version: 0.941-19-g2d1c533 (htslib: 1.18-4-g5098983e) build(Jul 29 2024 17:23:26)
-	-> angsd -b Langfjordvatn.f.sp2.list -anc ../2024-10-04/radloci.fa -ref ../2024-10-04/radloci.fa -out SAF/Langfjordvatn.f.sp2 -doSaf 1 -gl 1 -minMapQ 30 -minQ 20 -only_proper_pairs 1 -baq 1 -minInd 9 -setMinDepthInd 4 -nThreads 4 
-	-> Thu Apr 10 13:42:03 2025
+	-> angsd -b Langfjordvatn.f.sp2.list -anc ../2024-10-04/radloci.fa -ref ../2024-10-04/radloci.fa -out SAF/Langfjordvatn.f.sp2 -doSaf 1 -doGlf 1 -doHWE 1 -doMajorMinor 1 -gl 1 -minHWEpval 1.0e-3 -minMapQ 30 -minQ 20 -only_proper_pairs 0 -baq 1 -minInd 9 -setMinDepthInd 4 -nThreads 4 
+	-> Thu May 15 17:39:42 2025
 ----------------
 multiReader.cpp:
 	-nLines	50	(Number of lines to read)
@@ -33,7 +33,7 @@ parseArgs_bambi.cpp: bam reader:
 	-trim		0	Number of based to discard at both ends of the reads
 	-trim		0	Number of based to discard at 5' ends of the reads
 	-trim		0	Number of based to discard at 3' ends of the reads
-	-only_proper_pairs 1	Only use reads where the mate could be mapped
+	-only_proper_pairs 0	Only use reads where the mate could be mapped
 	-C		0	adjust mapQ for excessive mismatches (as SAMtools), supply -ref
 	-baq		1	adjust qscores around indels (1=normal baq 2= extended(as SAMtools)), supply -ref
 	-redo-baq		0 (recompute baq, instead of using BQ tag)
@@ -117,7 +117,7 @@ abcGL.cpp:
 	-minInd		9		(0 indicates no filtering)
 
 Filedumping:
-	-doGlf	0
+	-doGlf	1
 	1: binary glf (10 log likes)	.glf.gz
 	2: beagle likelihood file	.beagle.gz
 	3: binary 3 times likelihood	.glf.gz
@@ -140,7 +140,7 @@ abcGL.cpp:
 	-minInd		9		(0 indicates no filtering)
 
 Filedumping:
-	-doGlf	0
+	-doGlf	1
 	1: binary glf (10 log likes)	.glf.gz
 	2: beagle likelihood file	.beagle.gz
 	3: binary 3 times likelihood	.glf.gz
@@ -148,6 +148,26 @@ Filedumping:
 	5: binary saf files (usefull for realSFS)	.glf.gz
 
 	-> doMcall=0
+-------------------
+abcMajorMinor.cpp:
+	-doMajorMinor	1
+	1: Infer major and minor from GL
+	2: Infer major and minor from allele counts
+	3: use major and minor from a file (requires -sites file.txt)
+	4: Use reference allele as major (requires -ref)
+	5: Use ancestral allele as major (requires -anc)
+	6: Use EBD for major and minor (requires read data)
+	7: Use EBD for minor (Major is ref) (requires -ref and read data, (similar to SAMtools))
+	-rmTrans: remove transitions 0
+	-skipTriallelic	0
+-------------
+abcHWE.cpp:
+	-doHWE	1
+	-minHWEpval	0.001000
+	-maxHWEpval	-1.000000
+	-maxHetFreq	-1.000000
+	-minHetFreq	-1.000000
+
 --------------
 abcSaf.cpp:
 	-doSaf		1
@@ -172,9 +192,11 @@ abcHetPlas.cpp:
 	-maxIter=100	(Max number of iterations)
 	-minLRT=-1.000000
 		->"SAF/Langfjordvatn.f.sp2.arg"
+		->"SAF/Langfjordvatn.f.sp2.glf.gz"
+		->"SAF/Langfjordvatn.f.sp2.hwe.gz"
 		->"SAF/Langfjordvatn.f.sp2.saf.gz"
 		->"SAF/Langfjordvatn.f.sp2.saf.pos.gz"
 		->"SAF/Langfjordvatn.f.sp2.saf.idx"
 
-	[ALL done] cpu-time used =  569.24 sec
-	[ALL done] walltime used =  150112.00 sec
+	[ALL done] cpu-time used =  1320.59 sec
+	[ALL done] walltime used =  155424.00 sec
