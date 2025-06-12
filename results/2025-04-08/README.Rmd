@@ -12,7 +12,555 @@ nocite: |
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## $F_{ST}$ from estimated ancestral allele frequencies
+## Nucleotide diversity from the SFS
+
+```{r}
+PiTajima <- function(x, folded = TRUE){
+   n <- length(x) - 1  # the SFS includes invariable sites and 0 values for i > n/2
+   a <- 1:(n/2)
+   Theta <- (2/(n * (n-1))) * sum(x[2:(n/2 + 1)] * a * (n - a)) / sum(x)
+   return(Theta)
+}
+# Those SFSs were obtained from alignments to RAD loci, I think.
+Lan.sfs <- scan('../2024-10-10/SFS/Langfjordvatn.sfs', quiet = TRUE)
+Suo.sfs <- scan('../2024-10-10/SFS/Suopatjavri.sfs',   quiet = TRUE)
+Lan.n <- length(Lan.sfs) - 1
+Suo.n <- length(Suo.sfs) - 1
+Lan.pi <- PiTajima(Lan.sfs)
+Suo.pi <- PiTajima(Suo.sfs)
+par(mfrow=c(1,2))
+barplot(Lan.sfs[1:(1 + Lan.n / 2)], main = 'C. farionis in Langfjordvatn', log = 'y')
+text(25, 2.0e+05, bquote(pi==.(Lan.pi)))
+barplot(Suo.sfs[1:(1 + Suo.n / 2)], main = 'C. pseudofarionis in Suopatjavri', log = 'y')
+text(30, 2.0e+05, bquote(pi==.(Suo.pi)))
+```
+
+Both SFSs show a deficit of singletons, which must be due to missed heterozygous
+sites or confusion of singletons with sequencing errors. They showed an excess
+of high frequency SNPs, before filtering sites not in HWE. After filtering, the
+drop in mid-frequency SNPs appeared.
+
+Filtering sites not in HWE removes (all?) collapsed paralogous sites, which is
+necessary. However, it could affect our capacity to estimate inbreeding coefficients,
+at least per site. Certainly, if I remove sites not in HWE, I cannot expect to
+find sites out of HWE afterwards. But the point is to estimate inbreeding coefficients
+per individual, not per site, which should not be affected, unless there was a
+correlation of inbreeding among individuals. That is, individuals should not be
+related. Then, the only correlation of inbreeding among individuals would be caused
+by collapsed paralogous sites, which can be removed without affecting estimates
+of per individual inbreeding coefficients.
+
+Note that I originally included very low-coverage sites in the estimates. Because I
+suspected the lack of singletons could be due to such low-coverage sites hiding
+heterozygotes, I re-estimated the SFSs in the `2024-10-10` folder, using a minimum
+coverage of 4 per individual, and a minimum number of individuals equal to 4/5 the
+total number, in each population. The results are essentially the same, with a
+small increase of heterozygosity.
+
+The SFSs suggest that invariable sites (first category of the SFS) are about
+`r round(Suo.sfs[1] / sum(Suo.sfs[-1]), 2)` or `r round(Lan.sfs[1] / sum(Lan.sfs[-1]), 2)`
+times more abundant than variable sites, in *C. pseudofarionis* (Suopatjavri)
+and *C. farionis* (Langfjordvatn), respectively.
+
+Let's take a look at the admixed individuals.
+
+```{bash}
+ASM=../2023-05-15/assembly.fasta
+BAM=../2023-05-18/BAM
+# C. farionis only from Langfjordvatn (I exclude S004Cma, S004Cmb, S061Cma and S061Cmb)
+if [ ! -e farionis.txt ]; then
+   gawk '((NR > 1) && ($3 > 0.95) && ($1 ~ /^L/)){
+      print $1
+   }' ../2024-10-05/summary.txt | sort > farionis.txt
+fi
+# C. pseudofarionis only from Suopatjavri (I exclude L131Cmb)
+if [ ! -e pseudofarionis.txt ]; then
+   gawk '((NR > 1) && ($2 > 0.95) && ($1 ~ /^S/)){
+      print $1
+   }' ../2024-10-05/summary.txt | sort > pseudofarionis.txt
+fi
+# Hybrids are L019Cxa, L019Cxb, L088Cma and S023Cxd:
+if [ ! -e hybrids.txt ]; then
+   gawk '((NR > 1) && ($2 < 0.95) && ($3 < 0.95)){
+      print $1
+   }' ../2024-10-05/summary.txt | sort > hybrids.txt
+fi
+
+for pop in farionis pseudofarionis hybrids; do
+   if [ ! -e $pop.toRef.list ]; then
+      find $BAM -name '*.bam' | grep -f $pop.txt | sort > $pop.toRef.list
+   fi
+done
+
+if [ ! -e farionis.sfs ]; then
+   ln -s ../2024-10-10/SFS/Langfjordvatn.sfs farionis.sfs
+fi
+
+if [ ! -e pseudofarionis.sfs ]; then
+   ln -s ../2024-10-10/SFS/Suopatjavri.sfs pseudofarionis.sfs
+fi
+
+if [ ! -e hybrids.sfs ]; then
+   # We need to estimate the SFS for the hybrids!
+   # No way to filter by HWE in only 4 individuals.
+   if [ ! -e hybrids.saf.idx ]; then
+      angsd -b hybrids.toRef.list \
+            -anc $ASM \
+            -ref $ASM \
+            -out hybrids \
+            -doSaf 1 \
+            -doGlf 1 \
+            -gl 1 \
+            -minMapQ 30 \
+            -minQ 20 \
+            -only_proper_pairs 1 \
+            -baq 1 \
+            -minInd 4 \
+            -setMinDepthInd 4 \
+            -nThreads 4 1> hybrids.saf.log 2> hybrids.saf.err &
+   fi
+   realSFS -fold 1 \
+           -nSites 5000000 \
+           hybrids.saf.idx 1> hybrids.sfs 2> hybrids.sfs.log
+fi
+```
+
+```{r}
+Adm.sfs <- scan('hybrids.sfs',   quiet = TRUE)
+Adm.n <- length(Adm.sfs) - 1
+Adm.pi <- PiTajima(Adm.sfs)
+barplot(Adm.sfs[1:(1 + Adm.n / 2)], main = 'Admixed individuals', log = 'y')
+text(3, 1.0e+06, bquote(pi==.(Adm.pi)))
+```
+
+If admixed individuals were a population, their population-level nucleotide
+diversity would be that high. However, they are not, and individual heterozygosities
+should be calculated.
+
+```{bash}
+#ASM=../2023-05-15/assembly.fasta
+#BAM=../2023-05-18/BAM
+
+ASM=../2024-10-04/radloci.fa
+BAM=../2024-10-04/BAM
+
+if [ ! -d toRefHybridsSFS ]; then mkdir toRefHybridsSFS; fi
+for i in $(cat hybrids.txt); do
+   if [ ! -e toRefHybridsSFS/$i.sfs ]; then
+      if [ ! -e toRefHybridsSFS/$i.saf.idx ]; then
+         angsd -i $BAM/$i.bam \
+               -anc $ASM \
+               -doGlf 1 \
+               -GL 1 \
+               -doSaf 1 \
+               -C 50 \
+               -ref $ASM \
+               -minQ 20 \
+               -minmapQ 30 \
+               -setMinDepthInd 4 \
+               -out toRefHybridsSFS/$i 2> toRefHybridsSFS/$i.log
+      fi
+      realSFS -fold 1 \
+              toRefHybridsSFS/$i.saf.idx \
+              1> toRefHybridsSFS/$i.sfs \
+              2>> toRefHybridsSFS/$i.log
+   fi
+done
+find toRefHybridsSFS -name '*.gz'  -delete
+find toRefHybridsSFS -name '*.idx' -delete
+```
+
+```{r}
+library(kableExtra)
+hybrids <- scan('hybrids.txt', what = 'character', quiet = TRUE)
+SFSs <- lapply(paste0('toRefHybridsSFS/', hybrids, '.sfs'), scan, quiet = TRUE)
+sfs  <- data.frame(
+   Sample = hybrids,
+   Pi = sapply(SFSs, function(x) x[2] / sum(x))
+)
+kable(sfs) %>% kable_styling()
+```
+
+Individual estimates of heterozygosity are lower (half) when using
+reads mapped to RAD loci (not shown). The reason does not seem to be the
+difference in coverage. RAD loci are shorter than the reference, and twice
+as many reads are mapped to RAD loci than to the reference. As a result,
+depth of coverage is higher in RAD loci than in the reference.
+
+## Inbreeding coeficients from alignments to the reference genome
+Inbreeding coefficients per individual can be estimated with `ngsF`
+from genotype likelihoods [@Vieira2013]. Because genotype likelihoods
+depend only on indidivual data, and no priors are needed, I can compute
+them all together, without distinguishing populations.
+
+```{bash}
+ASM=../2023-05-15/assembly.fasta
+BAM=../2023-05-18/BAM
+if [ ! -e all.toRef.list ]; then
+   ls -1 $BAM/*.bam > all.toRef.list
+fi
+if [ ! -d toRefF ]; then mkdir toRefF; fi
+if [ ! -e toRefF/all.F ]; then
+   if [ ! -e toRefF/all.glf ]; then
+      if [ ! -e toRefF/all.glf.gz ]; then
+         angsd -b all.toRef.list \
+               -ref $ASM \
+               -out toRefF/all \
+               -doGlf 3 \
+               -doHWE 1 \
+               -doMajorMinor 1 \
+               -GL 1 \
+               -minHWEpval 0.05 \
+               -minMapQ 30 \
+               -minQ 20 \
+               -only_proper_pairs 0 \
+               -baq 1 \
+               -minInd 77 \
+               -setMinDepthInd 4 \
+               -nThreads 8 1> toRefF/glf.log 2> toRefF/glf.err
+      fi
+      gunzip toRefF/all.glf.gz
+   fi
+   NSITES=$(tail toRefF/glf.err | grep "retained after filtering:" | gawk '{print $NF}')
+   ngsF --n_ind $(cat all.toRef.list | wc -l) \
+        --n_sites $NSITES \
+        --glf toRefF/all.glf \
+        --out toRefF/all.F
+fi
+```
+
+```{r}
+library('ggplot2')
+GeneticSummary <- read.table('../2024-10-05/summary.txt',
+                             header = TRUE)
+F <- scan('toRefF/all.F', quiet = TRUE)
+Samples <- gsub('.bam', '', basename(scan('all.toRef.list', what = 'character')))
+GeneticSummary$F <- F[match(GeneticSummary$Sample, Samples)]
+GeneticSummary$Species <- factor('admixed', levels = c('farionis', 'pseudofarionis', 'admixed'))
+GeneticSummary[GeneticSummary$K2.1 > 0.9, 'Species'] <- 'pseudofarionis'
+GeneticSummary[GeneticSummary$K2.2 > 0.9, 'Species'] <- 'farionis'
+ggplot(GeneticSummary, aes(x = Species, y = F, color = Lake)) +
+   geom_point() + scale_y_continuous(trans = 'log')
+```
+
+The individual inbreeding coefficients are higher in *C. farionis* than in
+*C. pseudofarionis*. Curiously, two of the *C. farionis* individuals
+collected in Suopatjavri have much higher levels of inbreeding than typically
+observed in *C. farionis*. Admixed individuals do not have the lowest values
+of *F*, perhaps because of having inherited some of the inbreeding from their
+*C. farionis* ancestors (almost 40% of their genome).
+
+In any case, inbreeding is overall low, as expected for a diverse, outbred
+population. Selfing must be rare, despite the hermaphroditic nature of these
+guys.
+
+## Posterior probabilities of genotypes from alignments to the reference genome
+
+```{bash}
+ASM=../2023-05-15/assembly.fasta
+BAM=../2023-05-18/BAM
+
+if [ ! -d toRefPOST ]; then mkdir toRefPOST; fi
+for pop in farionis pseudofarionis hybrids; do
+   MININD=$(( $(cat $pop.txt | wc -l) * 4 / 5 ))
+   if [ $MININD -lt 4 ]; then MININD=4; fi
+   if [ ! -e toRefPOST/$pop.geno.gz ]; then
+      angsd -bam $pop.toRef.list \
+            -ref $ASM \
+            -out toRefPOST/$pop \
+            -doGeno 13 \
+            -GL 1 \
+            -doPost 3 \
+            -doHWE 1 \
+            -skipMissing 0 \
+            -pest $pop.sfs \
+            -doMajorMinor 1 \
+            -doMaf 1 \
+            -minHWEpval 0.05 \
+            -minMapQ 30 \
+            -minQ 20 \
+            -baq 1 \
+            -minInd $MININD \
+            -setMinDepthInd 4 \
+            -nThreads 8 1> toRefPOST/$pop.stdout 2> toRefPOST/$pop.stderr
+   fi
+done
+```
+
+```{r}
+library(MetBrewer)
+Hyb.name <- basename(scan('hybrids.toRef.list', 'character', quiet = TRUE))
+Hyb.name <- gsub('.bam', '', Hyb.name)
+Hyb.geno <- read.table('toRefPOST/hybrids.geno.gz',
+                       col.names = c('locus', 'pos', 'major', 'minor',
+                                     paste0(rep(Hyb.name, each = 4),
+                                            rep(c('.geno', '.P1', '.P2', '.P3'),
+                                                length(Hyb.name)))))
+LociPerContig <- table(Hyb.geno$locus)
+AtLeast100 <- names(LociPerContig[LociPerContig >= 100])
+Hyb.geno <- Hyb.geno[Hyb.geno$locus %in% AtLeast100,]
+PerLocus.H <- lapply(
+   Hyb.name,
+   function(x) {
+      sapply(split(Hyb.geno[, paste0(x, '.P2')], Hyb.geno$locus),
+             mean)
+   }
+)
+perLocusH <- as.data.frame(do.call(cbind, PerLocus.H))
+names(perLocusH) <- Hyb.name
+pairs(perLocusH)
+```
+
+After removing contigs with less than 100 loci, the positive correlations
+of mean contig heterozygosity among individuals are observed. I assume
+this reflects the fact that a considerable fraction of variation in
+heterozygosity along the genome is due to common underlying causes,
+like gene density or other selective constraints and mutational
+hotspots.
+
+```{r}
+c <- met.brewer('Egypt', 4)
+plot(density(perLocusH$L019Cxa), col = c[1], lwd = 2,
+     main = 'Mean heterozygosity per contig in admixed',
+     xlim = c(0, 0.2))
+lines(density(perLocusH$L019Cxb), col = c[2], lwd = 2)
+lines(density(perLocusH$L088Cma), col = c[3], lwd = 2)
+lines(density(perLocusH$S023Cxd), col = c[4], lwd = 2)
+abline(v = apply(perLocusH, 2, mean), col = c)
+legend(0.13, 12, Hyb.name, col = c, lwd = 2)
+rm(Hyb.geno, perLocusH, PerLocus.H)
+```
+
+The distribution of mean heterozygosity per contig is not bimodal: admixed
+individuals are not that much more heterozygous in some contigs than in others,
+when considering the subset of contigs with at least 100 positions genotyped,
+and after having filtered for Hardy-Weinberg equilibrium. Maybe we should not
+have applied such filter here. Another simple explanation for this unexpected
+result is that the contigs are in general longer than the tracts of increased
+heterozygosity. In addition, admixed fragments are expected to have just 12%
+higher heterozygosity (the $F_{ST}$), which is presumably undetectable.
+
+```{r}
+far.name <- basename(scan('farionis.toRef.list', 'character', quiet = TRUE))
+far.name <- gsub('.bam', '',far.name)
+far.geno <- read.table('toRefPOST/farionis.geno.gz',
+                       col.names = c('locus', 'pos', 'major', 'minor',
+                                     paste0(rep(far.name, each = 4),
+                                            rep(c('.geno', '.P1', '.P2', '.P3'),
+                                                length(far.name)))))
+LociPerContig <- table(far.geno$locus)
+AtLeast100 <- names(LociPerContig[LociPerContig >= 100])
+far.geno <- far.geno[far.geno$locus %in% AtLeast100,]
+PerLocus.H <- lapply(
+   far.name,
+   function(x) {
+      sapply(split(far.geno[, paste0(x, '.P2')], far.geno$locus),
+             mean)
+   }
+)
+perLocusH <- as.data.frame(do.call(cbind, PerLocus.H))
+names(perLocusH) <- far.name
+pairs(perLocusH[, sample(far.name, 4)])
+```
+
+Just a sample of 4 out of `r length(far.name)` *C. farionis* individuals, to make
+sure the correlation is not only present among admixed individuals.
+
+```{r}
+i <- sample(1:length(far.name), 4)
+plot(density(perLocusH[, i[1]]), col = c[1], lwd = 2,
+     main = 'Mean heterozygosity per locus in 4 C. farionis',
+     xlim = c(0, 0.2))
+lines(density(perLocusH[, i[2]]), col = c[2], lwd = 2)
+lines(density(perLocusH[, i[3]]), col = c[3], lwd = 2)
+lines(density(perLocusH[, i[4]]), col = c[4], lwd = 2)
+abline(v = sapply(far.name[i],
+                  function(x) sum(far.geno[, paste0(x, '.P2')])/dim(far.geno)[1]),
+       col = c)
+legend(0.13, 15, far.name[i], col = c, lwd = 2)
+#rm(par.geno, perLocusH, PerLocus.H)
+```
+
+Vertical lines are estimated heterozygosities per individual,
+from the posterior probabilities, not the average of the contig
+mean heterozygosities.
+
+```{r}
+pse.name <- basename(scan('pseudofarionis.toRef.list', 'character', quiet = TRUE))
+pse.name <- gsub('.bam', '',pse.name)
+pse.geno <- read.table('toRefPOST/pseudofarionis.geno.gz',
+                       col.names = c('locus', 'pos', 'major', 'minor',
+                                     paste0(rep(pse.name, each = 4),
+                                            rep(c('.geno', '.P1', '.P2', '.P3'),
+                                                length(pse.name)))))
+PerLocus.H <- lapply(
+   pse.name,
+   function(x) {
+      sapply(split(pse.geno[, paste0(x, '.P2')], pse.geno$locus),
+             mean)
+   }
+)
+perLocusH <- as.data.frame(do.call(cbind, PerLocus.H))
+```
+
+```{r}
+i <- sample(1:length(pse.name), 4)
+plot(density(perLocusH[, i[1]]), col = c[1], lwd = 2,
+     main = 'Mean heterozygosity per locus in 4 C. pseudofarionis',
+     xlim = c(0, 0.2))
+lines(density(perLocusH[, i[2]]), col = c[2], lwd = 2)
+lines(density(perLocusH[, i[3]]), col = c[3], lwd = 2)
+lines(density(perLocusH[, i[4]]), col = c[4], lwd = 2)
+legend(0.13, 15, pse.name[i], col = c, lwd = 2)
+rm(par.geno, perLocusH, PerLocus.H)
+```
+
+## Posterior probabilities of genotypes from alignments to ddRAD loci
+
+```{bash}
+ASM=../2024-10-04/radloci.fa
+BAM=../2024-10-04/BAM
+
+if [ ! -d toRadPOST ]; then mkdir toRadPOST; fi
+
+for pop in farionis pseudofarionis hybrids; do
+   if [ ! -e $pop.toRad.list ]; then
+      find $BAM -name '*.bam' | grep -f $pop.txt | sort > $pop.toRad.list
+   fi
+done
+
+# The SFS for hybrids must have been calculated above.
+for pop in farionis pseudofarionis hybrids; do
+   MININD=$(( $(cat $pop.txt | wc -l) * 4 / 5 ))
+   if [ $MININD -lt 4 ]; then MININD=4; fi
+   if [ ! -e toRadPOST/$pop.geno.gz ]; then
+      angsd -bam $pop.toRad.list \
+            -ref $ASM \
+            -out toRadPOST/$pop \
+            -doGeno 13 \
+            -GL 1 \
+            -doPost 3 \
+            -doHWE 1 \
+            -skipMissing 0 \
+            -pest $pop.sfs \
+            -doMajorMinor 1 \
+            -doMaf 1 \
+            -minHWEpval 1.0e-03 \
+            -minMapQ 30 \
+            -minQ 20 \
+            -baq 1 \
+            -minInd $MININD \
+            -setMinDepthInd 4 \
+            -nThreads 8 1> toRadPOST/$pop.stdout 2> toRadPOST/$pop.stderr
+   fi
+done
+```
+
+```{r}
+library(MetBrewer)
+Hyb.sfs <- scan('hybrids.sfs', quiet = TRUE)
+Hyb.n <- length(Hyb.sfs) - 1
+Hyb.pi <- PiTajima(Hyb.sfs)
+barplot(Hyb.sfs[1:(1 + Hyb.n / 2)], main = 'Admixed individuals', log = 'y')
+text(4, 5.0e+05, bquote(pi==.(Hyb.pi)))
+
+Hyb.name <- basename(scan('hybrids.toRef.list', 'character', quiet = TRUE))
+Hyb.name <- gsub('.bam', '', Hyb.name)
+Hyb.geno <- read.table('toRadPOST/hybrids.geno.gz',
+                       col.names = c('locus', 'pos', 'major', 'minor',
+                                     paste0(rep(Hyb.name, each = 4),
+                                            rep(c('.geno', '.P1', '.P2', '.P3'),
+                                                length(Hyb.name)))))
+PerLocus.H <- lapply(
+   Hyb.name,
+   function(x) {
+      sapply(split(Hyb.geno[, paste0(x, '.P2')], Hyb.geno$locus),
+             mean)
+   }
+)
+perLocusH <- as.data.frame(do.call(cbind, PerLocus.H))
+names(perLocusH) <- Hyb.name
+pairs(perLocusH)
+```
+
+```{r}
+c <- met.brewer('Egypt', 4)
+plot(density(perLocusH$L019Cxa), col = c[1], lwd = 2,
+     main = 'Mean heterozygosity per locus in admixed',
+     xlim = c(0, 0.2))
+lines(density(perLocusH$L019Cxb), col = c[2], lwd = 2)
+lines(density(perLocusH$L088Cma), col = c[3], lwd = 2)
+lines(density(perLocusH$S023Cxd), col = c[4], lwd = 2)
+legend(0.13, 12, Hyb.name, col = c, lwd = 2)
+rm(Hyb.geno, perLocusH, PerLocus.H)
+```
+
+```{r}
+far.name <- basename(scan('farionis.toRef.list', 'character', quiet = TRUE))
+far.name <- gsub('.bam', '',far.name)
+far.geno <- read.table('toRadPOST/farionis.geno.gz',
+                       col.names = c('locus', 'pos', 'major', 'minor',
+                                     paste0(rep(far.name, each = 4),
+                                            rep(c('.geno', '.P1', '.P2', '.P3'),
+                                                length(far.name)))))
+PerLocus.H <- lapply(
+   far.name,
+   function(x) {
+      sapply(split(far.geno[, paste0(x, '.P2')], far.geno$locus),
+             mean)
+   }
+)
+perLocusH <- as.data.frame(do.call(cbind, PerLocus.H))
+```
+
+```{r}
+i <- sample(1:length(far.name), 4)
+plot(density(perLocusH[, i[1]]), col = c[1], lwd = 2,
+     main = 'Mean heterozygosity per locus in 4 C. farionis',
+     xlim = c(0, 0.2))
+lines(density(perLocusH[, i[2]]), col = c[2], lwd = 2)
+lines(density(perLocusH[, i[3]]), col = c[3], lwd = 2)
+lines(density(perLocusH[, i[4]]), col = c[4], lwd = 2)
+legend(0.13, 15, far.name[i], col = c, lwd = 2)
+rm(par.geno, perLocusH, PerLocus.H)
+```
+
+```{r}
+pse.name <- basename(scan('pseudofarionis.toRef.list', 'character', quiet = TRUE))
+pse.name <- gsub('.bam', '',pse.name)
+pse.geno <- read.table('toRadPOST/pseudofarionis.geno.gz',
+                       col.names = c('locus', 'pos', 'major', 'minor',
+                                     paste0(rep(pse.name, each = 4),
+                                            rep(c('.geno', '.P1', '.P2', '.P3'),
+                                                length(pse.name)))))
+PerLocus.H <- lapply(
+   pse.name,
+   function(x) {
+      sapply(split(pse.geno[, paste0(x, '.P2')], pse.geno$locus),
+             mean)
+   }
+)
+perLocusH <- as.data.frame(do.call(cbind, PerLocus.H))
+```
+
+```{r}
+i <- sample(1:length(pse.name), 4)
+plot(density(perLocusH[, i[1]]), col = c[1], lwd = 2,
+     main = 'Mean heterozygosity per locus in 4 C. pseudofarionis',
+     xlim = c(0, 0.2))
+lines(density(perLocusH[, i[2]]), col = c[2], lwd = 2)
+lines(density(perLocusH[, i[3]]), col = c[3], lwd = 2)
+lines(density(perLocusH[, i[4]]), col = c[4], lwd = 2)
+legend(0.13, 15, pse.name[i], col = c, lwd = 2)
+rm(par.geno, perLocusH, PerLocus.H)
+```
+
+
+# References
+
+<div id="refs"></div>
+
+## Apendix. $F_{ST}$ from estimated ancestral allele frequencies
 
 On `2024-03-11` we run NGSadmix on variable sites identified from
 mappings to the RAD loci. K = 2 was determined as a good fit. The
@@ -88,170 +636,9 @@ and limited sample size across sites, while I naively assume all loci have
 data in either all or a constant fraction of individuals. The smaller the
 fraction, the lower the estimate.
 
-## Nucleotide diversity from the SFS
+## Session information
 
 ```{r}
-PiTajima <- function(x, folded = TRUE){
-   n <- length(x) - 1  # the SFS includes invariable sites and 0 values for i > n/2
-   a <- 1:(n/2)
-   Theta <- (2/(n * (n-1))) * sum(x[2:(n/2 + 1)] * a * (n - a)) / sum(x)
-   return(Theta)
-}
-Lan.sfs <- scan('../2024-10-10/SFS/Langfjordvatn.sfs', quiet = TRUE)
-Suo.sfs <- scan('../2024-10-10/SFS/Suopatjavri.sfs',   quiet = TRUE)
-Lan.n <- length(Lan.sfs) - 1
-Suo.n <- length(Suo.sfs) - 1
-Lan.pi <- PiTajima(Lan.sfs)
-Suo.pi <- PiTajima(Suo.sfs)
-par(mfrow=c(1,2))
-barplot(Lan.sfs[1:(1 + Lan.n / 2)], main = 'C. farionis in Langfjordvatn', log = 'y')
-text(25, 2.0e+05, bquote(pi==.(Lan.pi)))
-barplot(Suo.sfs[1:(1 + Suo.n / 2)], main = 'C. pseudofarionis in Suopatjavri', log = 'y')
-text(30, 2.0e+05, bquote(pi==.(Suo.pi)))
+sessionInfo()
 ```
 
-Both SFSs show a deficit of singletons, which must be due to missed heterozygous
-sites or confusion of singletons with sequencing errors. And they show an excess
-of high frequency SNPs, which must be the cause of such high $\pi$ values. Note
-that I originally included very low-coverage sites in the estimates. Because I
-suspected the lack of singletons could be due to such low-coverage sites hiding
-heterozygotes, I re-estimated the SFSs in the `2024-10-10` folder, using a minimum
-coverage of 4 per individual, and a minimum number of individuals equal to 4/5 the
-total number, in each population. The results are essentially the same, with a
-small increase of heterozygosity.
-
-The SFSs suggest that invariable sites (first category of the SFS) are about
-`r round(Suo.sfs[1] / sum(Suo.sfs[-1]), 2)` or `r round(Lan.sfs[1] / sum(Lan.sfs[-1]), 2)`
-times more abundant than variable sites, in *C. pseudofarionis* (Suopatjavri)
-and *C. farionis* (Langfjordvatn), respectively.
-
-Assuming the lack of singletons is an artifact, the remaining question is why
-there is an excess of high frequency SNPs. Note that part of that excess is shared
-or correlated between the two populations (see `2024-10-10`). One possibility is
-balancing selection.
-
-## Individual heterozygosity
-I want to see if there is any excess of heterozygosity. I will run ANGSD again to obtain
-posterior probabilities of genotypes in both populations. I will also obtain posterior
-genotype probabilities of the inbred individuals, to see their genomic distribution
-of heterozygosity (I expect long runs of excess of heterozygosity). I should
-probably run this in Garnatxa.
-
-### With alignments to ddRAD loci
-
-```{bash}
-ASM=../2024-10-04/radloci.fa
-BAM=../2024-10-04/BAM
-# C. farionis only from Langfjordvatn (I exclude S004Cma, S004Cmb, S061Cma and S061Cmb)
-if [ ! -e farionis.txt ]; then
-   gawk '((NR > 1) && ($3 > 0.95) && ($1 ~ /^L/)){
-      print $1
-   }' ../2024-10-05/summary.txt | sort > farionis.txt
-fi
-# C. pseudofarionis only from Suopatjavri (I exclude L131Cmb)
-if [ ! -e pseudofarionis.txt ]; then
-   gawk '((NR > 1) && ($2 > 0.95) && ($1 ~ /^S/)){
-      print $1
-   }' ../2024-10-05/summary.txt | sort > pseudofarionis.txt
-fi
-# Hybrids are L019Cxa, L019Cxb, L088Cma and S023Cxd:
-if [ ! -e hybrids.txt ]; then
-   gawk '((NR > 1) && ($2 < 0.95) && ($3 < 0.95)){
-      print $1
-   }' ../2024-10-05/summary.txt | sort > hybrids.txt
-fi
-
-if [ ! -d toRadPOST ]; then mkdir toRadPOST; fi
-if [ ! -e farionis.sfs ]; then
-   ln -s ../2024-10-10/SFS/Langfjordvatn.sfs farionis.sfs
-fi
-if [ ! -e pseudofarionis.sfs ]; then
-   ln -s ../2024-10-10/SFS/Suopatjavri.sfs pseudofarionis.sfs
-fi
-
-for pop in farionis pseudofarionis hybrids; do
-   if [ ! -e $pop.toRad.list ]; then
-      find $BAM -name '*.bam' | grep -f $pop.txt | sort > $pop.toRad.list
-   fi
-done
-
-if [ ! -e hybrids.sfs ]; then
-   # We need to estimate the SFS for the hybrids!
-   if [ ! -e hybrids.saf.idx ]; then
-      angsd -b hybrids.toRad.list \
-            -anc $ASM \
-            -ref $ASM \
-            -out hybrids \
-            -doSaf 1 \
-            -doGlf 1 \
-            -gl 1 \
-            -minMapQ 30 \
-            -minQ 20 \
-            -only_proper_pairs 1 \
-            -baq 1 \
-            -minInd 4 \
-            -setMinDepthInd 4 \
-            -nThreads 4 1> hybrids.saf.log 2> hybrids.saf.err &
-   fi
-   realSFS -fold 1 \
-           -nSites 5000000 \
-           hybrids.saf.idx 1> hybrids.sfs 2> hybrids.sfs.log
-fi
-for pop in farionis pseudofarionis hybrids; do
-   MININD=$(( $(cat $pop.txt | wc -l) * 4 / 5 ))
-   if [ $MININD -lt 4 ]; then MININD=4; fi
-   if [ ! -e toRadPOST/$pop.geno.gz ]; then
-      angsd -bam $pop.toRad.list \
-            -ref $ASM \
-            -out toRadPOST/$pop \
-            -doGeno 13 \
-            -GL 1 \
-            -doPost 3 \
-            -skipMissing 0 \
-            -pest $pop.sfs \
-            -doMajorMinor 1 \
-            -doMaf 1 \
-            -minMapQ 30 \
-            -minQ 20 \
-            -baq 1 \
-            -minInd $MININD \
-            -setMinDepthInd 4 \
-            -nThreads 8 1> toRadPOST/$pop.stdout 2> toRadPOST/$pop.stderr
-   fi
-done
-```
-
-### With alignments to reference genome
-
-```{bash}
-ASM=../2023-05-15/assembly.fasta
-BAM=../2023-05-18/BAM
-if [ ! -d toRefPOST ]; then mkdir toRefPOST; fi
-for pop in farionis pseudofarionis hybrids; do
-   if [ ! -e $pop.toRef.list ]; then
-      find $BAM -name '*.bam' | grep -f $pop.txt | sort > $pop.toRef.list
-   fi
-   MININD=$(( $(cat $pop.txt | wc -l) * 4 / 5 ))
-   if [ $MININD -lt 4 ]; then MININD=4; fi
-   if [ ! -e toRadPOST/$pop.geno.gz ]; then
-      angsd -bam $pop.toRef.list \
-            -ref $ASM \
-            -out toRefPOST/$pop \
-            -doGeno 13 \
-            -GL 1 \
-            -doPost 3 \
-            -skipMissing 0 \
-            -pest $pop.sfs \
-            -doMajorMinor 1 \
-            -doMaf 1 \
-            -minMapQ 30 \
-            -minQ 20 \
-            -baq 1 \
-            -minInd $MININD \
-            -setMinDepthInd 4 \
-            -nThreads 8 1> toRefPOST/$pop.stdout 2> toRefPOST/$pop.stderr
-   fi
-done
-```
-
-# References

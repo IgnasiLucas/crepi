@@ -1,6 +1,6 @@
 	-> angsd version: 0.941-17-ge6967e6 (htslib: 1.13+ds) build(Jun 30 2023 17:52:55)
-	-> angsd -bam farionis.toRad.list -ref ../2024-10-04/radloci.fa -out toRadPOST/farionis -doGeno 13 -GL 1 -doPost 3 -skipMissing 0 -pest farionis.sfs -doMajorMinor 1 -doMaf 1 -minMapQ 30 -minQ 20 -baq 1 -minInd 28 -setMinDepthInd 4 -nThreads 8 
-	-> Wed Apr 30 10:46:54 2025
+	-> angsd -bam farionis.toRad.list -ref ../2024-10-04/radloci.fa -out toRadPOST/farionis -doGeno 13 -GL 1 -doPost 3 -doHWE 1 -skipMissing 0 -pest farionis.sfs -doMajorMinor 1 -doMaf 1 -minHWEpval 1.0e-03 -minMapQ 30 -minQ 20 -baq 1 -minInd 28 -setMinDepthInd 4 -nThreads 8 
+	-> Fri May 30 08:34:01 2025
 ----------------
 multiReader.cpp:
 	-nLines	50	(Number of lines to read)
@@ -188,6 +188,14 @@ Extras:
 	-indFname	(null) (file containing individual inbreedcoeficients)
 	-underFlowProtect	0 (file containing individual inbreedcoeficients)
 NB These frequency estimators requires major/minor -doMajorMinor
+-------------
+abcHWE.cpp:
+	-doHWE	1
+	-minHWEpval	0.001000
+	-maxHWEpval	-1.000000
+	-maxHetFreq	-1.000000
+	-minHetFreq	-1.000000
+
 -----------------
 abcCallGenotypes.cpp:
 
@@ -215,7 +223,8 @@ abcHetPlas.cpp:
 	-minLRT=-1.000000
 		->"toRadPOST/farionis.arg"
 		->"toRadPOST/farionis.mafs.gz"
+		->"toRadPOST/farionis.hwe.gz"
 		->"toRadPOST/farionis.geno.gz"
 
-	[ALL done] cpu-time used =  8751.44 sec
-	[ALL done] walltime used =  168272.00 sec
+	[ALL done] cpu-time used =  8952.20 sec
+	[ALL done] walltime used =  168299.00 sec
