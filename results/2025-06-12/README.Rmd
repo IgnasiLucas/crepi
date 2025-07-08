@@ -1,0 +1,757 @@
+---
+title: "Population parameters"
+author: "J. Ignacio Lucas Lledó"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+The estimation of population parameters (basically, nucleotide diversity
+and inbreeding) is complex, and I became entangled in a previous folder.
+I will try to streamline the process and get conclusions. The plan is:
+
+0. Explore the relationship between allele frequency and HWE *p*-value,
+in order to set a reasonable threshold not biasing the SFS.
+1. Re-estimate SFS for the two populations and for every individual,
+from both alignments, to the reference and to the RAD loci.
+3. Estimate individual-level of inbreeding.
+4. Estimate relatedness among individuals.
+2. Maybe estimate error rates for the two populations [@Kim2011], and for the
+two types of input data.
+
+## Preparing data
+
+```{bash}
+RADBAM=../2024-10-04/BAM
+REFBAM=../2023-05-18/BAM
+RADREF=../2024-10-04/radloci.fa
+REFREF=../2023-05-15/assembly.fasta
+
+if [ ! -d ref ]; then mkdir ref; fi
+if [ ! -d rad ]; then mkdir rad; fi
+
+if [ ! -e farionis.txt ]; then
+   gawk '((NR > 1) && ($3 > 0.95) && ($1 ~ /^L/)){
+      print $1
+   }' ../2024-10-05/summary.txt | sort > farionis.txt
+fi
+if [ ! -e pseudofarionis.txt ]; then
+   gawk '((NR > 1) && ($2 > 0.95) && ($1 ~ /^S/)){
+      print $1
+   }' ../2024-10-05/summary.txt | sort > pseudofarionis.txt
+fi
+if [ ! -e admixed.txt ]; then
+   gawk '((NR > 1) && ($2 < 0.95) && ($3 < 0.95)){
+      print $1
+   }' ../2024-10-05/summary.txt | sort > admixed.txt
+fi
+if [ ! -e uncertain.txt ]; then
+   # Includes samples from Bienne, but also individuals without
+   # enough data.
+   find $REFBAM -name '*.bam' | \
+   grep -v -F -f farionis.txt | \
+   grep -v -F -f pseudofarionis.txt | \
+   grep -v -F -f admixed.txt | \
+   xargs basename -s .bam > uncertain.txt
+   
+   find $RADBAM -name '*.bam' | \
+   grep -v -F -f others.txt | \
+   xargs basename -s .bam > z.txt
+   
+   if [ ! -s z.txt ]; then cat z.txt >> uncertain.txt; fi
+   if [ -e z.txt ]; then rm z.txt; fi
+fi
+
+for pop in farionis pseudofarionis admixed; do
+   if [ ! -e ref/$pop.list ]; then
+      find $REFBAM -name '*.bam' | grep -f $pop.txt | sort > ref/$pop.list
+   fi
+   if [ ! -e rad/$pop.list ]; then
+      find $RADBAM -name '*.bam' | grep -f $pop.txt | sort > rad/$pop.list
+   fi
+done
+
+if [ ! -d ref/SFS ]; then mkdir ref/SFS; fi
+if [ ! -d rad/SFS ]; then mkdir rad/SFS; fi
+if [ ! -d ref/SFS/unfiltered ]; then mkdir ref/SFS/unfiltered; fi
+if [ ! -d rad/SFS/unfiltered ]; then mkdir rad/SFS/unfiltered; fi
+# No need of SFS for the admixed
+for pop in farionis pseudofarionis; do
+   if [ ! -e ref/SFS/unfiltered/$pop.saf.idx ]; then
+      angsd -b ref/$pop.list \
+            -anc $REFREF \
+            -ref $REFREF \
+            -out ref/SFS/unfiltered/$pop \
+            -doGlf 1 \
+            -GL 1 \
+            -doSaf 1 \
+            -doHWE 1 \
+            -doMajorMinor 1 \
+            -minmapQ 30 \
+            -minQ 20 \
+            -only_proper_pairs 1 \
+            -baq 1 \
+            -minInd $(( $(cat ref/$pop.list | wc -l) * 4 / 5 )) \
+            -setMinDepthInd 4 \
+            -nThreads 8 1> ref/SFS/unfiltered/$pop.log \
+            2> ref/SFS/unfiltered/$pop.err &
+   fi
+   if [ ! -e rad/SFS/unfiltered/$pop.saf.idx ]; then
+      angsd -b rad/$pop.list \
+            -anc $RADREF \
+            -ref $RADREF \
+            -out rad/SFS/unfiltered/$pop \
+            -doGlf 1 \
+            -GL 1 \
+            -doSaf 1 \
+            -doHWE 1 \
+            -doMajorMinor 1 \
+            -minmapQ 30 \
+            -minQ 20 \
+            -only_proper_pairs 1 \
+            -baq 1 \
+            -minInd $(( $(cat rad/$pop.list | wc -l) * 4 / 5 )) \
+            -setMinDepthInd 4 \
+            -nThreads 8 1> rad/SFS/unfiltered/$pop.log \
+            2> rad/SFS/unfiltered/$pop.err &
+   fi
+done
+wait
+
+for pop in farionis pseudofarionis; do
+   if [ ! -e ref/SFS/unfiltered/$pop.sfs ]; then
+      realSFS -fold 1 ref/SFS/unfiltered/$pop.saf.idx \
+              1> ref/SFS/unfiltered/$pop.sfs \
+              2> ref/SFS/unfiltered/$pop.sfs.err &
+   fi
+
+   if [ ! -e rad/SFS/unfiltered/$pop.sfs ]; then
+      realSFS -fold 1 rad/SFS/unfiltered/$pop.saf.idx \
+              1> rad/SFS/unfiltered/$pop.sfs \
+              2> rad/SFS/unfiltered/$pop.sfs.err &
+   fi
+done
+wait
+```
+
+```{r}
+library(ggplot2)
+minMAF <- 0.01
+ref.pse <- read.table('ref/SFS/unfiltered/pseudofarionis.hwe.gz',
+                      header = TRUE)
+ref.far <- read.table('ref/SFS/unfiltered/farionis.hwe.gz',
+                      header = TRUE)
+rad.pse <- read.table('rad/SFS/unfiltered/pseudofarionis.hwe.gz',
+                      header = TRUE)
+rad.far <- read.table('rad/SFS/unfiltered/farionis.hwe.gz',
+                      header = TRUE)
+
+ plot(density(ref.pse[ref.pse$Freq >= minMAF, 'Freq']), lty = 2, col = 'red')
+lines(density(ref.far[ref.far$Freq >= minMAF, 'Freq']), lty = 2, col = 'darkgreen')
+lines(density(rad.pse[rad.pse$Freq >= minMAF, 'Freq']), lty = 1, col = 'red')
+lines(density(rad.far[rad.far$Freq >= minMAF, 'Freq']), lty = 1, col = 'darkgreen')
+legend(0.2, 12, c('C. pseudofarionis, ref.',
+                  'C. farionis, reference',
+                  'C. pseudofarionis, RAD',
+                  'C. farionis, RAD'),
+       lty = c(2, 2, 1, 1),
+       col = c('red', 'darkgreen', 'red', 'darkgreen'))
+
+f <- ref.pse$Freq > 0.45 & ref.pse$F < -0.995
+ggplot(ref.pse[f,], aes(x = Freq, y = LRT, color = F)) + geom_point()
+f <- ref.far$Freq > 0.45 & ref.far$F < -0.995
+ggplot(ref.far[f,], aes(x = Freq, y = LRT, color = F)) + geom_point()
+f <- rad.pse$Freq > 0.45 & rad.pse$F < -0.995
+ggplot(rad.pse[f,], aes(x = Freq, y = LRT, color = F)) + geom_point()
+f <- rad.far$Freq > 0.45 & rad.far$F < -0.995
+ggplot(rad.far[f,], aes(x = Freq, y = LRT, color = F)) + geom_point()
+```
+
+Apparently, the excess of 50%-frequency sites is caused by the only
+sites having the minimum (negative, close to -1) inbreeding coefficient
+in all data sets. This confirms that that the excess of such anomalous
+sites can be removed by a more specific filter than just setting a
+*p*-value threshold. I can identify and remove those sites by their
+extreme $F$ value, for example.
+
+```{r}
+if (! file.exists('ref/SFS/unfiltered/pseudofarionis.sites.txt')) {
+   write.table(ref.pse[ref.pse$F > min(ref.pse$F), c('Chromo', 'Position')],
+               file = 'ref/SFS/unfiltered/pseudofarionis.sites.txt', sep = '\t',
+               quote = FALSE, row.names = FALSE, col.names = FALSE)
+}
+if (! file.exists('ref/SFS/unfiltered/farionis.sites.txt')) {
+   write.table(ref.far[ref.far$F > min(ref.far$F), c('Chromo', 'Position')],
+               file = 'ref/SFS/unfiltered/farionis.sites.txt', sep = '\t',
+               quote = FALSE, row.names = FALSE, col.names = FALSE)
+}
+if (! file.exists('rad/SFS/unfiltered/pseudofarionis.sites.txt')) {
+   write.table(rad.pse[rad.pse$F > min(rad.pse$F), c('Chromo', 'Position')],
+               file = 'rad/SFS/unfiltered/pseudofarionis.sites.txt', sep = '\t',
+               quote = FALSE, row.names = FALSE, col.names = FALSE)
+}
+if (! file.exists('rad/SFS/unfiltered/farionis.sites.txt')) {
+   write.table(rad.far[rad.far$F > min(rad.far$F), c('Chromo', 'Position')],
+               file = 'rad/SFS/unfiltered/farionis.sites.txt', sep = '\t',
+               quote = FALSE, row.names = FALSE, col.names = FALSE)
+}
+```
+
+```{bash}
+if [ ! -e ref/SFS/unfiltered/pseudofarionis.sites.txt.idx ]; then
+   angsd sites index ref/SFS/unfiltered/pseudofarionis.sites.txt \
+   2>&1 > ref/SFS/unfiltered/pseudofarionis.sites.err
+fi
+if [ ! -e ref/SFS/unfiltered/farionis.sites.txt.idx ]; then
+   angsd sites index ref/SFS/unfiltered/farionis.sites.txt \
+   2>&1 > ref/SFS/unfiltered/farionis.sites.err
+fi
+if [ ! -e rad/SFS/unfiltered/pseudofarionis.sites.txt.idx ]; then
+   angsd sites index rad/SFS/unfiltered/pseudofarionis.sites.txt \
+   2>&1 > rad/SFS/unfiltered/pseudofarionis.sites.err
+fi
+if [ ! -e rad/SFS/unfiltered/farionis.sites.txt.idx ]; then
+   angsd sites index rad/SFS/unfiltered/farionis.sites.txt \
+   2>&1 > rad/SFS/unfiltered/farionis.sites.err
+fi
+
+if [ ! -e ref/SFS/unfiltered/pseudofarionis.chr.txt ]; then
+   cut -f 1 ref/SFS/unfiltered/pseudofarionis.sites.txt | sort | \
+   uniq > ref/SFS/unfiltered/pseudofarionis.chr.txt
+fi
+
+if [ ! -e ref/SFS/unfiltered/farionis.chr.txt ]; then
+   cut -f 1 ref/SFS/unfiltered/farionis.sites.txt | sort | \
+   uniq > ref/SFS/unfiltered/farionis.chr.txt
+fi
+
+if [ ! -e rad/SFS/unfiltered/pseudofarionis.chr.txt ]; then
+   cut -f 1 rad/SFS/unfiltered/pseudofarionis.sites.txt | sort | \
+   uniq > rad/SFS/unfiltered/pseudofarionis.chr.txt
+fi
+
+if [ ! -e rad/SFS/unfiltered/farionis.chr.txt ]; then
+   cut -f 1 rad/SFS/unfiltered/farionis.sites.txt | sort | \
+   uniq > rad/SFS/unfiltered/farionis.chr.txt
+fi
+```
+
+```{bash}
+RADBAM=../2024-10-04/BAM
+REFBAM=../2023-05-18/BAM
+RADREF=../2024-10-04/radloci.fa
+REFREF=../2023-05-15/assembly.fasta
+
+# No need of SFS for the admixed
+for pop in farionis pseudofarionis; do
+   if [ ! -e ref/SFS/$pop.saf.idx ]; then
+      angsd -b ref/$pop.list \
+            -anc $REFREF \
+            -ref $REFREF \
+            -rf    ref/SFS/unfiltered/$pop.chr.txt \
+            -sites ref/SFS/unfiltered/$pop.sites.txt \
+            -out ref/SFS/$pop \
+            -doGlf 1 \
+            -GL 1 \
+            -doSaf 1 \
+            -doMajorMinor 1 \
+            -minmapQ 30 \
+            -minQ 30 \
+            -only_proper_pairs 1 \
+            -baq 1 \
+            -minInd $(( $(cat ref/$pop.list | wc -l) * 4 / 5 )) \
+            -setMinDepthInd 4 \
+            -nThreads 8 1> ref/SFS/$pop.log \
+            2> ref/SFS/$pop.err &
+   fi
+   if [ ! -e rad/SFS/$pop.saf.idx ]; then
+      angsd -b rad/$pop.list \
+            -anc $RADREF \
+            -ref $RADREF \
+            -rf    rad/SFS/unfiltered/$pop.chr.txt \
+            -sites rad/SFS/unfiltered/$pop.sites.txt \
+            -out rad/SFS/$pop \
+            -doGlf 1 \
+            -GL 1 \
+            -doSaf 1 \
+            -doMajorMinor 1 \
+            -minmapQ 30 \
+            -minQ 30 \
+            -only_proper_pairs 1 \
+            -baq 1 \
+            -minInd $(( $(cat rad/$pop.list | wc -l) * 4 / 5 )) \
+            -setMinDepthInd 4 \
+            -nThreads 8 1> rad/SFS/$pop.log \
+            2> rad/SFS/$pop.err &
+   fi
+done
+wait
+
+for pop in farionis pseudofarionis; do
+   if [ ! -e ref/SFS/$pop.sfs ]; then
+      realSFS -fold 1 ref/SFS/$pop.saf.idx \
+      1> ref/SFS/$pop.sfs 2> ref/SFS/$pop.sfs.err &
+   fi
+
+   if [ ! -e rad/SFS/$pop.sfs ]; then
+      realSFS -fold 1 rad/SFS/$pop.saf.idx \
+      1> rad/SFS/$pop.sfs 2> rad/SFS/$pop.sfs.err &
+   fi
+done
+wait
+```
+
+# Nucleotide diversity
+
+```{r, fig.width=10, fig.height=10}
+PiTajima <- function(x, folded = TRUE){
+   n <- length(x) - 1  # the SFS includes invariable sites and, if folded, 0 values for i > n/2
+   a <- 1:(n/2)
+   Theta <- (2/(n * (n-1))) * sum(x[2:(n/2 + 1)] * a * (n - a)) / sum(x)
+   return(Theta)
+}
+PiWatterson <- function(x, folded = TRUE){
+   n <- length(x) - 1
+   a <- sum(1/(1:(n-1)))
+   Theta <- sum(x[-1]) / (a * sum(x))
+   return(Theta)
+}
+
+# SFS data and calculations
+far.ref <- scan('ref/SFS/farionis.sfs', quiet = TRUE)
+far.n <- (length(far.ref) - 1) / 2
+far.ref.pi.T <- PiTajima(far.ref)
+far.ref.pi.W <- PiWatterson(far.ref)
+
+far.rad <- scan('rad/SFS/farionis.sfs', quiet = TRUE)
+far.rad.pi.T <- PiTajima(far.rad)
+far.rad.pi.W <- PiWatterson(far.rad)
+
+
+pse.ref <- scan('ref/SFS/pseudofarionis.sfs', quiet = TRUE)
+pse.n <- (length(pse.ref) - 1) / 2
+pse.ref.pi.T <- PiTajima(pse.ref)
+pse.ref.pi.W <- PiWatterson(pse.ref)
+
+pse.rad <- scan('rad/SFS/pseudofarionis.sfs', quiet = TRUE)
+pse.rad.pi.T <- PiTajima(pse.rad)
+pse.rad.pi.W <- PiWatterson(pse.rad)
+
+# Plotting
+par(mfrow = c(2, 2))
+plot(c(0, far.n), c(0, 0.05), type = 'n', xlab = '', ylab = '', axes = FALSE,
+     main = 'C. farionis, Ref alignments')
+barplot(far.ref / sum(far.ref), add = TRUE, space = 0)
+text(2 * far.n / 3, 0.040,
+     bquote(pi[T]==.(far.ref.pi.T)))
+text(2 * far.n / 3, 0.035,
+     bquote(pi[W]==.(far.ref.pi.W)))
+
+plot(c(0, pse.n), c(0, 0.05), type = 'n', xlab = '', ylab = '', axes = FALSE,
+     main = 'C. pseudofarionis, Ref alignments')
+barplot(pse.ref[1:(pse.n + 1)] / sum(pse.ref), add = TRUE, space = 0)
+text(2 * pse.n / 3, 0.040,
+     bquote(pi[T]==.(pse.ref.pi.T)))
+text(2 * pse.n / 3, 0.035,
+     bquote(pi[W]==.(pse.ref.pi.W)))
+
+plot(c(0, far.n), c(0, 0.05), type = 'n', xlab = '', ylab = '', axes = FALSE,
+     main = 'C. farionis, RAD loci')
+barplot(far.rad[1:(far.n + 1)] / sum(far.rad), add = TRUE, space = 0)
+text(2 * far.n / 3, 0.040,
+     bquote(pi[T]==.(far.rad.pi.T)))
+text(2 * far.n / 3, 0.035,
+     bquote(pi[W]==.(far.rad.pi.W)))
+
+plot(c(0, pse.n), c(0, 0.05), type = 'n', xlab = '', ylab = '', axes = FALSE,
+     main = 'C. pseudofarionis, RAD loci')
+barplot(pse.rad[1:(pse.n + 1)] / sum(pse.rad), add = TRUE, space = 0)
+text(2 * pse.n / 3, 0.040,
+     bquote(pi[T]==.(pse.rad.pi.T)))
+text(2 * pse.n / 3, 0.035,
+     bquote(pi[W]==.(pse.rad.pi.W)))
+```
+
+Watterson estimates of nucleotide diversity are slightly higher in both
+populations. This suggests an excess of low frequency variants,
+especially in *C. farionis*, despite an apparent bias against singletons.
+An excess of low frequency variants is indicative of population
+expansion.
+
+# Individual heterozygosity
+We can estimate heterozygosity of all individuals, including the
+admixed ones, or the ones for which we have less data. It may make
+sense to use a common subset of sites. For example, the sites that
+are valid in both populations.
+
+```{bash}
+RADBAM=../2024-10-04/BAM
+REFBAM=../2023-05-18/BAM
+RADREF=../2024-10-04/radloci.fa
+REFREF=../2023-05-15/assembly.fasta
+
+if [ ! -d ref/indH ]; then mkdir ref/indH; fi
+if [ ! -d rad/indH ]; then mkdir rad/indH; fi
+
+if [ ! -e ref/indH/goodchr.txt ]; then
+   if [ ! -e ref/indH/sites.txt.idx ]; then
+      if [ ! -e ref/indH/sites.txt ]; then
+         cat ref/SFS/unfiltered/pseudofarionis.sites.txt \
+             ref/SFS/unfiltered/farionis.sites.txt | \
+         gawk -v OFS="\t" '{
+            F[$0]++
+            if (F[$0] == 2) print $0
+         }' > ref/indH/sites.txt
+      fi
+      angsd sites index ref/indH/sites.txt \
+            2>&1 > ref/indH/sites.err
+   fi
+   cut -f 1 ref/indH/sites.txt | sort | uniq > ref/indH/goodchr.txt
+fi
+if [ ! -e rad/indH/goodchr.txt ]; then
+   if [ ! -e rad/indH/sites.txt.idx ]; then
+      if [ ! -e rad/indH/sites.txt ]; then
+         cat rad/SFS/unfiltered/pseudofarionis.sites.txt \
+             rad/SFS/unfiltered/farionis.sites.txt | \
+         gawk -v OFS="\t" '{
+            F[$0]++
+            if (F[$0] == 2) print $0
+         }' > rad/indH/sites.txt
+      fi
+      angsd sites index rad/indH/sites.txt \
+      2>&1 > rad/indH/sites.err
+   fi
+   cut -f 1 rad/indH/sites.txt | sort | uniq > rad/indH/goodchr.txt
+fi
+
+if [ ! -e ref/indH/samples.txt ]; then
+   find $REFBAM -name '*.bam' | xargs basename -s .bam > ref/indH/samples.txt
+fi
+if [ ! -e rad/indH/samples.txt ]; then
+   find $RADBAM -name '*.bam' | xargs basename -s .bam > rad/indH/samples.txt
+fi
+
+split -l 16 -d ref/indH/samples.txt ref/indH/batch
+for batch in $(ls -1 ref/indH/batch*); do
+   for i in $(cat $batch); do
+      if [ ! -e ref/indH/$i.saf.idx ]; then
+         echo $REFBAM/$i.bam > ref/indH/$i.list
+         angsd -bam ref/indH/$i.list \
+               -anc $REFREF \
+               -ref $REFREF \
+               -out   ref/indH/$i \
+               -rf    ref/indH/goodchr.txt \
+               -sites ref/indH/sites.txt \
+               -doGlf 1 \
+               -GL 1 \
+               -doSaf 1 \
+               -minmapQ 30 \
+               -minQ 30 \
+               -only_proper_pairs 1 \
+               -baq 1 \
+               -setMinDepthInd 4 \
+               -nThreads 2 \
+               2>&1 > ref/indH/$i.err &
+      fi
+   done
+   wait
+done
+
+for batch in $(ls -1 ref/indH/batch*); do
+   for i in $(cat $batch); do
+      if [ ! -e ref/indH/$i.sfs ]; then
+         realSFS -fold 1 ref/indH/$i.saf.idx 1> ref/indH/$i.sfs 2>> ref/indH/$i.err &
+      fi
+   done
+   wait
+done
+
+find ref/indH -name 'batch*' -delete
+find ref/indH -name '*.list' -delete
+
+split -l 16 -d rad/indH/samples.txt rad/indH/batch
+for batch in $(ls -1 rad/indH/batch*); do
+   for i in $(cat $batch); do
+      if [ ! -e rad/indH/$i.saf.idx ]; then
+         echo $RADBAM/$i.bam > rad/indH/$i.list
+         angsd -bam rad/indH/$i.list \
+               -anc $RADREF \
+               -ref $RADREF \
+               -out   rad/indH/$i \
+               -rf    rad/indH/goodchr.txt \
+               -sites rad/indH/sites.txt \
+               -doGlf 1 \
+               -GL 1 \
+               -doSaf 1 \
+               -minmapQ 30 \
+               -minQ 30 \
+               -only_proper_pairs 1 \
+               -baq 1 \
+               -setMinDepthInd 4 \
+               -nThreads 2 \
+               2>&1 > rad/indH/$i.err &
+      fi
+   done
+   wait
+done
+
+for batch in $(ls -1 rad/indH/batch*); do
+   for i in $(cat $batch); do
+      if [ ! -e rad/indH/$i.sfs ]; then
+         realSFS -fold 1 rad/indH/$i.saf.idx 1> rad/indH/$i.sfs 2>> rad/indH/$i.err &
+      fi
+   done
+   wait
+done
+
+find rad/indH -name 'batch*' -delete
+find rad/indH -name '*.list' -delete
+
+if [ ! -e summary_indH.txt ]; then
+   echo -e "Ind\tPop\tAssembly\tHomo\tHetero\tTotal\tH" > summary_indH.txt
+   for i in $(cat farionis.txt); do
+      gawk -v SAMPLE=$i '{
+         TOT = $1 + $2 + $3
+         print SAMPLE "\tC.farionis\tReference\t" $1 "\t" $2 "\t" TOT "\t" $2 / TOT 
+      }' ref/indH/$i.sfs >> summary_indH.txt
+      gawk -v SAMPLE=$i '{
+         TOT = $1 + $2 + $3
+         print SAMPLE "\tC.farionis\tRAD_loci\t" $1 "\t" $2 "\t" TOT "\t" $2 / TOT
+      }' rad/indH/$i.sfs >> summary_indH.txt
+   done
+   for i in $(cat pseudofarionis.txt); do
+      gawk -v SAMPLE=$i '{
+         TOT = $1 + $2 + $3
+         print SAMPLE "\tC.pseudofarionis\tReference\t" $1 "\t" $2 "\t" TOT "\t" $2 / TOT 
+      }' ref/indH/$i.sfs >> summary_indH.txt
+      gawk -v SAMPLE=$i '{
+         TOT = $1 + $2 + $3
+         print SAMPLE "\tC.pseudofarionis\tRAD_loci\t" $1 "\t" $2 "\t" TOT "\t" $2 / TOT
+      }' rad/indH/$i.sfs >> summary_indH.txt
+   done
+   for i in $(cat admixed.txt); do
+      gawk -v SAMPLE=$i '{
+         TOT = $1 + $2 + $3
+         print SAMPLE "\tAdmixed\tReference\t" $1 "\t" $2 "\t" TOT "\t" $2 / TOT 
+      }' ref/indH/$i.sfs >> summary_indH.txt
+      gawk -v SAMPLE=$i '{
+         TOT = $1 + $2 + $3
+         print SAMPLE "\tAdmixed\tRAD_loci\t" $1 "\t" $2 "\t" TOT "\t" $2 / TOT
+      }' rad/indH/$i.sfs >> summary_indH.txt
+   done
+   for i in $(cat uncertain.txt); do
+      gawk -v SAMPLE=$i '{
+         TOT = $1 + $2 + $3
+         print SAMPLE "\tUncertain\tReference\t" $1 "\t" $2 "\t" TOT "\t" $2 / TOT 
+      }' ref/indH/$i.sfs >> summary_indH.txt
+      gawk -v SAMPLE=$i '{
+         TOT = $1 + $2 + $3
+         print SAMPLE "\tUncertain\tRAD_loci\t" $1 "\t" $2 "\t" TOT "\t" $2 / TOT
+      }' rad/indH/$i.sfs >> summary_indH.txt
+   done
+fi
+```
+
+```{r}
+library(tidyr)
+library(kableExtra)
+indH <- read.table('summary_indH.txt', header = TRUE)
+onlyH <- pivot_wider(
+   indH[, c('Ind', 'Pop', 'Assembly', 'H')],
+   id_cols = c(1, 2),
+   names_from = 'Assembly',
+   values_from = 'H'
+)
+class(onlyH) <- 'data.frame'
+ggplot(onlyH, aes(x = Reference, y = RAD_loci, color = Pop)) +
+   geom_point() + geom_abline(slope = 1, intercept = 0)
+f <- onlyH$Pop %in% c('C.farionis', 'C.pseudofarionis')
+ggplot(onlyH[f,], aes(x = Reference, y = RAD_loci)) +
+   geom_point() + geom_smooth(method = 'lm') +
+   geom_abline(intercept = 0, slope = 1)
+
+summaryH <- data.frame(
+   Population = rep(c('C. pseudofarionis', 'C. farionis'), each = 2),
+   Assembly   = rep(c('Reference', 'RAD loci'), 2),
+   MeanIndH   = c(mean(onlyH[onlyH$Pop == 'C.pseudofarionis', 'Reference']),
+                  mean(onlyH[onlyH$Pop == 'C.pseudofarionis', 'RAD_loci']),
+                  mean(onlyH[onlyH$Pop == 'C.farionis', 'Reference']),
+                  mean(onlyH[onlyH$Pop == 'C.farionis', 'RAD_loci'])),
+   Tajima     = c(pse.ref.pi.T, pse.rad.pi.T, far.ref.pi.T, far.rad.pi.T),
+   Watterson  = c(pse.ref.pi.W, pse.rad.pi.W, far.ref.pi.W, far.rad.pi.W)
+)
+kable(summaryH) %>% kable_styling()
+```
+
+Individual levels of heterozygosity are estimated a bit higher when
+using the genome reference than when using RAD loci. No
+idea why. At least, the correlation is good. Surprisingly,
+*C. pseudofarionis* individuals seem to be more heterozygous than
+*C. farionis* ones, despite the two populations having very similar
+population-wide nucleotide diversities. This suggests *C. farionis*
+may be more inbred.
+
+Admixed individuals are estimated to be between 62 and 64% of
+*C. pseudofarionis* ancestry, and I expected them to be significantly
+more heterozygous than other *C. pseudofarionis* individuals. But
+it is not the case. 
+
+## Individual inbreeding coefficients
+
+```{bash}
+RADBAM=../2024-10-04/BAM
+REFBAM=../2023-05-18/BAM
+RADREF=../2024-10-04/radloci.fa
+REFREF=../2023-05-15/assembly.fasta
+
+if [ ! -d ref/F ]; then mkdir ref/F; fi
+if [ ! -d rad/F ]; then mkdir rad/F; fi
+
+if [ ! -e ref/F/all.F ]; then
+   if [ ! -e ref/F/all.glf ]; then
+      if [ ! -e ref/F/all.list ]; then
+         find $REFBAM -name '*.bam' > ref/F/all.list
+      fi
+      if [ ! -e ref/F/all.glf.gz ]; then
+         angsd -b ref/F/all.list \
+               -ref $REFREF \
+               -rf ref/indH/goodchr.txt \
+               -sites ref/indH/sites.txt \
+               -out ref/F/all \
+               -doGlf 3 \
+               -GL 1 \
+               -doMajorMinor 1 \
+               -minmapQ 30 \
+               -minQ 30 \
+               -only_proper_pairs 1 \
+               -baq 1 \
+               -minInd 77 \
+               -setMinDepthInd 4 \
+               -nThreads 8 2> ref/F/all.err
+      fi
+      gunzip ref/F/all.glf.gz
+   fi
+   NSITES=$(tail -n 50 ref/F/all.err | grep "retained after filtering:" | gawk '{print $NF}')
+   ngsF --n_ind $(cat ref/F/all.list | wc -l) \
+        --n_sites $NSITES \
+        --glf ref/F/all.glf \
+        --out ref/F/all.F
+fi
+
+if [ ! -e rad/F/all.F ]; then
+   if [ ! -e rad/F/all.glf ]; then
+      if [ ! -e rad/F/all.list ]; then
+         find $RADBAM -name '*.bam' > rad/F/all.list
+      fi
+      if [ ! -e rad/F/all.glf.gz ]; then
+         angsd -b rad/F/all.list \
+               -ref $RADREF \
+               -rf rad/indH/goodchr.txt \
+               -sites rad/indH/sites.txt \
+               -out rad/F/all \
+               -doGlf 3 \
+               -GL 1 \
+               -doMajorMinor 1 \
+               -minmapQ 30 \
+               -minQ 30 \
+               -only_proper_pairs 1 \
+               -baq 1 \
+               -minInd 77 \
+               -setMinDepthInd 4 \
+               -nThreads 8 2> rad/F/all.err
+      fi
+      gunzip rad/F/all.glf.gz
+   fi
+   NSITES=$(tail -n 50 rad/F/all.err | grep "retained after filtering:" | gawk '{print $NF}')
+   ngsF --n_ind $(cat rad/F/all.list | wc -l) \
+        --n_sites $NSITES \
+        --glf rad/F/all.glf \
+        --out rad/F/all.F
+fi
+
+if [ ! -e summary_F.txt ]; then
+   echo -e "Ind\tPop\tAssembly\tF" > summary_F.txt
+   paste <(cat ref/F/all.list | xargs basename -s .bam) ref/F/all.F | \
+   grep -f pseudofarionis.txt | \
+   gawk '{
+      print $1 "\tC.pseudofarionis\tReference\t" $2
+   }' >> summary_F.txt
+   
+   paste <(cat ref/F/all.list | xargs basename -s .bam) ref/F/all.F | \
+   grep -f farionis.txt | \
+   gawk '{
+      print $1 "\tC.farionis\tReference\t" $2
+   }' >> summary_F.txt
+   
+   paste <(cat ref/F/all.list | xargs basename -s .bam) ref/F/all.F | \
+   grep -f admixed.txt | \
+   gawk '{
+      print $1 "\tAdmixed\tReference\t" $2
+   }' >> summary_F.txt
+   
+   paste <(cat ref/F/all.list | xargs basename -s .bam) ref/F/all.F | \
+   grep -f uncertain.txt | \
+   gawk '{
+      print $1 "\tUncertain\tReference\t" $2
+   }' >> summary_F.txt
+   
+   paste <(cat rad/F/all.list | xargs basename -s .bam) rad/F/all.F | \
+   grep -f pseudofarionis.txt | \
+   gawk '{
+      print $1 "\tC.pseudofarionis\tRAD_loci\t" $2
+   }' >> summary_F.txt
+   
+   paste <(cat rad/F/all.list | xargs basename -s .bam) rad/F/all.F | \
+   grep -f farionis.txt | \
+   gawk '{
+      print $1 "\tC.farionis\tRAD_loci\t" $2
+   }' >> summary_F.txt
+   
+   paste <(cat rad/F/all.list | xargs basename -s .bam) rad/F/all.F | \
+   grep -f admixed.txt | \
+   gawk '{
+      print $1 "\tAdmixed\tRAD_loci\t" $2
+   }' >> summary_F.txt
+   
+   paste <(cat rad/F/all.list | xargs basename -s .bam) rad/F/all.F | \
+   grep -f uncertain.txt | \
+   gawk '{
+      print $1 "\tUncertain\tRAD_loci\t" $2
+   }' >> summary_F.txt
+fi
+```
+
+```{r}
+F <- read.table('summary_F.txt', header = TRUE)
+Fwide <- pivot_wider(F, id_cols = c('Ind', 'Pop'),
+                     names_from = 'Assembly',
+                     values_from = 'F')
+class(Fwide) <- 'data.frame'
+f <- Fwide$Pop == 'Uncertain'
+kable(Fwide[f,]) %>% kable_styling()
+
+ggplot(Fwide[! f,], aes(x = Reference, y = RAD_loci, color = Pop)) +
+   geom_point() + geom_abline(slope = 1, intercept = 0)
+
+summaryH$F <- c(mean(Fwide[Fwide$Pop == 'C.pseudofarionis', 'Reference']),
+                mean(Fwide[Fwide$Pop == 'C.pseudofarionis', 'RAD_loci']),
+                mean(Fwide[Fwide$Pop == 'C.farionis', 'Reference']),
+                mean(Fwide[Fwide$Pop == 'C.farionis', 'RAD_loci']))
+kable(summaryH) %>% kable_styling()
+```
+
+As expected, *C. farionis* has higher levels of inbreeding, which
+explains the difference between average individual heterozygosities
+and population-level nucleotide diversities. Inbreeding is low, in
+any case, except for two individuals: T165Cxa and S031Cmc, which
+are suspected to belong to a third species (*C. metoecus*?), and
+have much fewer loci covered.
+
+```{r}
+sessionInfo()
+```
