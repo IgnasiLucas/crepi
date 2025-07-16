@@ -1,0 +1,19 @@
+Population_1	Population_2	Data	Method	Distance
+admixed	C. farionis	RAD loci	ADB	0.012633331545412
+admixed	C. farionis	RAD loci	DAD	0.00386580694782769
+admixed	C. farionis	RAD loci	KB	0.0118012401449687
+admixed	C. farionis	Reference	ADB	0.0136559467321301
+admixed	C. farionis	Reference	DAD	0.00469787534725164
+admixed	C. farionis	Reference	KB	0.0130478683497031
+admixed	C. pseudofarionis	RAD loci	ADB	0.0124134857849781
+admixed	C. pseudofarionis	RAD loci	DAD	0.00282924198744044
+admixed	C. pseudofarionis	RAD loci	KB	0.0111755026088125
+admixed	C. pseudofarionis	Reference	ADB	0.0130516953172347
+admixed	C. pseudofarionis	Reference	DAD	0.00333521283459026
+admixed	C. pseudofarionis	Reference	KB	0.0123454162818164
+C. farionis	C. pseudofarionis	RAD loci	ADB	0.0139813763098748
+C. farionis	C. pseudofarionis	RAD loci	DAD	0.00431353674899889
+C. farionis	C. pseudofarionis	RAD loci	KB	0.0138467661410609
+C. farionis	C. pseudofarionis	Reference	ADB	0.0155474350961037
+C. farionis	C. pseudofarionis	Reference	DAD	0.00579469438362444
+C. farionis	C. pseudofarionis	Reference	KB	0.0154258561669956

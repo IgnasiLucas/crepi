@@ -1,0 +1,13 @@
+Population Data Method Diversity
+admixed Reference ADW 0.00892181315504364
+admixed Reference KW 0.0119549774386328
+admixed RAD loci ADW 0.00868392883424608
+admixed RAD loci KW 0.0116043451117187
+C. farionis Reference ADW 0.00899432961471325
+C. farionis Reference KW 0.00940961625535256
+C. farionis RAD loci ADW 0.00885112036092249
+C. farionis RAD loci KW 0.00924863962983734
+C. pseudofarionis Reference ADW 0.0105111518102453
+C. pseudofarionis Reference KW 0.0110283206774771
+C. pseudofarionis RAD loci ADW 0.0104845587608293
+C. pseudofarionis RAD loci KW 0.0109369721792207

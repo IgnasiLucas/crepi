@@ -1,5 +1,12 @@
 (Note the inverse chronological order: more recent first)
 
+# 2025-07-09
+I follow @Kosman2024 to estimate the effective number of different
+populations (ENDP) among the individuals identified as *C. farionis* and
+*C. pseudofarionis*. It turns out that they are so similar genetically
+that ENDP is not larger than 1.01. I take this as strong support of the
+hypothesis of only one species.
+
 # 2025-07-03
 Attempt to understand better the data: what model fits our data better?
 What is the error rate? What quality thresholds are more reasonable?
