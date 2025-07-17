@@ -36,9 +36,10 @@ populations. Combined measures of diversity and dispersion constitute
 the effective numbers of *different* populations.
 
 # Measures of genetic distance
-Originally I attempted to use estimates of coancestry, obtained with
-`ngsrelate`. The coefficient of coancestry is defined as the
-probability of two homologous genes drawn from two individuals being
+The first thing we need is a measure of genetic dissimilarity between
+individuals. Originally I attempted to use estimates of coancestry,
+obtained with `ngsrelate`. The coefficient of coancestry is defined as
+the probability of two homologous genes drawn from two individuals being
 identical by descent, that is, by sharing a *recent* common ancestor
 rather than an old one. There are problems with this measure, and I
 move that analysis to the appendix. First, it rapidly goes to zero
@@ -61,7 +62,8 @@ namely: matching each allele in $A$ with it's most similar one in $B$, and
 adding up the differences. For diploids, $\delta_{\mathrm{min}}(A,B;j)$ is 0
 if the two genotypes are the same (even if both are heterozygous); 1, if one
 genotype is homozygous and the other heterozygous; and 2 if they are homozygous
-for different alleles. This would be the matrix of *costs*:
+for different alleles. For one diploid locus with two alleles, $n=1$ and $q=2$,
+and $\delta_{AB}$ would be like this:
 
 |    |  AA  |  Aa  |  aa  |
 | -- |:----:|:----:|:----:|
@@ -70,7 +72,7 @@ for different alleles. This would be the matrix of *costs*:
 | aa |  1.0 |  0.5 |  0.0 |
 
 In a probabilistic framework, we will use the `ibs` program, with
-`-model 0` option, which delivers the estimated probabilities of each of the 100
+`-model 0` option, which delivers the estimated percentages of each of the 100
 possible genotype combinations: AA_AA, AC_AA, AG_AA... GT_TT, and TT_TT between
 two individuals. Thus, grouping loci by combination of genotypes, we have:
 
@@ -78,7 +80,8 @@ $$
 \delta_{AB} = \frac{1}{q}\cdot \frac{\sum_{c=AA\_AA}^{TT\_TT}n_c\cdot \delta_{\mathrm{min}}(c)}{n} =\sum_{c=AA\_AA}^{TT\_TT}P(c)\cdot \frac{\delta_{\mathrm{min}}(c)}{q}
 $$
 
-Where $n_c$ is the number of loci with the same $c$ combination of genotypes, and
+Where $n_c$ is the number of loci with the same combination $c$ of genotypes,
+$P(c)$ is the frequency of the $c$ combination between those two individuals, and
 the summation is over the 100 possible genotype combinations. Note that genotypes
 are expressed in terms of actual nucleotides. I assume that `ibs` estimates the
 expected number of every combination of genotypes without having to infer what
@@ -187,8 +190,9 @@ true picture of how genetically different two individuals are.
 
 ```{r}
 library(ggplot2)
-# This uses %in% for the assignment, because the cost is 1
-# when the elements are different and 0 if they are the same.
+# I came up with the following way to calculate delta_min
+# between two genotypes in R. Seems to work. You can check
+# the result in "delta_dist.txt" file, generated below.
 # x and y are vectors of alleles in two q-ploid genotypes.
 # e.g.: delta.min(c('A','C'), c('G','G'))
 delta.min <- function(x, y) {
