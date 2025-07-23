@@ -38,6 +38,11 @@ Individual heterozygosities, in contrast, are clearly higher in *C. pseudofarion
 due to a 10 times higher inbreeding coefficient in *C. farionis*:
 between 0.003 and 0.004.
 
+The four individuals presumed to be admixed do not show significantly higher
+levels of heterozygosity, which is unexpected. I checked individual distributions
+of depth of coverage, and I confirm *admixed* individuals do not have lower
+depths of coverage.
+
 # 2025-04-08
 Failed attempt at estimating population parameters with ANGSD, from
 BAM files mapped to either the reference or the RAD loci. It failed

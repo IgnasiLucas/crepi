@@ -2,14 +2,17 @@
 title: "Population parameters"
 author: "J. Ignacio Lucas Lledó"
 date: "`r Sys.Date()`"
-output: html_document
+output:
+   html_document:
+      toc: true
+bibliography: ../../doc/references.bib
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Introduction
+# Introduction
 
 The estimation of population parameters (basically, nucleotide diversity
 and inbreeding) is complex, and I became entangled in a previous folder.
@@ -20,11 +23,11 @@ in order to set a reasonable threshold not biasing the SFS.
 1. Re-estimate SFS for the two populations and for every individual,
 from both alignments, to the reference and to the RAD loci.
 3. Estimate individual-level of inbreeding.
-4. Estimate relatedness among individuals.
+4. Estimate $F_{ST}$ again (it was done in `2024-10-10`).
 2. Maybe estimate error rates for the two populations [@Kim2011], and for the
 two types of input data.
 
-## Preparing data
+# Preparing data
 
 ```{bash}
 RADBAM=../2024-10-04/BAM
@@ -601,7 +604,7 @@ Admixed individuals are estimated to be between 62 and 64% of
 more heterozygous than other *C. pseudofarionis* individuals. But
 it is not the case. 
 
-## Individual inbreeding coefficients
+# Individual inbreeding coefficients
 
 ```{bash}
 RADBAM=../2024-10-04/BAM
@@ -752,6 +755,206 @@ any case, except for two individuals: T165Cxa and S031Cmc, which
 are suspected to belong to a third species (*C. metoecus*?), and
 have much fewer loci covered.
 
+# $F_{ST}$
+In `2024-10-10` we already estimated the $F_{ST}$ between *C. farionis*
+in Langfjordvatn and *C. pseudofarionis* in Suopatjavri: 0.125520. But
+the estimate was based on artificially truncated SFSs, produced with a
+hard HWE threshold. Here, we have selected sites more carefully, and it
+is worth estimating the $F_{ST}$ between the two species again.
+
+```{bash}
+if [ ! -e summary_FST.txt ]; then
+   for i in ref rad; do
+      if [ ! -d $i/FST ]; then mkdir $i/FST; fi
+      if [ ! -e $i/FST/farpse.fst.idx ]; then
+         if [ ! -e $i/FST/farpse.2dsfs.ml ]; then
+            realSFS -fold 1 \
+                    -cores 16 \
+                    $i/SFS/farionis.saf.idx \
+                    $i/SFS/pseudofarionis.saf.idx \
+                    1> $i/FST/farpse.2dsfs.ml \
+                    2> $i/FST/farpse.2dsfs.err 
+         fi
+         realSFS fst index $i/SFS/farionis.saf.idx \
+                           $i/SFS/pseudofarionis.saf.idx \
+                           -sfs $i/FST/farpse.2dsfs.ml \
+                           -fstout $i/FST/farpse \
+                           -whichFst 1 \
+                           -cores 16 \
+                           1> $i/FST/farpse.fst.log \
+                           2> $i/FST/farpse.fst.err
+      fi
+   done
+   echo -e "N.farionis\tN.pseudofarionis\tData\tFST.unweighted\tFST.weighted" > summary_FST.txt
+   for i in ref rad; do
+      NFar=$(cat $i/farionis.list | wc -l)
+      NPse=$(cat $i/pseudofarionis.list | wc -l)
+      echo -e "$NFar\t$NPse\t$i\t$(realSFS fst stats $i/FST/farpse.fst.idx 2> /dev/null)" >> summary_FST.txt
+   done
+fi
+```
+
+```{r, fig.width=5, fig.height=5}
+library(kableExtra)
+SFS2D.ref <- matrix(scan('ref/FST/farpse.2dsfs.ml', quiet = TRUE),
+                    ncol = 2 * length(scan('ref/pseudofarionis.list',
+                                           what = 'character',
+                                           quiet = TRUE)) + 1,
+                    nrow = 2 * length(scan('ref/farionis.list',
+                                           what = 'character',
+                                           quiet = TRUE)) + 1,
+                    byrow = TRUE)
+image(x = 0:(dim(SFS2D.ref)[1] - 1),
+      y = 0:(dim(SFS2D.ref)[2] - 1),
+      log(SFS2D.ref),
+      main = 'Reference',
+      xlab = 'C. farionis',
+      ylab = 'C. pseudofarionis')
+
+SFS2D.rad <- matrix(scan('rad/FST/farpse.2dsfs.ml', quiet = TRUE),
+                    ncol = 2 * length(scan('rad/pseudofarionis.list',
+                                           what = 'character',
+                                           quiet = TRUE)) + 1,
+                    nrow = 2 * length(scan('rad/farionis.list',
+                                           what = 'character',
+                                           quiet = TRUE)) + 1,
+                    byrow = TRUE)
+image(x = 0:(dim(SFS2D.rad)[1] - 1),
+      y = 0:(dim(SFS2D.rad)[2] - 1),
+      log(SFS2D.rad),
+      main = 'RAD loci',
+      xlab = 'C. farionis',
+      ylab = 'C. pseudofarionis')
+fst <- read.table('summary_FST.txt', header = TRUE)
+kable(fst) %>% kable_styling(full_width = FALSE)
+```
+
+# Individual depth of coverage
+I am surprised the four apparently admixed individuals do not have any excess
+of heterozygosity. I wonder if their ambiguous genetic make-up could be the
+result of missing data, rather true admixture. To get depth of coverage per
+individual also allows me to test for any correlation between depth of coverage
+and heterozygosity or inbreeding coefficient.
+
+```{bash}
+RADREF=../2024-10-04/radloci.fa
+REFREF=../2023-05-15/assembly.fasta
+
+for i in ref rad; do
+   if [ ! -d $i/depth ]; then mkdir $i/depth; fi
+   if [ $i == 'ref' ]; then
+      REF=$REFREF
+   else
+      REF=$RADREF
+   fi
+   for pop in admixed farionis pseudofarionis; do
+      if [ $pop == 'admixed' ]; then
+         RF=$i/indH/goodchr.txt
+         SITES=$i/indH/sites.txt
+      else
+         RF=$i/SFS/unfiltered/$pop.chr.txt
+         SITES=$i/SFS/unfiltered/$pop.sites.txt
+      fi
+      if [ ! -e $i/depth/$pop.depthSample ]; then
+         angsd -bam $i/$pop.list \
+               -ref $REF \
+               -rf    $RF \
+               -sites $SITES \
+               -out   $i/depth/$pop \
+               -doDepth 1 \
+               -doCounts 1 \
+               -maxDepth 1000 \
+               -minmapQ 30 \
+               -minQ 30 \
+               -only_proper_pairs 1 \
+               -baq 1 \
+               -nThreads 4 \
+               1> $i/depth/$pop.log \
+               2> $i/depth/$pop.err &
+      fi
+   done
+done
+wait
+```
+
+
+```{r}
+perSample.rad <- rbind(
+   matrix(scan('rad/depth/admixed.depthSample', quiet = TRUE),
+          ncol = 1001, byrow = TRUE),
+   matrix(scan('rad/depth/farionis.depthSample', quiet = TRUE),
+          ncol = 1001, byrow = TRUE),
+   matrix(scan('rad/depth/pseudofarionis.depthSample', quiet = TRUE),
+          ncol = 1001, byrow = TRUE)
+)
+perSample.ref <- rbind(
+   matrix(scan('ref/depth/admixed.depthSample', quiet = TRUE),
+          ncol = 1001, byrow = TRUE),
+   matrix(scan('ref/depth/farionis.depthSample', quiet = TRUE),
+          ncol = 1001, byrow = TRUE),
+   matrix(scan('ref/depth/pseudofarionis.depthSample', quiet = TRUE),
+          ncol = 1001, byrow = TRUE)
+)
+samples <- basename(c(
+   scan('rad/admixed.list',        what = 'character', quiet = TRUE),
+   scan('rad/farionis.list',       what = 'character', quiet = TRUE),
+   scan('rad/pseudofarionis.list', what = 'character', quiet = TRUE)
+))
+samples <- gsub('.bam', '', samples)
+row.names(perSample.rad) <- samples
+row.names(perSample.ref) <- samples
+pops <- c(rep('admixed',
+              length(scan('rad/admixed.list',
+                          what = 'character',
+                          quiet = TRUE))),
+          rep('farionis',
+              length(scan('rad/farionis.list',
+                          what = 'character',
+                          quiet = TRUE))),
+          rep('pseudofarionis',
+              length(scan('rad/pseudofarionis.list',
+                          what = 'character',
+                          quiet = TRUE))))
+pops <- factor(pops, levels = c('admixed', 'farionis', 'pseudofarionis'))
+
+# The total number of sites is different among populations,
+# because of the population-specific filtering, based on F.
+
+meanDepth.rad <- apply(perSample.rad, 1,
+                       function(x) sum(0:1000 * x) / sum(x))
+meanDepth.ref <- apply(perSample.ref, 1,
+                       function(x) sum(0:1000 * x) / sum(x))
+medianDepth.rad <- apply(perSample.rad, 1,
+                         function(x) which(cumsum(x) >= sum(x) / 2)[1])
+medianDepth.ref <- apply(perSample.ref, 1,
+                         function(x) which(cumsum(x) >= sum(x) / 2)[1])
+
+plot(as.numeric(pops) + rnorm(length(pops), 0, 0.1),
+     medianDepth.rad, axes = FALSE, xlab = '', ylab = 'Median depth', main = 'RAD loci')
+axis(1, at = 1:3, labels = levels(pops), tick = FALSE)
+axis(2)
+plot(as.numeric(pops) + rnorm(length(pops), 0, 0.1),
+     medianDepth.ref, axes = FALSE, xlab = '', ylab = 'Median depth', main = 'Reference')
+axis(1, at = 1:3, labels = levels(pops), tick = FALSE)
+axis(2)
+```
+
+The four admixed individuals do not have lower depth of coverage than the rest.
+
+```{r}
+indH <- read.table('summary_indH.txt', header = TRUE)
+indH$depth <- meanDepth.rad[indH$Ind]
+indH[indH$Assembly == 'Reference', 'depth'] <- medianDepth.ref[indH[indH$Assembly == 'Reference', 'Ind']]
+ggplot(data = indH, mapping = aes(x = depth, y = H, color = Pop)) + geom_point() + facet_wrap(~Assembly)
+```
+
+The covariation of individual heterozygosity with median coverage is not
+important.
+
+# Session information
+
 ```{r}
 sessionInfo()
 ```
+
+# References
