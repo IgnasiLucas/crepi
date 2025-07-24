@@ -8,10 +8,11 @@ that ENDP is not larger than 1.01. I take this as strong support of the
 hypothesis of only one species.
 
 # 2025-07-03
-Attempt to understand better the data: what model fits our data better?
-What is the error rate? What quality thresholds are more reasonable?
-It is late for all this, but I suspect some preliminar, descriptive
-analyses should have been the start point.
+Attempt to understand better the data and justify the thresholds
+of mapping quality, base quality and minimum coverage used with
+ANGSD. One thing is missing: maximum coverage. The last analysis
+in 2025-06-12 revealed a number of sites with much higher coverage
+than the rest. I suppose they should be filtered out.
 
 # 2025-06-12
 Repetition of 2025-04-08 with a better folder structure. Here, the

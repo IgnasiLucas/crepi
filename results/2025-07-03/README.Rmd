@@ -1,0 +1,372 @@
+---
+title: "Understanding the data"
+author: "J. Ignacio Lucas Lledó"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Mapping qualities
+From a few samples.
+
+```{bash}
+RADBAM=../2024-10-04/BAM
+REFBAM=../2023-05-18/BAM
+
+if [ ! -d MQ ]; then mkdir MQ; fi
+for pop in farionis pseudofarionis; do
+   if [ ! -e MQ/$pop.sample.txt ]; then
+      shuf ../2025-06-12/$pop.txt | head -n 5 > MQ/$pop.sample.txt
+   fi
+   if [ ! -e MQ/$pop.ref.mq.txt ]; then
+      if [ ! -e MQ/$pop.ref.tmp ]; then
+         for sample in $(cat MQ/$pop.sample.txt); do
+            samtools view $REFBAM/$sample.bam | cut -f 5 >> MQ/$pop.ref.tmp
+         done
+      fi
+      gawk '{F[$1]++}END{
+         for (f in F) print f "\t" F[f]
+      }' MQ/$pop.ref.tmp | sort -nk 1,1 > MQ/$pop.ref.mq.txt
+   fi
+   if [ ! -e MQ/$pop.rad.mq.txt ]; then
+      if [ ! -e MQ/$pop.rad.tmp ]; then
+         for sample in $(cat MQ/$pop.sample.txt); do
+            samtools view $RADBAM/$sample.bam | cut -f 5 >> MQ/$pop.rad.tmp
+         done
+      fi
+      gawk '{F[$1]++}END{
+         for (f in F) print f "\t" F[f]
+      }' MQ/$pop.rad.tmp | sort -nk 1,1 > MQ/$pop.rad.mq.txt
+   fi
+done
+find MQ -name '*.tmp' -delete
+```
+
+The assembly is 206254914 nucleotides long, while the RAD loci
+add up to 40586257 nucleotides. The number of reads mapped to
+the assembly is 130043732, and those mapped to the RAD loci are
+twice as many: 262739636. But, reads mapped to RAD loci were not
+filtered by mapping quality: many have low mapping quality.
+
+```{r}
+library(ggplot2)
+ref.pse <- read.table('MQ/pseudofarionis.ref.mq.txt',
+                      col.names = c('MQ', 'freq'))
+ref.pse$assembly <- 'ref'
+ref.pse$pop      <- 'C. pseudofarionis'
+ref.far <- read.table('MQ/farionis.ref.mq.txt',
+                      col.names = c('MQ', 'freq'))
+ref.far$assembly <- 'ref'
+ref.far$pop      <- 'C. farionis'
+rad.pse <- read.table('MQ/pseudofarionis.rad.mq.txt',
+                      col.names = c('MQ', 'freq'))
+rad.pse$assembly <- 'rad'
+rad.pse$pop      <- 'C. pseudofarionis'
+rad.far <- read.table('MQ/farionis.rad.mq.txt',
+                      col.names = c('MQ', 'freq'))
+rad.far$assembly <- 'rad'
+rad.far$pop      <- 'C. farionis'
+MQ <- rbind(ref.pse, ref.far, rad.pse, rad.far)
+plot(c(0, 60), range(MQ$freq), type = 'n',
+     xlab = 'MQ', ylab = 'Num. reads', ylim = c(0, 500000))
+lines(ref.pse$MQ, ref.pse$freq, col = 'darkred', lty = 1)
+lines(ref.far$MQ, ref.far$freq, col = 'darkgreen', lty = 1)
+lines(rad.pse$MQ, rad.pse$freq, col = 'darkred', lty = 2)
+lines(rad.far$MQ, rad.far$freq, col = 'darkgreen', lty = 2)
+legend(10, 500000, c('C. farionis, reference',
+                     'C. farionis, RAD loci',
+                     'C. pseudofarionis, ref.',
+                     'C. pseudofarionis, RAD'),
+       lty = c(1, 2, 1, 2), bty = 'n',
+       col = c('darkgreen', 'darkgreen', 'darkred', 'darkred'))
+```
+
+The number of reads mapped with high quality is still higher among
+mappings to the RAD loci than to the reference. Any threshold between
+20 and 30 seems appropriate.
+
+# Base quality distribution
+From only a few samples, I explore the distribuion of base qualities
+among reads mapped with quality of at least 30.
+
+```{bash}
+RADBAM=../2024-10-04/BAM
+REFBAM=../2023-05-18/BAM
+if [ ! -d BQ ]; then mkdir BQ; fi
+for pop in farionis pseudofarionis; do
+   if [ ! -e BQ/$pop.sample.txt ]; then
+      shuf ../2025-06-12/$pop.txt | head -n 5 > BQ/$pop.sample.txt
+   fi
+   if [ ! -e BQ/$pop.ref.bq.txt ]; then
+      if [ ! -e BQ/$pop.ref.tmp.txt ]; then
+         if [ ! -e BQ/$pop.ref.tmp.fq ]; then
+            for sample in $(cat BQ/$pop.sample.txt); do
+               samtools view -q 30 -u $REFBAM/$sample.bam | \
+               samtools fastq >> BQ/$pop.ref.tmp.fq
+            done
+         fi
+         vsearch --fastq_stats BQ/$pop.ref.tmp.fq \
+                 --log BQ/$pop.ref.tmp.txt
+      fi
+      gawk 'BEGIN{
+         ACTIVE = 0
+      }(/^Q score distribution$/){
+         ACTIVE = 1
+         next
+      }((ACTIVE == 1) && (/^[^-]/)){
+         if (NF == 6) {
+            print $0
+         } else {
+            ACTIVE = 0
+         }
+      }' BQ/$pop.ref.tmp.txt > BQ/$pop.ref.bq.txt
+   fi
+   if [ ! -e BQ/$pop.rad.bq.txt ]; then
+      if [ ! -e BQ/$pop.rad.tmp.txt ]; then
+         if [ ! -e BQ/$pop.rad.tmp.fq ]; then
+            for sample in $(cat BQ/$pop.sample.txt); do
+               samtools view -q 30 -u $RADBAM/$sample.bam | \
+               samtools fastq >> BQ/$pop.rad.tmp.fq
+            done
+         fi
+         vsearch --fastq_stats BQ/$pop.rad.tmp.fq \
+                 --log BQ/$pop.rad.tmp.txt
+      fi
+      gawk 'BEGIN{
+         ACTIVE = 0
+      }(/^Q score distribution$/){
+         ACTIVE = 1
+         next
+      }((ACTIVE == 1) && (/^[^-]/)){
+         if (NF == 6) {
+            print $0
+         } else {
+            ACTIVE = 0
+         }
+      }' BQ/$pop.rad.tmp.txt > BQ/$pop.rad.bq.txt
+   fi
+done
+find BQ -name '*.tmp.*' -delete
+```
+
+```{r}
+ref.pse <- read.table('BQ/pseudofarionis.ref.bq.txt',
+                      header = TRUE)
+ref.far <- read.table('BQ/farionis.ref.bq.txt',
+                      header = TRUE)
+rad.pse <- read.table('BQ/pseudofarionis.rad.bq.txt',
+                      header = TRUE)
+rad.far <- read.table('BQ/farionis.rad.bq.txt',
+                      header = TRUE)
+plot(c(11, 40), c(0, max(c(ref.pse$N, ref.far$N, rad.pse$N, rad.far$N))),
+     type = 'n', xlab = 'Base quality', ylab = 'Num. reads')
+lines(ref.pse$Q, ref.pse$N, col = 'darkred', lty = 1)
+lines(ref.far$Q, ref.far$N, col = 'darkgreen', lty = 1)
+lines(rad.pse$Q, rad.pse$N, col = 'darkred', lty = 2)
+lines(rad.far$Q, rad.far$N, col = 'darkgreen', lty = 2)
+legend(11, 3.0e+08, c('C. pseudofarionis, ref.',
+                      'C. farionis, reference',
+                      'C. pseudofarionis, RAD',
+                      'C. farionis, RAD loci'),
+       lty = c(1, 1, 2, 2),
+       col = c('darkred', 'darkgreen', 'darkred', 'darkgreen'))
+```
+
+A base quality threshold of 30 would be appropriate. Or even 35.
+
+# Coverage
+## Addequacy of thresholds
+
+```{bash}
+RADBAM=../2024-10-04/BAM
+REFBAM=../2023-05-18/BAM
+if [ ! -d COV ]; then mkdir COV; fi
+for pop in farionis pseudofarionis; do
+   if [ ! -e COV/$pop.ref.tmp ]; then
+      ls -1 $REFBAM/*.bam | grep -F -f ../2025-06-12/$pop.txt | \
+      xargs samtools depth -q 30 -Q 30 -o COV/$pop.ref.tmp
+   fi
+   if [ ! -e COV/$pop.rad.tmp ]; then
+      ls -1 $RADBAM/*.bam | grep -F -f ../2025-06-12/$pop.txt | \
+      xargs samtools depth -q 30 -Q 30 -o COV/$pop.rad.tmp
+   fi
+done
+```
+
+```{r}
+library(MetBrewer)
+library(ggplot2)
+paleta <- met.brewer('Hokusai2', n=6)
+minD <- 1:6
+
+# C. pseudofarionis, reference
+N <- length(scan('../2025-06-12/pseudofarionis.txt',
+                 what = 'character', quiet = TRUE))
+minN <- round(N / 2):(N - 1)
+if (file.exists('COV/pseudofarionis.ref.txt')) {
+   w <- read.table('COV/pseudofarionis.ref.txt')
+} else {
+   ref.pse <- read.table('COV/pseudofarionis.ref.tmp')
+   ref.pse <- as.matrix(ref.pse[, -c(1,2)])
+   w <- sapply(minD,
+               function(x) {
+                  sapply(minN,
+                         function(y, i = x) {
+                            sum(rowSums(ref.pse >= i) >= y)
+                         })
+               })
+   colnames(w)  <- as.character(minD)
+   row.names(w) <- as.character(minN)
+   write.table(w, file = 'COV/pseudofarionis.ref.txt')
+}
+
+plot(range(minN), range(w), type = 'n',
+     main = 'C. pseudofarionis, reference',
+     xlab = 'Min. num. individuals', ylab = 'Number of sites')
+for (i in 1:dim(w)[2]) {
+   lines(minN, w[,i], col = paleta[i], lwd=3)
+}
+abline(v = round(4 * N / 5), lty = 2, col = 'gray')
+```
+
+Lines correspond to different thresholds of minimum coverage per individual,
+between 1 and 6.
+
+```{r}
+# C. pseudofarionis, RAD loci
+if (file.exists('COV/pseudofarionis.rad.txt')) {
+   w <- read.table('COV/pseudofarionis.rad.txt')
+} else {
+   rad.pse <- read.table('COV/pseudofarionis.rad.tmp')
+   rad.pse <- as.matrix(rad.pse[, -c(1,2)])
+   w <- sapply(minD,
+               function(x) {
+                  sapply(minN,
+                         function(y, i = x) {
+                            sum(rowSums(rad.pse >= i) >= y)
+                         })
+               })
+   colnames(w)  <- as.character(minD)
+   row.names(w) <- as.character(minN)
+   write.table(w, file = 'COV/pseudofarionis.rad.txt')
+   # file.remove('COV/pseudofarionis.rad.tmp')
+}
+
+plot(range(minN), range(w), type = 'n',
+     main = 'C. pseudofarionis, RAD loci',
+     xlab = 'Min. num. individuals', ylab = 'Number of sites')
+for (i in 1:dim(w)[2]) {
+   lines(minN, w[,i], col = paleta[i], lwd=3)
+}
+abline(v = round(4 * N / 5), lty = 2, col = 'gray')
+
+# C. farionis, reference
+N <- length(scan('../2025-06-12/farionis.txt',
+                 what = 'character', quiet = TRUE))
+minN <- round(N / 2):(N - 1)
+if (file.exists('COV/farionis.ref.txt')) {
+   w <- read.table('COV/farionis.ref.txt')
+} else {
+   ref.far <- read.table('COV/farionis.ref.tmp')
+   ref.far <- as.matrix(ref.far[, -c(1,2)])
+   w <- sapply(minD,
+               function(x) {
+                  sapply(minN,
+                         function(y, i = x) {
+                            sum(rowSums(ref.far >= i) >= y)
+                         })
+               })
+   colnames(w)  <- as.character(minD)
+   row.names(w) <- as.character(minN)
+   write.table(w, file = 'COV/farionis.ref.txt')
+   # file.remove('COV/farionis.ref.tmp')
+}
+plot(range(minN), range(w), type = 'n',
+     main = 'C. farionis, reference',
+     xlab = 'Min. num. individuals', ylab = 'Number of sites')
+for (i in 1:dim(w)[2]) {
+   lines(minN, w[,i], col = paleta[i], lwd=3)
+}
+abline(v = round(4 * N / 5), lty = 2, col = 'gray')
+
+# C. farionis, RAD loci
+if (file.exists('COV/farionis.rad.txt')) {
+   w <- read.table('COV/farionis.rad.txt')
+} else {
+   rad.far <- read.table('COV/farionis.rad.tmp')
+   rad.far <- as.matrix(rad.far[, -c(1,2)])
+   w <- sapply(minD,
+               function(x) {
+                  sapply(minN,
+                         function(y, i = x) {
+                            sum(rowSums(rad.far >= i) >= y)
+                         })
+               })
+   colnames(w)  <- as.character(minD)
+   row.names(w) <- as.character(minN)
+   write.table(w, file = 'COV/farionis.rad.txt')
+   # file.remove('COV/farionis.rad.tmp')
+}
+plot(range(minN), range(w), type = 'n',
+     main = 'C. farionis, RAD loci',
+     xlab = 'Min. num. individuals', ylab = 'Number of sites')
+for (i in 1:dim(w)[2]) {
+   lines(minN, w[,i], col = paleta[i], lwd=3)
+}
+abline(v = round(4 * N / 5), lty = 2, col = 'gray')
+```
+
+## Modeling
+We have very large files with coverage per position per individual. Before
+erasing them, I should try to model coverage as a function of individual and
+contig. Coefficients of the model would then inform us what contigs have
+too much coverage, and maybe even what individuals have unexpected coverage
+levels for certain contigs. What kind of model should I use? Depth of coverage
+is count data, but usually with overdispersion with respect to a Poisson
+distribution. In our case, an excess of zeros is also expected. Thus, a
+**zero-inflated negative binomial** model should fit. However, values are
+heavily dependent among them, not independent. A **hidden Markov model**
+should be used to account for dependence. The package `depmixS4` could be
+used for that, either with a simple Poisson response model, or
+extending the response models to include the zero-inflated negative
+binomial. But that's too much work, and too much computing time.
+
+I envision three *states*: zero coverage, for not sequenced loci;
+low to moderate coverage on normal RAD loci; and very high coverage on
+collapsed repetitive genome regions. I'm afraid every sample needs to be
+modeled separately, instead of being a covariate in the response model.
+The contigs, which actually vary along the series of positions,
+could be used as covariates in the response model, but they would also
+influence the transition probabilities, which complicates the model.
+
+The following is not run.
+
+```{r, eval=FALSE}
+suppressMessages(library(depmixS4))
+suppressMessages(library(tidyr))
+#ref.pse <- read.table('COV/pseudofarionis.ref.tmp',
+ref.pse <- read.table('COV/z.pserefpart.tmp',
+                      col.names = c('contig', 'pos',
+                                    scan('../2025-06-12/pseudofarionis.txt',
+                                         what = 'character', quiet = TRUE)))
+ref.pse.l <- pivot_longer(
+   ref.pse,
+   cols = 3:ncol(ref.pse),
+   names_to = 'sample',
+   values_to = 'cov'
+)
+
+set.seed(1)
+hmm <- depmix(response = S001Cma ~ 1,
+              data = ref.pse,
+              family = poisson(),
+              nstates = 2,
+              instart = c(0.99, 0.01),
+              respstart = c(1, 100),
+              trstart = c(0.95, 0.05,
+                          0.05, 0.95))
+
+```

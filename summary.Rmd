@@ -35,7 +35,7 @@ done
 
 ## Fabric plot
 
-```{r graf, warning=FALSE, message=FALSE, fig.width=10}
+```{r graf, warning=FALSE, message=FALSE, fig.width=12}
 library(igraph)
 library(ggraph)
 library(ggplot2)
@@ -54,9 +54,9 @@ nodes$title <- title[nodes$ID, 'title']
 links$ghost <- links$from %in% ghosts
 g <- graph_from_data_frame(d = links, vertices = nodes)
 ggraph(g, layout = 'fabric', sort.by = name) + 
-  geom_node_range(color = 'gray', aes(x=0, xend=50)) +
+  geom_node_range(color = 'gray', aes(x=0, xend=72)) +
   geom_edge_span(end_shape = 'square', aes(edge_colour = ghost)) + 
-  xlim(-25, 50) +
+  xlim(-25, 72) +
   geom_node_label(aes(label = title, x = -6), size = 2, hjust = 1) +
   geom_node_label(aes(label = name, x = -5.5), size = 2, hjust = 0) +
   coord_fixed() + theme(legend.position = 'none') +
