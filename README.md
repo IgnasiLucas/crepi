@@ -1,5 +1,61 @@
 (Note the inverse chronological order: more recent first)
 
+# 2025-07-09
+I follow @Kosman2024 to estimate the effective number of different
+populations (ENDP) among the individuals identified as *C. farionis* and
+*C. pseudofarionis*. It turns out that they are so similar genetically
+that ENDP is not larger than 1.01. I take this as strong support of the
+hypothesis of only one species.
+
+# 2025-07-03
+Attempt to understand better the data and justify the thresholds
+of mapping quality, base quality and minimum coverage used with
+ANGSD. One thing is missing: maximum coverage. The last analysis
+in 2025-06-12 revealed a number of sites with much higher coverage
+than the rest. I suppose they should be filtered out.
+
+# 2025-06-12
+Repetition of 2025-04-08 with a better folder structure. Here, the
+concern with sites in collapsed paralogous regions remains. In
+principle, filtering sites not in HWE in either *C. farionis* or
+in *C. pseudofarionis* seems compatible with individual estimates
+of inbreeding. However, the problem is that the HWE filter biases
+heavily the SFS, being far more aggressive on SNPs in the the right
+end of the SFS than on those in the left side. That is, moderate- and
+high-frequency SNPs (with more heterozygous genotypes) are, for some
+reason, more likely to get low *p*-values in the HWE test (a likelihood
+ratio test on two parameters: allele frequency and inbreeding coefficient).
+Thus, before filtering I had to characterize the SNPs and try
+to be more specific in filtering only those affected by paralogy.
+
+Results show Tajima estimates of nucleotide diversity below 0.02 in both
+populations, and Watterson estimates a bit above 0.02 only in *C. farionis*.
+Nucleotide diversitites are similar in both populations: which one is
+more diverse depends on the estimator and on the assembly (reference or
+RAD loci). But the difference between Watterson's and Tajima's estimates
+is more pronounced in *C. farionis*, suggesting higher population growth.
+
+Individual heterozygosities, in contrast, are clearly higher in *C. pseudofarionis*,
+due to a 10 times higher inbreeding coefficient in *C. farionis*:
+between 0.003 and 0.004.
+
+The four individuals presumed to be admixed do not show significantly higher
+levels of heterozygosity, which is unexpected. I checked individual distributions
+of depth of coverage, and I confirm *admixed* individuals do not have lower
+depths of coverage.
+
+# 2025-04-08
+Failed attempt at estimating population parameters with ANGSD, from
+BAM files mapped to either the reference or the RAD loci. It failed
+because the folder became too crowded and the analysis too long and
+cumbersome. An excess of 50-percent-frequency SNPs suggested the
+presence of collapsed paralog regions in both the reference assembly
+and the RAD loci. Filtering sites not in Hardy-Weinberg equilibrium
+removed the spurious excess of high frequency SNPs, as they were fully
+heterozygous, as expected from collapsed paralogous regions.
+
+The need to filter by HWE questioned the validity of F estimates.
+
 # 2025-03-15
 In order to use SNAPPER for Bayesian species delimitation, we need
 to call genoypes and prepare them in Nexus format. Here I prepare

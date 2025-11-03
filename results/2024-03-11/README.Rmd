@@ -1,5 +1,5 @@
 ---
-title: "Population structure analysis accounting for linkage disequilibrium and SNP coverage"
+title: "Population structure analysis accounting for LD and SNP coverage"
 author: "Mar Llaberia-Robledillo & J. Ignacio Lucas Lledó"
 date: "`r Sys.Date()`"
 output:

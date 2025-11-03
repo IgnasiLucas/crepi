@@ -5,7 +5,7 @@ angsd: /usr/lib/x86_64-linux-gnu/libhts.so.3: no version information available (
 angsd: /usr/lib/x86_64-linux-gnu/libhts.so.3: no version information available (required by angsd)
 angsd: /usr/lib/x86_64-linux-gnu/libhts.so.3: no version information available (required by angsd)
 	-> angsd version: 0.941-17-ge6967e6 (htslib: 1.13+ds) build(Jun 30 2023 17:52:55)
-	-> angsd -bam farionis.toRad.list -ref ../2024-10-04/radloci.fa -out toRadPOST/farionis -doGeno 13 -GL 1 -doPost 3 -skipMissing 0 -pest farionis.sfs -doMajorMinor 1 -doMaf 1 -minMapQ 30 -minQ 20 -baq 1 -minInd 28 -setMinDepthInd 4 -nThreads 8 
+	-> angsd -bam farionis.toRad.list -ref ../2024-10-04/radloci.fa -out toRadPOST/farionis -doGeno 13 -GL 1 -doPost 3 -doHWE 1 -skipMissing 0 -pest farionis.sfs -doMajorMinor 1 -doMaf 1 -minHWEpval 1.0e-03 -minMapQ 30 -minQ 20 -baq 1 -minInd 28 -setMinDepthInd 4 -nThreads 8 
 	-> Inputtype is BAM/CRAM
 [multiReader] 35 samples in 35 input files
 	-> Reading fasta: ../2024-10-04/radloci.fa
@@ -3796,10 +3796,11 @@ angsd: /usr/lib/x86_64-linux-gnu/libhts.so.3: no version information available (
 	-> Output filenames:
 		->"toRadPOST/farionis.arg"
 		->"toRadPOST/farionis.mafs.gz"
+		->"toRadPOST/farionis.hwe.gz"
 		->"toRadPOST/farionis.geno.gz"
-	-> Fri May  2 09:31:26 2025
+	-> Sun Jun  1 07:19:00 2025
 	-> Arguments and parameters for all analysis are located in .arg file
 	-> Total number of sites analyzed: 24137806
-	-> Number of sites retained after filtering: 3263004 
-	[ALL done] cpu-time used =  8751.44 sec
-	[ALL done] walltime used =  168272.00 sec
+	-> Number of sites retained after filtering: 3223537 
+	[ALL done] cpu-time used =  8952.20 sec
+	[ALL done] walltime used =  168299.00 sec

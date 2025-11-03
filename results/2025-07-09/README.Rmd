@@ -1,0 +1,781 @@
+---
+title: "On the differentiation between populations"
+author: "J. Ignacio Lucas Lledó"
+date: "`r Sys.Date()`"
+output: html_document
+bibliography: ../../doc/references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+One way to visualize to what extent the two main populations can be
+considered two species is to compare the amount of differentiation
+between populations with the amount of diversity within a population.
+In `2024-10-10` we estimated $F_{ST}$, which suggested there is about
+12.5% more diversity when comparing individuals from different populations
+than from the same one. But this is only one measure, based on the
+partition of variation within and between populations. It does not
+convey an intuitive meaning, and it fails to address some aspects
+of differentiation.
+
+To get a more intuitive picture of differentiation, I would like to
+see the distribution of individual genetic differences within and
+between populations. @Kosman2024 proposes an interesting framework,
+based on the distinction between *diversity* and *dispersion*, as two
+independent aspects of variation among populations. **Diversity**
+refers to how evenly separated the populations are, it is independent
+of the absolute magnitude of differences among them, and it is also
+independent of the diversity within the populations. Diversity
+represents the effective number of *equally distant* populations,
+but it is equal to 2 if there are only 2 populations. **Dispersion**,
+on the other hand, is related to the actual genetic distances between
+populations. Combined measures of diversity and dispersion constitute
+the effective numbers of *different* populations.
+
+# Measures of genetic distance
+The first thing we need is a measure of genetic dissimilarity between
+individuals. Originally I attempted to use estimates of coancestry,
+obtained with `ngsrelate`. The coefficient of coancestry is defined as
+the probability of two homologous genes drawn from two individuals being
+identical by descent, that is, by sharing a *recent* common ancestor
+rather than an old one. There are problems with this measure, and I
+move that analysis to the appendix. First, it rapidly goes to zero
+if the two individuals are not related. Second, it should be estimated
+among members of a homogeneous population, because it depends on the
+selection of sites assessed to be variable, and because it depends on the
+allele frequencies. Thus, estimates are likely to be biased when using
+a mixture of two populations.
+
+The measure of genetic distance between two individuals $A$ and $B$
+advocated by @Kosman2024 is that of equation 6 in @Kosman2019 for
+individuals of any ploidy $q$ genotyped along $n$ loci:
+
+$$
+\delta_{AB} = \frac{1}{q}\times \frac{\sum_{j=1}^n \delta_{\mathrm{min}}(A,B; j)}{n}
+$$
+
+Where $\delta_{\mathrm{min}}(A, B; j)$ is the solution to the *assignment problem*,
+namely: matching each allele in $A$ with it's most similar one in $B$, and
+adding up the differences. For diploids, $\delta_{\mathrm{min}}(A,B;j)$ is 0
+if the two genotypes are the same (even if both are heterozygous); 1, if one
+genotype is homozygous and the other heterozygous; and 2 if they are homozygous
+for different alleles. For one diploid locus with two alleles, $n=1$ and $q=2$,
+and $\delta_{AB}$ would be like this:
+
+|    |  AA  |  Aa  |  aa  |
+| -- |:----:|:----:|:----:|
+| AA |  0.0 |  0.5 |  1.0 |
+| Aa |  0.5 |  0.0 |  0.5 |
+| aa |  1.0 |  0.5 |  0.0 |
+
+In a probabilistic framework, we will use the `ibs` program, with
+`-model 0` option, which delivers the estimated percentages of each of the 100
+possible genotype combinations: AA_AA, AC_AA, AG_AA... GT_TT, and TT_TT between
+two individuals. Thus, grouping loci by combination of genotypes, we have:
+
+$$
+\delta_{AB} = \frac{1}{q}\cdot \frac{\sum_{c=AA\_AA}^{TT\_TT}n_c\cdot \delta_{\mathrm{min}}(c)}{n} =\sum_{c=AA\_AA}^{TT\_TT}P(c)\cdot \frac{\delta_{\mathrm{min}}(c)}{q}
+$$
+
+Where $n_c$ is the number of loci with the same combination $c$ of genotypes,
+$P(c)$ is the frequency of the $c$ combination between those two individuals, and
+the summation is over the 100 possible genotype combinations. Note that genotypes
+are expressed in terms of actual nucleotides. I assume that `ibs` estimates the
+expected number of every combination of genotypes without having to infer what
+alleles are major and minor. There is likely no need to assume certain sites as
+variable, nor any need to assume variable sites are bi-allelic. This is specially
+important, since it means that not only drift by also mutation (if any) is contributing
+to the distance.
+
+# Identity by state
+I use `angsd` to get first the genotype likelihoods of the 90 individuals
+that were used in the NGSadmix analysis of `2024-10-05`, using only sites
+determined in `2025-06-12` not to be collapsed paralogs. The whole analysis
+is run twice: for the alignments to the reference genome and to the assembled
+RAD loci.
+
+```{bash}
+REFBAM=../2023-05-18/BAM
+RADBAM=../2024-10-04/BAM
+REFREF=../2023-05-15/assembly.fasta
+RADREF=../2024-10-04/radloci.fa
+REFSITES=../2025-06-12/ref/indH/sites.txt
+RADSITES=../2025-06-12/rad/indH/sites.txt
+REFCHR=../2025-06-12/ref/indH/goodchr.txt
+RADCHR=../2025-06-12/rad/indH/goodchr.txt
+
+if [ ! -d ref ]; then mkdir ref; fi
+if [ ! -d rad ]; then mkdir rad; fi
+
+if [ ! -e ref/all1.glf.gz ]; then
+   if [ ! -e ref/all.list ]; then
+      if [ ! -e samples.txt ]; then
+         cut -f 1 ../2024-10-05/summary.txt > samples.txt
+      fi
+      find $REFBAM -name '*.bam' | \
+      grep -f samples.txt > ref/all.list
+   fi
+   angsd -bam ref/all.list \
+         -ref $REFREF \
+         -rf  $REFCHR \
+         -sites $REFSITES \
+         -out ref/all1 \
+         -doGlf 1 \
+         -GL 1 \
+         -minMapQ 30 \
+         -minQ 30 \
+         -only_proper_pairs 1 \
+         -baq 1 \
+         -minInd 75 \
+         -setMinDepthInd 4 \
+         -nThreads 8 1> ref/angsd1.log 2> ref/angsd1.err &
+fi
+
+if [ ! -e rad/all1.glf.gz ]; then
+   if [ ! -e rad/all.list ]; then
+      if [ ! -e samples.txt ]; then
+         cut -f 1 ../2024-10-05/summary.txt > samples.txt
+      fi
+      find $RADBAM -name '*.bam' | \
+      grep -f samples.txt > rad/all.list
+   fi
+   angsd -bam rad/all.list \
+         -ref $RADREF \
+         -rf  $RADCHR \
+         -sites $RADSITES \
+         -out rad/all1 \
+         -doGlf 1 \
+         -GL 1 \
+         -minMapQ 30 \
+         -minQ 30 \
+         -only_proper_pairs 1 \
+         -baq 1 \
+         -minInd 75 \
+         -setMinDepthInd 4 \
+         -nThreads 8 1> rad/angsd1.log 2> rad/angsd1.err &
+fi
+wait
+
+if [ ! -e ref/all1.ibspair ]; then
+   ibs -glf ref/all1.glf.gz \
+       -nInd $(cat ref/all.list | wc -l) \
+       -o ref/all1 \
+       -allpairs 1 \
+       -model 0 1> ref/ibs.log 2> ref/ibs.err &
+fi
+
+if [ ! -e rad/all1.ibspair ]; then
+   ibs -glf rad/all1.glf.gz \
+       -nInd $(cat rad/all.list | wc -l) \
+       -o rad/all1 \
+       -allpairs 1 \
+       -model 0 1> rad/ibs.log 2> rad/ibs.err &
+fi
+wait
+```
+
+The `ref/all1.ibspair` and `rad/all1.ibspair` tables are $4005 \times 104$,
+because there are $\frac{90\times 89}{2} = 4005$ pairs among 90 individuals,
+and 100 genotype combinations for each pair. The 4 initial columns are the
+0-based indexes of the two individuals being compared, the number of sites
+used in the comparison and the log-likelihood.
+
+# Genetic distances among individuals
+I apply here the genetic distance defined above. The values are averages
+across loci, including variable and invariable loci, which I think gives a
+true picture of how genetically different two individuals are. 
+
+```{r}
+library(ggplot2)
+# I came up with the following way to calculate delta_min
+# between two genotypes in R. Seems to work. You can check
+# the result in "delta_dist.txt" file, generated below.
+# x and y are vectors of alleles in two q-ploid genotypes.
+# e.g.: delta.min(c('A','C'), c('G','G'))
+delta.min <- function(x, y) {
+   stopifnot(length(x) == length(y))
+   max(sum(! x %in% y), sum(! y %in% x)) / length(x)
+}
+
+refibs <- read.table('ref/all1.ibspair', header = TRUE, na.strings = '-nan')
+radibs <- read.table('rad/all1.ibspair', header = TRUE, na.strings = '-nan')
+refind <- basename(scan('ref/all.list', what = 'character', quiet = TRUE))
+refind <- gsub('.bam', '', refind)
+radind <- basename(scan('rad/all.list', what = 'character', quiet = TRUE))
+radind <- gsub('.bam', '', radind)
+stopifnot(all.equal(refind, radind))
+inds <- refind
+rm(refind, radind)
+genstr <- read.table('../2024-10-05/summary.txt', header = TRUE)
+genstr$pop <- factor('admixed', levels = c('admixed', 'farionis', 'pseudofarionis'))
+# Assuming K2.1 is pseudofarionis and K2.2, farionis!! 
+genstr[genstr$K2.1 > 0.95, 'pop'] <- 'pseudofarionis'
+genstr[genstr$K2.2 > 0.95, 'pop'] <- 'farionis'
+delta.c <- sapply(
+   strsplit(gsub('p', '', names(refibs)[5:104]), '_', fixed = TRUE),
+   function(x) {
+      X <- strsplit(x, '')
+      delta.min(X[[1]], X[[2]])
+   }
+)
+names(delta.c) <- names(refibs)[5:104]
+# I print the table of genetic distances to be able
+# to check that the "delta.min()" function works well:
+write.table(delta.c, 'delta_dist.txt', quote = FALSE, col.names = FALSE)
+
+if (file.exists('distances.txt')) {
+   distances <- read.table('distances.txt', header = TRUE)
+} else {
+   distances <- data.frame(
+      ind1 = inds[refibs$ind1 + 1],
+      ind2 = inds[refibs$ind2 + 1],
+      delta_ref = sapply(
+         1:dim(refibs)[1],
+         function(x) {
+            sum(delta.c * refibs[x, 5:104]) / (sum(refibs[x, 5:104]))
+         }
+      ),
+      delta_rad = sapply(
+         1:dim(radibs)[1],
+         function(x) {
+            sum(delta.c * radibs[x, 5:104]) / (sum(radibs[x, 5:104]))
+         }
+      ),
+      pop1 = genstr[match(inds[refibs$ind1 + 1], genstr$Sample), 'pop'],
+      pop2 = genstr[match(inds[refibs$ind2 + 1], genstr$Sample), 'pop']
+   )
+   distances$pops <- apply(
+      distances[, c('pop1', 'pop2')],
+      1, function(x) {paste(sort(x), collapse = '_')}
+   )
+   write.table(distances, file = 'distances.txt',
+               quote = FALSE, row.names = FALSE)
+}
+
+# Just for the sake of printing the complete, symmetrical matrices
+# of distances, first I generate the other hemimatrix:
+z1 <- distances[, c('ind2', 'ind1', 'delta_ref', 'delta_rad', 'pop2', 'pop1', 'pops')]
+names(z1) <- names(distances)
+# I create the diagonal elements of the matrix:
+zind <- unique(c(z1$ind1, z1$ind2))
+di <- data.frame(
+   ind1 = zind,
+   ind2 = zind,
+   delta_ref = 0,
+   delta_rad = 0,
+   pop1 = genstr[match(zind, genstr$Sample), 'pop'],
+   pop2 = genstr[match(zind, genstr$Sample), 'pop'],
+   pops = NA
+)
+zz <- rbind(distances, z1, di)
+# How to order the rows is the difficult thing!
+zz <- zz[order(paste0(zz$pop1, zz$ind1), paste0(zz$pop2, zz$ind2)),]
+zmat.ref <- matrix(zz$delta_ref, nrow = length(zind), ncol = length(zind))
+zmat.rad <- matrix(zz$delta_rad, nrow = length(zind), ncol = length(zind))
+
+image(zmat.ref, axes = FALSE, main = 'Genetic distances (reference)')
+image(zmat.rad, axes = FALSE, main = 'Genetic distances (RAD loci)')
+ggplot(distances, aes(x = delta_ref, y = delta_rad, col = pops)) + geom_point() +
+   geom_abline(intercept = 0, slope = 1)
+fff <- distances$pops == 'farionis_farionis'
+ffp <- distances$pops == 'farionis_pseudofarionis'
+fpp <- distances$pops == 'pseudofarionis_pseudofarionis'
+
+plot(density(distances$delta_ref, bw = 'SJ'), type = 'n',
+     axes = FALSE, xlab = '', main = 'Reference')
+lines(density(distances[fff, 'delta_ref'], bw = 'SJ',
+              weights = rep(1 / length(fff), sum(fff)),
+              subdensity = TRUE), col = 'darkgreen',)
+lines(density(distances[fpp, 'delta_ref'], bw = 'SJ',
+              weights = rep(1 / length(fpp), sum(fpp)),
+              subdensity = TRUE), col = 'darkred')
+lines(density(distances[ffp, 'delta_ref'], bw = 'SJ',
+              weights = rep(1/ length(ffp), sum(ffp)),
+              subdensity = TRUE), col = 'blue')
+axis(1)
+
+plot(density(distances$delta_rad, bw = 'SJ'), type = 'n',
+     axes = FALSE, xlab = '', main = 'RAD loci')
+lines(density(distances[fff, 'delta_rad'], bw = 'SJ',
+              weights = rep(1 / length(fff), sum(fff)),
+              subdensity = TRUE), col = 'darkgreen',)
+lines(density(distances[fpp, 'delta_rad'], bw = 'SJ',
+              weights = rep(1 / length(fpp), sum(fpp)),
+              subdensity = TRUE), col = 'darkred')
+lines(density(distances[ffp, 'delta_rad'], bw = 'SJ',
+              weights = rep(1/ length(ffp), sum(ffp)),
+              subdensity = TRUE), col = 'blue')
+axis(1)
+```
+
+Genetic distances measured among RAD loci are equivalent to those
+measured among alignments to the reference genome only for low to
+moderate values, up to 0.012 or so. Larger differences depend more
+on what set of loci they are measured on, with RAD loci giving lower
+distances. Thus, when looking differences at RAD loci, some pairs
+of individuals from the two populations are just as different as some
+pairs of individuals from the same *C. pseudofarionis* population.
+There is overlap of within and between populations distances only
+when using the RAD loci, which is the largest data set.
+
+# Diversity within populations
+The approach used in this analysis is a *genetic method* of analysis
+of diversity. It is based on comparisons among individuals, using their
+whole genetic profile [@Kosman2014]. This is different from the
+*genotypic methods*, which are those based on frequencies of haplotypes
+at one locus. And it is also different from the *gene methods*, which
+are based on allele frequencies at multiple loci (Nei's gene diversity,
+$F_{ST}$s, and so on).
+
+The first step in the analysis of diversity is to measure diversity
+within populations. I use two measures: the **average distance within**
+population, based on dissimilarity $\delta$ ($ADW_{\delta}$), and
+**Kosman's diversity**, also based on a dissimilarity, $KW_{\delta}$.
+
+```{r}
+# Average Distance Within (Kosman, 2014; eq. 13): averages the whole
+# matrix of distances among individuals in a population, including
+# both d(i, j) and d(j, i), and distances to selves, d(i, i).
+# Here, "n" is the number of individuals in the population, deduced
+# from the number of pairs (length(x)).
+ADW.ref <- sapply(
+   c('admixed', 'farionis', 'pseudofarionis'),
+   function(i) {
+      x <- distances[distances$pops == paste(i, i, sep = '_'), 'delta_ref']
+      n <- (1 + sqrt(1 + 8 * length(x))) / 2
+      return(mean(c(x, x, rep(0, n))))
+   }
+)
+
+ADW.rad <- sapply(
+   c('admixed', 'farionis', 'pseudofarionis'),
+   function(i) {
+      x <- distances[distances$pops == paste(i, i, sep = '_'), 'delta_rad']
+      n <- (1 + sqrt(1 + 8 * length(x))) / 2
+      return(mean(c(x, x, rep(0, n))))
+   }
+)
+```
+
+Kosman's diversity within is a bit more complicated. It consists on
+matching every individual in the population with its most different
+one, so as to maximize the sum of differences. The total number of
+pairs is equal to the number of individuals, the pairs are made between
+two copies of the population, as in the entris of an $n\times n$ matrix.
+
+```{r}
+library(kableExtra)
+# I create the KW function to take the "distances" d.f. as input.
+KW <- function(x, pop, delta = 'delta_ref') {
+   x.sel <- x[x$pops %in% pop,
+              c('ind1', 'ind2', delta)]
+   # Eq. 14 in Kosman (2014)
+   inds <- unique(c(x.sel$ind1, x.sel$ind2))
+   n1 <- length(inds)
+   stopifnot(nrow(x.sel) == n1 * (n1 - 1) / 2)
+   # the other hemimatrix, switchin individuals
+   unfold <- data.frame(
+      ind1 = x.sel$ind2,
+      ind2 = x.sel$ind1,
+      delta = x.sel[, delta]
+   )
+   names(unfold)[3] <- delta
+   # the diagonal elements of the complete matrix
+   diagonal <- data.frame(
+      ind1 = inds,
+      ind2 = inds,
+      delta = rep(0, length(inds))
+   )
+   names(diagonal)[3] <- delta
+   x.sel <- rbind(
+      x.sel,
+      unfold,
+      diagonal
+   )
+   # I use pivot_wider() to turn the d.f. into matrix format
+   x.wide <- tidyr::pivot_wider(
+      x.sel,
+      id_cols = ind1,
+      names_from = ind2,
+      values_from = delta
+   )
+   class(x.wide) <- 'data.frame'
+   row.names(x.wide) <- x.wide$ind1
+   x.mat <- as.matrix(x.wide[, -1])
+   stopifnot(nrow(x.mat) == ncol(x.mat))
+   sol <- lpSolve::lp.assign(x.mat, direction = 'max')
+   return(sol$objval / n1)
+}
+
+
+KW.ref <- c(
+   admixed  = KW(distances, 'admixed_admixed', 'delta_ref'),
+   farionis = KW(distances, 'farionis_farionis', 'delta_ref'),
+   pseudofarionis = KW(distances, 'pseudofarionis_pseudofarionis', 'delta_ref')
+)
+KW.rad <- c(
+   admixed  = KW(distances, 'admixed_admixed', 'delta_rad'),
+   farionis = KW(distances, 'farionis_farionis', 'delta_rad'),
+   pseudofarionis = KW(distances, 'pseudofarionis_pseudofarionis', 'delta_rad')
+)
+
+diversityWithin <- data.frame(
+   Population = rep(c('admixed', 'C. farionis', 'C. pseudofarionis'), each = 4),
+   Data = rep(rep(c('Reference', 'RAD loci'), each = 2), 3),
+   Method = rep(c('ADW', 'KW'), 6),
+   Diversity = c(
+      ADW.ref['admixed'], KW.ref['admixed'],
+      ADW.rad['admixed'], KW.rad['admixed'],
+      ADW.ref['farionis'], KW.ref['farionis'],
+      ADW.rad['farionis'], KW.rad['farionis'],
+      ADW.ref['pseudofarionis'], KW.ref['pseudofarionis'],
+      ADW.rad['pseudofarionis'], KW.rad['pseudofarionis']
+   )
+)
+write.table(diversityWithin, 'diversityWithin.txt', quote = FALSE, row.names = FALSE)
+kable(diversityWithin) %>% kable_styling(full_width = FALSE)
+```
+
+The reason why ADW and KW differ more in the admixed population is just
+that there are only 4 individuals there. Because ADW averages all-against-all
+dissimilarities, including selves, the weight of zero values is higher
+in smaller samples.
+
+# Distances between populations
+Distances between populations can also be measured in different
+ways. Below I implement the $DAD_{\delta}$ and the $KB_{\delta}$.
+$DAD_{\delta}$ might be negative [@Kosman2014], and must be used
+carefully.
+
+```{r}
+# Average distance between (ADB) (Kosman, 2014; eq. 15)
+# Needed to get DAD.
+ADB.ref <- sapply(
+   split(distances$delta_ref, distances$pops),
+   mean
+)
+ADB.rad <- sapply(
+   split(distances$delta_rad, distances$pops),
+   mean
+)
+
+# Distance of average differences, equation 16 in Kosman (2014):
+pairs <- c('admixed_farionis', 'admixed_pseudofarionis', 'farionis_pseudofarionis')
+DAD.ref <- sapply(
+   pairs,
+   function(x){
+      pops <- unlist(strsplit(x, '_'))
+      ADB.ref[x] - (ADW.ref[pops[1]] + ADW.ref[pops[2]]) / 2
+   },
+   USE.NAMES = FALSE
+)
+DAD.rad <- sapply(
+   pairs,
+   function(x) {
+      pops <- unlist(strsplit(x, '_'))
+      ADB.rad[x] - (ADW.rad[pops[1]] + ADW.rad[pops[2]]) / 2
+   },
+   USE.NAMES = FALSE
+)
+```
+
+Kosman's distance between populations, $KB_{\delta}$, is more complicated.
+We need to solve the assignment problem: for every individual in one population
+we have to assign one of the other, so that every individual is paired
+in such a way that the sum of differences is **minimized**. The assignment
+problem is usually framed between two sets of the same size: e.g, jobs and
+machines, where every job must be run in a different machine. @Kosman2014
+does not specify how to proceed when one sample is larger than the other.
+But it seems to be common practice in operational research to augment the
+smallest set with dummy vertices connected with zero-cost edges to all
+vertices of the other set. The package that can solve the assignment
+problem in R is called `lpSolve`. The challenge here is to present the
+distances as a square matrix.
+
+The strategy is to first extract from `distances` the rows that compare
+individuals from the two populations; then, switch individuals 1 and 2
+as needed to have only one population per column. Then, use `pivot_wider()`
+from `tidyr` to distribute the distances in a matrix; and finally add the
+rows or columns necessary to make it squared.
+
+```{r}
+library(kableExtra)
+KB <- function(x, pops, delta = 'delta_ref') {
+   x.sel <- x[x$pops == pops,
+              c('ind1', 'ind2', 'pop1', 'pop2', delta)]
+   popL <- unlist(strsplit(pops, '_'))
+   x.sel$indpop1 <- ifelse(
+      x.sel$pop1 == popL[1],
+      x.sel$ind1,
+      x.sel$ind2
+   )
+   x.sel$indpop2 <- ifelse(
+      x.sel$pop1 == popL[2],
+      x.sel$ind1,
+      x.sel$ind2
+   )
+   x.wide <- tidyr::pivot_wider(
+      x.sel[, c(delta, 'indpop1', 'indpop2')],
+      id_cols = 'indpop1',
+      names_from = 'indpop2',
+      values_from = delta
+   )
+   class(x.wide) <- 'data.frame'
+   row.names(x.wide) <- x.wide$indpop1
+   x.mat <- as.matrix(x.wide[, -1])
+   n1 <- nrow(x.mat)
+   n2 <- ncol(x.mat)
+   if (n1 < n2) {
+      x.mat <- rbind(x.mat,
+                     matrix(0,
+                            nrow = n2 - n1,
+                            ncol = n2))
+   }
+   if (n1 > n2) {
+      x.mat <- rbind(x.mat,
+                     matrix(0,
+                            nrow = n1,
+                            ncol = n1 - n2))
+   }
+   sol <- lpSolve::lp.assign(x.mat, direction = 'min')
+   return(sol$objval / min(n1, n2))
+}
+
+KB.ref <- c(
+   admixed_farionis = KB(distances, 'admixed_farionis', 'delta_ref'),
+   admixed_pseudofarionis = KB(distances, 'admixed_pseudofarionis', 'delta_ref'),
+   farionis_pseudofarionis = KB(distances, 'farionis_pseudofarionis', 'delta_ref')
+)
+KB.rad <- c(
+   admixed_farionis = KB(distances, 'admixed_farionis', 'delta_rad'),
+   admixed_pseudofarionis = KB(distances, 'admixed_pseudofarionis', 'delta_rad'),
+   farionis_pseudofarionis = KB(distances, 'farionis_pseudofarionis', 'delta_rad')
+)
+
+distancesBetween <- data.frame(
+   Population_1 = rep(c('admixed', 'admixed', 'C. farionis'), each = 6),
+   Population_2 = rep(c('C. farionis', 'C. pseudofarionis', 'C. pseudofarionis'), each = 6),
+   Data = rep(rep(c('RAD loci', 'Reference'), each = 3), 3),
+   Method = rep(c('ADB', 'DAD', 'KB'), 6),
+   Distance = c(
+      ADB.rad['admixed_farionis'],
+      DAD.rad['admixed_farionis'],
+      KB.rad['admixed_farionis'],
+      ADB.ref['admixed_farionis'],
+      DAD.ref['admixed_farionis'],
+      KB.ref['admixed_farionis'],
+      ADB.rad['admixed_pseudofarionis'],
+      DAD.rad['admixed_pseudofarionis'],
+      KB.rad['admixed_pseudofarionis'],
+      ADB.ref['admixed_pseudofarionis'],
+      DAD.ref['admixed_pseudofarionis'],
+      KB.ref['admixed_pseudofarionis'],
+      ADB.rad['farionis_pseudofarionis'],
+      DAD.rad['farionis_pseudofarionis'],
+      KB.rad['farionis_pseudofarionis'],
+      ADB.ref['farionis_pseudofarionis'],
+      DAD.ref['farionis_pseudofarionis'],
+      KB.ref['farionis_pseudofarionis']
+   )
+)
+kable(distancesBetween) %>% kable_styling(full_width = FALSE)
+write.table(distancesBetween, 'distancesBetween.txt', row.names = FALSE,
+            quote = FALSE, sep = '\t')
+```
+
+$DAD_{\delta}$ may not be appropriate if there is linkage disequilibrium among
+markes, but if it is bounded between 0 and 1 (not sure about that), then it can
+be used to build metrics of diversity, just as well as $KB_{\delta}$.
+
+# Diversity
+Here, I follow @Kosman2024, where *diversity* is understood as how
+evenly distributed the populations are, or how regular distances among
+them are. This only makes
+sense for more than two populations. I have been considering the four
+admixed individuals as a third population mostly to test the formulas
+of diversity. But this section is irrelevant because we are using data
+from only two biologically plausible populations.
+
+```{r}
+# Eq. 2 in Kosman et al. 2024.
+# Note that distances are counted twice
+f <- list(
+   dad.ref = DAD.ref / (2 * sum(DAD.ref)),
+   dad.rad = DAD.rad / (2 * sum(DAD.rad)),
+   kb.ref  = KB.ref / (2 * sum(KB.ref)),
+   kb.rad  = KB.rad / (2 * sum(KB.rad))
+)
+H <- sapply(f, function(x) exp(-sum(x * log(x))))
+
+# Eq. 3 in Kosman et al. 2024.
+D <- (1 + sqrt(1 + 4 * H)) / 2
+D
+
+# Eq. 4 in Kosman et al. 2024:
+S <- 3
+E <- D / S
+
+# Eq. 4' in Kosman et al. 2024:
+S  <- 3
+Ep <- (D - 1) / (S - 1)
+Ep
+```
+
+$D$ is the *diversity* of order 1 among the three populations, and
+it is to be interpreted as the effective number of *equally distant*
+populations. Because the admixed *population* is closer to
+*C. pseudofarionis*, the values are closer to 2 than to 3.
+
+$E'$ is the evenness of order 1, in a scale from 0 to 1. The three
+populations are over half as evenly distant as they could be.
+
+These are not interesting measures, because the admixed population
+is not a population of interest. If we exclude it, however, we are
+left with a number of populations $S = 2$, where evenness is 1 and
+the effective number of equally distant populations is necessarily
+2.
+
+# Dispersion
+This corresponds with equations 6 and 6' in @Kosman2024, and with
+Kosman's assignment-based measure (like in equation 14 of @Kosman2014,
+but with distances among populations).
+
+```{r}
+ADW.pop <- c(
+   dad.ref = mean(c(DAD.ref, DAD.ref, rep(0, 3))),
+   dad.rad = mean(c(DAD.rad, DAD.rad, rep(0, 3))),
+   kb.ref  = mean(c(KB.ref, KB.ref, rep(0, 3))),
+   kb.rad  = mean(c(KB.rad, KB.rad, rep(0, 3)))
+)
+ADW.pop.p <- (S / (S - 1)) * ADW.pop
+KW.3 <- function(d) {
+   m <- matrix(c(0, d[1], d[2], 0, 0, d[3], 0, 0, 0), ncol = 3)
+   s <- lpSolve::lp.assign(m, direction = 'max')
+   return(s$objval / 3)
+}
+KW.pop  <- c(
+   dad.ref = KW.3(DAD.ref),
+   dad.rad = KW.3(DAD.rad),
+   kb.ref  = KW.3(KB.ref),
+   kb.rad  = KW.3(KB.rad)
+)
+dispersion <- data.frame(
+   Data = rep(c('Reference', 'RAD loci'), each = 6),
+   Distance = rep(rep(c('DAD', 'KB'), each = 3), 2),
+   Method = rep(c('ADW', 'ADWp', 'KW'), 4),
+   Dispersion = c(
+      ADW.pop['dad.ref'], ADW.pop.p['dad.ref'], KW.pop['dad.ref'],
+      ADW.pop['kb.ref'],  ADW.pop.p['kb.ref'],  KW.pop['kb.ref'],
+      ADW.pop['dad.rad'], ADW.pop.p['dad.rad'], KW.pop['dad.rad'],
+      ADW.pop['kb.rad'],  ADW.pop.p['kb.rad'],  KW.pop['kb.rad']
+   )
+)
+kable(dispersion) %>% kable_styling(full_width = FALSE)
+write.table(dispersion, 'dispersion.txt', quote = FALSE, sep = '\t', row.names = FALSE)
+```
+With only 2 populations, dispersion would be equal to the corresponding
+distance between the two populations.
+
+# Effective number of different populations
+Considering $S=3$:
+
+```{r}
+S <- 3
+ENDP.ADW <- 1 + (S - 1) * E * ADW.pop.p
+ENDP.ADW
+
+ENDP.KW  <- 1 + (S - 1) * E * KW.pop
+ENDP.KW
+```
+
+When we ignore the admixed, and $S=2$, then:
+
+```{r}
+ADW.pop <- c(
+   dad.ref = mean(c(DAD.ref[3], DAD.ref[3], rep(0, 2))),
+   dad.rad = mean(c(DAD.rad[3], DAD.rad[3], rep(0, 2))),
+   kb.ref  = mean(c(KB.ref[3], KB.ref[3], rep(0, 2))),
+   kb.rad  = mean(c(KB.rad[3], KB.rad[3], rep(0, 2)))
+)
+S <- 2
+ADW.pop.p <- (S / (S - 1)) * ADW.pop
+KW.2 <- function(d) {
+   m <- matrix(c(0, d[1], d[1], 0), ncol = 2)
+   s <- lpSolve::lp.assign(m, direction = 'max')
+   return(s$objval / 2)
+}
+KW.pop  <- c(
+   dad.ref = KW.2(DAD.ref[3]),
+   dad.rad = KW.2(DAD.rad[3]),
+   kb.ref  = KW.2(KB.ref[3]),
+   kb.rad  = KW.2(KB.rad[3])
+)
+
+E <- 1
+
+ENDP.ADW <- 1 + (S - 1) * E * ADW.pop.p
+ENDP.ADW
+
+ENDP.KW  <- 1 + (S - 1) * E * KW.pop
+ENDP.KW
+```
+
+# Other measures of diversity
+The effective number of different populations estimated above is a measure
+of $\beta$-diversity that is independent of total or $\gamma$-diversity and
+also independent of the amount of diversity within populations ($\alpha$-diversity).
+A more classical approach decomposes total diversity in those other two
+components, so that $\beta$-diversity becomes defined by the difference
+between total and average within diversities.
+
+@Kosman2024 (equation 18 and 20) suggests two measures of differentiation
+susceptible of being decomposed this way: either the Kosman's assignment-based
+index ($KW_{\delta}$), or the average difference within (the total population),
+$ADW_{\delta}$. But it warns that the *concavity* of $ADW_{\delta}$ is not proved
+(it depends on the specific dissimilarity measure, $\delta$), and could not be
+valid.
+
+```{r}
+N <- length(unique(c(distances$ind1, distances$ind2)))
+stopifnot(dim(distances)[1] == N * (N - 1) / 2)
+TotalDiversity <- c(
+   ref.adw = mean(c(distances$delta_ref,
+                    distances$delta_ref,
+                    rep(0, N))),
+   ref.kw = KW(distances, unique(distances$pops), 'delta_ref'),
+   rad.adw = mean(c(distances$delta_rad,
+                    distances$delta_rad,
+                    rep(0, N))),
+   rad.kw = KW(distances, unique(distances$pops), 'delta_rad')
+)
+N <- table(genstr$pop)
+AverageWithin <- c(
+   ref.adw = weighted.mean(ADW.ref, N),
+   ref.kw  = weighted.mean(KW.ref,  N),
+   rad.adw = weighted.mean(ADW.rad, N),
+   rad.kw  = weighted.mean(KW.rad,  N)
+)
+BetaDiversity <- TotalDiversity - AverageWithin
+ST <- BetaDiversity / TotalDiversity
+DiversityAnalysis <- cbind(TotalDiversity, BetaDiversity, AverageWithin, ST)
+kable(DiversityAnalysis) %>% kable_styling(full_width = FALSE)
+write.table(DiversityAnalysis, 'DiversityAnalysis.txt', sep = '\t', quote = FALSE)
+```
+The last column in the table above represents "proportional amount of
+variation among populations" [@Kosman2014, eq. 22], analog to the
+$F_{ST}$.
+
+# Conclusions
+The effective number of different populations strongly supports the idea
+that they are all the same species.
+
+# Session information
+
+```{r}
+sessionInfo()
+```
+
+# References

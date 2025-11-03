@@ -1,6 +1,6 @@
 	-> angsd version: 0.941-17-ge6967e6 (htslib: 1.13+ds) build(Jun 30 2023 17:52:55)
-	-> angsd -bam bamlist2.txt -ref ../2024-10-03/consensus.fa -out toRad -baq 1 -setMinDepthInd 2 -minInd 60 -GL 1 -doMaf 2 -doMajorMinor 1 -minMaf 0.05 -doGeno 2 -doPost 1 -nThreads 8 -postCutoff 0.50 
-	-> Sun Mar 16 22:56:16 2025
+	-> angsd -bam bamlist2.txt -ref ../2024-10-03/consensus.fa -out toRad -baq 1 -setMinDepthInd 4 -minInd 80 -GL 1 -doMaf 2 -doMajorMinor 1 -doGeno 2 -doPost 1 -nThreads 8 -postCutoff 0.75 
+	-> Tue Apr 15 19:18:07 2025
 ----------------
 multiReader.cpp:
 	-nLines	50	(Number of lines to read)
@@ -64,8 +64,8 @@ abcFilter.cpp:
 	-sites		(null)	(File containing sites to keep (chr regStart regStop))
 	-sites		(null)	(File containing sites to keep (chr pos major minor))
 	-sites		(null)	(File containing sites to keep (chr pos major minor af ac an))
-	-minInd		60	Only use site if atleast minInd of samples has data
-	-setMinDepthInd	2	Only use site if atleast minInd of samples has this minimum depth 
+	-minInd		80	Only use site if atleast minInd of samples has data
+	-setMinDepthInd	4	Only use site if atleast minInd of samples has this minimum depth 
 	-capDepth	-1	Only use the first capDepth bases
 	-strict	1	 (experimental)
 	1) You can force major/minor by -doMajorMinor 3
@@ -114,7 +114,7 @@ abcGL.cpp:
 	-trim		0		(zero means no trimming)
 	-tmpdir		angsd_tmpdir/	(used by SOAPsnp)
 	-errors		(null)		(used by SYK)
-	-minInd		60		(0 indicates no filtering)
+	-minInd		80		(0 indicates no filtering)
 
 Filedumping:
 	-doGlf	0
@@ -137,7 +137,7 @@ abcGL.cpp:
 	-trim		0		(zero means no trimming)
 	-tmpdir		angsd_tmpdir/	(used by SOAPsnp)
 	-errors		(null)		(used by SYK)
-	-minInd		60		(0 indicates no filtering)
+	-minInd		80		(0 indicates no filtering)
 
 Filedumping:
 	-doGlf	0
@@ -174,7 +174,7 @@ abcFreq.cpp:
 	3: Using SFS as prior (still in development)
 	4: Using reference panel as prior (still in development), requires a site file with chr pos major minor af ac an
 Filters:
-	-minMaf  	0.050000	(Remove sites with MAF below)
+	-minMaf  	-1.000000	(Remove sites with MAF below)
 	-SNP_pval	0.317311	(Remove sites with a pvalue larger)
 	-rmSNPs 	0	(Remove infered SNPs instead of keeping them (pval > SNP_pval)
 	-rmTriallelic	0.000000	(Remove sites with a pvalue lower)
@@ -199,11 +199,11 @@ abcCallGenotypes.cpp:
 	16: write the posterior probability of called genotype
 	32: write the posterior probabilities of the 3 gentypes as binary
 	-> A combination of the above can be choosen by summing the values, EG write 0,1,2 types with majorminor as -doGeno 3
-	-postCutoff=0.500000 (Only genotype to missing if below this threshold)
+	-postCutoff=0.750000 (Only genotype to missing if below this threshold)
 	-geno_minDepth=-1	(-1 indicates no cutof)
 	-geno_maxDepth=-1	(-1 indicates no cutof)
 	-geno_minMM=-1.000000	(minimum fraction af major-minor bases)
-	-minInd=60	(only keep sites if you call genotypes from this number of individuals)
+	-minInd=80	(only keep sites if you call genotypes from this number of individuals)
 
 	NB When writing the posterior the -postCutoff is not used
 	NB geno_minDepth requires -doCounts
@@ -217,5 +217,5 @@ abcHetPlas.cpp:
 		->"toRad.mafs.gz"
 		->"toRad.geno.gz"
 
-	[ALL done] cpu-time used =  18177.56 sec
-	[ALL done] walltime used =  217943.00 sec
+	[ALL done] cpu-time used =  15660.46 sec
+	[ALL done] walltime used =  217844.00 sec

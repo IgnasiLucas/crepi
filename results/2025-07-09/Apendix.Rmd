@@ -1,0 +1,286 @@
+---
+title: "Coancestry"
+author: "J. Ignacio Lucas Lledó"
+date: "`r Sys.Date()`"
+output: html_document
+bibliography: ../../doc/references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Relatedness or coancestry
+Relatedness between individuals consists on the sharing of alleles
+identical by descent (IBD). It is not observable directly, but it
+can be estimated from genotypes. Between two diploid individuals there
+are different ways of sharing any pair of alleles IBD. @Cockerham1971
+defined 15 probabilities, for the 15 different patterns of IBD in one
+locus between two diploid individuals. @Jacquard1970 used only 9 such
+parameters, because he did not distinguish paternal from maternal
+alleles. In the absence of inbreeding, the two alleles in one individual
+cannot be IBD, an the number of parameters reduces to three, commonly
+refered to as $K_2$, $K_1$ and $K_0$, which are the probabilities of
+the two individuals sharing 0, 1 or the two alleles IBD. They correspond
+to the last three of Jacquard's probabilities, $\Delta_7$, $\Delta_8$ and $\Delta_9$,
+respectively.
+
+The **coefficient of coancestry**, $\Theta_{xy}$ is defined as the
+probability of a random allele of one individual being IBD to a random
+allele of the same locus in the other individual [@Lynch1998], and it
+is a function of Jacquard's condensed coefficients of identity:
+
+$$
+\Theta_{xy} = \Delta_1 + \frac{1}{2}(\Delta_3 + \Delta_5 + \Delta_7) + \frac{1}{4}\Delta_8
+$$
+
+It is also called *coefficient of kinship*, and it is equal to the
+inbreeding coefficient of an offspring between the two individuals.
+Another measure of relatedness is *the proportion of homologous
+alleles shared between two individuals due to IBD from a common
+ancestor* [@Hedrick2014]:
+
+$$
+r_{yx} = \Delta_1 + \Delta_7 + \frac{3}{4}(\Delta_3 + \Delta_5) + \frac{1}{2}\Delta_8
+$$
+
+The output of `ngsRelate` [@Hanghoj2019] includes the ML estimates
+of all 9 Jacquard's condensed coefficients of identity, and the relatedness
+sensu @Hedrick2014, among other things.
+
+## Overall allele frequencies
+I need to generate allele frequencies valid for all the individuals
+I want to compare. I will exclude distant samples, with less data,
+suspected to be of a different species (not present in the NGSadmix
+analysis). But I will include *uncertain* individuals like the admixed
+or the migrants.
+
+I want to run the analysis for both data sets: RAD loci and
+reference-based. I need to exclude sites affected by collapsed
+paralogy (see `2025-06-12`).
+
+```{bash}
+REFBAM=../2023-05-18/BAM
+RADBAM=../2024-10-04/BAM
+REFREF=../2023-05-15/assembly.fasta
+RADREF=../2024-10-04/radloci.fa
+REFSITES=../2025-06-12/ref/indH/sites.txt
+RADSITES=../2025-06-12/rad/indH/sites.txt
+REFCHR=../2025-06-12/ref/indH/goodchr.txt
+RADCHR=../2025-06-12/rad/indH/goodchr.txt
+
+if [ ! -d ref ]; then mkdir ref; fi
+if [ ! -d rad ]; then mkdir rad; fi
+
+if [ ! -e ref/all.mafs.gz ]; then
+   angsd -bam ref/all.list \
+         -ref $REFREF \
+         -rf  $REFCHR \
+         -sites $REFSITES \
+         -out ref/all \
+         -doGlf 3 \
+         -GL 1 \
+         -doMajorMinor 1 \
+         -SNP_pval 1.0e-06 \
+         -domaf 1 \
+         -minMaf 0.01 \
+         -minMapQ 30 \
+         -minQ 30 \
+         -only_proper_pairs 1 \
+         -baq 1 \
+         -minInd 75 \
+         -setMinDepthInd 4 \
+         -nThreads 8 2>&1 > ref/all.log &
+fi
+
+if [ ! -e rad/all.mafs.gz ]; then
+   angsd -bam rad/all.list \
+         -ref $RADREF \
+         -rf  $RADCHR \
+         -sites $RADSITES \
+         -out rad/all \
+         -doGlf 3 \
+         -GL 1 \
+         -doMajorMinor 1 \
+         -SNP_pval 1.0e-06 \
+         -domaf 1 \
+         -minMaf 0.01 \
+         -minMapQ 30 \
+         -minQ 30 \
+         -only_proper_pairs 1 \
+         -baq 1 \
+         -minInd 75 \
+         -setMinDepthInd 4 \
+         -nThreads 8 2>&1 > rad/all.log &
+fi
+wait
+```
+
+```{r}
+refFreq <- read.table('ref/all.mafs.gz', header = TRUE)
+radFreq <- read.table('rad/all.mafs.gz', header = TRUE)
+plot(density(radFreq$knownEM),  lwd = 2, col = 'orange', main = 'MAF')
+lines(density(refFreq$knownEM), lwd = 2, col = 'darkgreen')
+legend(0.3, 12, c('Reference', 'RAD loci'), lwd = c(2, 2),
+       col = c('darkgreen', 'orange'), bty = 'n')
+```
+
+## Estimates of coancestry
+Note the setting of random seed with `-r`. 
+
+```{bash}
+if [ ! -e ref/relatedness.txt ]; then
+   if [ ! -e ref/freq.txt ]; then
+      gunzip -c ref/all.mafs.gz | \
+      cut -f 6 | \
+      tail -n +2 > ref/freq.txt
+   fi
+   ngsrelate -g ref/all.glf.gz \
+             -f ref/freq.txt \
+             -n $(cat ref/all.list | wc -l) \
+             -L $(cat ref/freq.txt | wc -l) \
+             -O ref/relatedness.txt \
+             -m 1 \
+             -r 511 \
+             -p 8 \
+             1> ref/ngsrelate.log 2> ngsrelate.err &
+fi
+
+if [ ! -e rad/relatedness.txt ]; then
+   if [ ! -e rad/freq.txt ]; then
+      gunzip -c rad/all.mafs.gz | \
+      cut -f 6 | \
+      tail -n +2 > rad/freq.txt
+   fi
+   ngsrelate -g rad/all.glf.gz \
+             -f rad/freq.txt \
+             -n $(cat rad/all.list | wc -l) \
+             -L $(cat rad/freq.txt | wc -l) \
+             -O rad/relatedness.txt \
+             -m 1 \
+             -r 8031 \
+             -p 8 \
+             1> rad/ngsrelate.log 2> ngsrelate.err &
+fi
+wait
+```
+
+```{r}
+library(ggplot2)
+popstr <- read.table('../2024-10-05/summary.txt', header = TRUE)
+popstr$pop <- factor('admixed',
+                     levels = c('farionis', 'pseudofarionis', 'admixed'))
+popstr[popstr$K2.1 > 0.95, 'pop'] <- 'pseudofarionis'
+popstr[popstr$K2.2 > 0.95, 'pop'] <- 'farionis'
+row.names(popstr) <- popstr$Sample
+
+refsmp <- basename(scan('ref/all.list', what = 'character', quiet = TRUE))
+refsmp <- gsub('.bam', '', refsmp)
+radsmp <- basename(scan('rad/all.list', what = 'character', quiet = TRUE))
+radsmp <- gsub('.bam', '', radsmp)
+refrel1 <- read.table('ref/relatedness.txt', header = TRUE)
+refrel1$a <- refsmp[refrel1$a + 1]
+refrel1$b <- refsmp[refrel1$b + 1]
+refrel1$pops <- sapply(
+   1:dim(refrel1)[1],
+   function(x) {
+      paste(
+         sort(
+            as.character(
+               c(popstr[refrel1[x, 'a'], 'pop'],
+                 popstr[refrel1[x, 'b'], 'pop'])
+            )
+         ), collapse = '_')
+   }
+)
+refrel1$Dist <- sapply(
+   1:dim(refrel1)[1],
+   function(x) {
+      z <- as.numeric(unlist(strsplit(refrel1[x, 'X2dsfs'], ',')))
+      0.5 * sum(z[c(2,4,5,6,8)]) + z[3] + z[7]
+   }
+)
+
+radrel1 <- read.table('rad/relatedness.txt', header = TRUE)
+radrel1$a <- radsmp[radrel1$a + 1]
+radrel1$b <- radsmp[radrel1$b + 1]
+radrel1$pops <- sapply(
+   1:dim(radrel1)[1],
+   function(x) {
+      paste(
+         sort(
+            as.character(
+               c(popstr[radrel1[x, 'a'], 'pop'],
+                 popstr[radrel1[x, 'b'], 'pop'])
+            )
+         ), collapse = '_')
+   }
+)
+radrel1$Dist <- sapply(
+   1:dim(radrel1)[1],
+   function(x) {
+      z <- as.numeric(unlist(strsplit(radrel1[x, 'X2dsfs'], ',')))
+      0.5 * sum(z[c(2,4,5,6,8)]) + z[3] + z[7]
+   }
+)
+
+refrel1$pops <- factor(refrel1$pops,
+                       levels = c('farionis_pseudofarionis',
+                                  'admixed_farionis',
+                                  'admixed_pseudofarionis',
+                                  'admixed_admixed',
+                                  'pseudofarionis_pseudofarionis',
+                                  'farionis_farionis'))
+par(mar = c(8, 4.1, 4.1, 2.1))
+boxplot(refrel1$theta ~ refrel1$pops, axes = FALSE,
+        ylab = 'coancestry', xlab = '', main = 'Reference')
+axis(2)
+text(1:length(levels(refrel1$pops)), -0.015, xpd = NA, srt = 35,
+     labels = levels(refrel1$pops), adj = 0.99)
+
+radrel1$pops <- factor(radrel1$pops,
+                       levels = c('farionis_pseudofarionis',
+                                  'admixed_farionis',
+                                  'admixed_pseudofarionis',
+                                  'admixed_admixed',
+                                  'pseudofarionis_pseudofarionis',
+                                  'farionis_farionis'))
+boxplot(radrel1$theta ~ radrel1$pops, axes = FALSE,
+        ylab = 'coancestry', xlab = '', main = 'RAD loci')
+axis(2)
+text(1:length(levels(radrel1$pops)), -0.015, xpd = NA, srt = 35,
+     labels = levels(radrel1$pops), adj = 0.99)
+
+plot(refrel1$theta, radrel1$theta)
+```
+
+As expected, the coefficient of coancestry is null between individuals
+from different populations.
+
+## Sequence differences
+The `ngsrelate` output includes the two-individuals 2D SFS of every
+comparison. They are 9 numbers reporting the fraction of all sites
+used in that comparison where each individual had each of the 3
+possible genotypes in a biallelic site. From those numbers I can
+derive the fraction of sites where genotypes are different between
+the two individuals. Another measure of genetic distance is the
+expected difference upon randomly drawing one allele from each
+individual. So, a site where one is heterozygous and the other is
+homozygous would contribute 0.5 to the difference, which is the
+chance of picking the different alleles. The same is true if both
+are heterozygous. This is computed in the `Dist` column of both
+data frames.
+
+```{r}
+par(mar = c(5.1, 13, 4.1, 2.1))
+boxplot(refrel1$Dist ~ refrel1$pops, axes = TRUE, horizontal = TRUE,
+        ylab = '', xlab = 'Distance', main = 'Reference', las = 2)
+boxplot(radrel1$Dist ~ radrel1$pops, axes = TRUE, horizontal = TRUE,
+        ylab = '', xlab = 'Distance', main = 'RAD loci', las = 2)
+```
+
+It turns out that the distance among individuals from *C. pseudofarionis*
+is as large as the distance between *C. farionis* and *C. pseudofarionis*.
+
+# References

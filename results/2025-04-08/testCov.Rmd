@@ -1,0 +1,90 @@
+---
+title: "On the side"
+author: "J. Ignacio Lucas Lledó"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{bash}
+ASM=../2024-10-04/radloci.fa
+BAM=../2024-10-04/BAM
+
+if [ ! -d z ]; then mkdir z; fi
+for i in 2 3 4 5 6 7 8 9 10; do
+   if [ ! -e z/minCov$i.sfs ]; then
+      if [ ! -e z/minCov$i.saf.idx ]; then
+         angsd -i $BAM/L019Cxa.bam \
+               -anc $ASM \
+               -doGlf 1 \
+               -GL 1 \
+               -doSaf 1 \
+               -C 50 \
+               -ref $ASM \
+               -minQ 20 \
+               -minmapQ 30 \
+               -setMinDepthInd $i \
+               -out z/minCov$i 2> /dev/null
+      fi
+      realSFS -fold 1 \
+              z/minCov$i.saf.idx \
+              1> z/minCov$i.sfs \
+              2> /dev/null
+   fi
+done
+find z -name '*.gz'  -delete
+find z -name '*.idx' -delete
+```
+
+```{r}
+sfs <- lapply(2:10, function(x) scan(paste0('z/minCov', x, '.sfs'), quiet = TRUE))
+pi  <- sapply(sfs, function(x) x[2] / sum(x))
+N   <- sapply(sfs, sum)
+cov <- 2:10
+plot(cov, pi)
+plot(N, pi)
+plot(cov, N)
+```
+
+```{bash}
+ASM=../2023-05-15/assembly.fasta
+BAM=../2023-05-18/BAM
+
+if [ ! -d z2 ]; then mkdir z2; fi
+for i in 2 3 4 5 6 7 8 9 10; do
+   if [ ! -e z2/minCov$i.sfs ]; then
+      if [ ! -e z2/minCov$i.saf.idx ]; then
+         angsd -i $BAM/L019Cxa.bam \
+               -anc $ASM \
+               -doGlf 1 \
+               -GL 1 \
+               -doSaf 1 \
+               -C 50 \
+               -ref $ASM \
+               -minQ 20 \
+               -minmapQ 30 \
+               -setMinDepthInd $i \
+               -out z2/minCov$i 2> /dev/null
+      fi
+      realSFS -fold 1 \
+              z2/minCov$i.saf.idx \
+              1> z2/minCov$i.sfs \
+              2> /dev/null
+   fi
+done
+find z2 -name '*.gz'  -delete
+find z2 -name '*.idx' -delete
+```
+
+```{r}
+sfs <- lapply(2:10, function(x) scan(paste0('z2/minCov', x, '.sfs'), quiet = TRUE))
+pi  <- sapply(sfs, function(x) x[2] / sum(x))
+N   <- sapply(sfs, sum)
+cov <- 2:10
+plot(cov, pi)
+plot(N, pi)
+plot(cov, N)
+```
