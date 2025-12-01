@@ -1,0 +1,5 @@
+cp2_first: marginal L estimate = -17391.65203187406
+cp2_sec: marginal L estimate = -17982.88739575979
+
+cp2_first: marginal L estimate = 
+cp2_sec: marginal L estimate = 

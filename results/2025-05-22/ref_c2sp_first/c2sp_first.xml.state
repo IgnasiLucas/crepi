@@ -1,0 +1,19 @@
+<itsabeastystatewerein version='2.0' sample='40000000'>
+<statenode id='Tree.t:toRef'>(0:0.04210931578623707,1:0.04210931578623707)2:0.0</statenode>
+<statenode id='snapperCoalescentRate.t:toRef'>snapperCoalescentRate.t:toRef[3 1] (1.0E-10,10.0): 0.6517574542757265 8.925753219241908E-4 1.4902041928705272 </statenode>
+<statenode id='birthRate.t:toRef'>birthRate.t:toRef[1 1] (-Infinity,Infinity): 0.007330221449184452 </statenode>
+</itsabeastystatewerein>
+<!--
+{"operators":[
+{"id":"SnapperGammaMover.t:toRef","p":0.9046327805117116,"accept":321179,"reject":887547,"acceptFC":321083,"rejectFC":887281,"rejectIv":208204,"rejectOp":0},
+{"id":"SnapperRateMixer.t:toRef","p":0.018852008523718412,"accept":0,"reject":1210887,"acceptFC":0,"rejectFC":1210508,"rejectIv":1184091,"rejectOp":1027559},
+{"id":"YuleBirthRateScaler.t:toRef","p":0.14657806039119226,"accept":948267,"reject":2685841,"acceptFC":947323,"rejectFC":2685660,"rejectIv":0,"rejectOp":0},
+{"id":"YuleModelTreeScaler.t:toRef","p":0.9106671359573927,"accept":536390,"reject":3097499,"acceptFC":536374,"rejectFC":3096385,"rejectIv":0,"rejectOp":0},
+{"id":"YuleModelTreeRootScaler.t:toRef","p":0.9143390649157638,"accept":564893,"reject":3068712,"acceptFC":564865,"rejectFC":3067562,"rejectIv":0,"rejectOp":0},
+{"id":"YuleModelUniformOperator.t:toRef","p":"NaN","accept":0,"reject":7140096,"acceptFC":0,"rejectFC":7128687,"rejectIv":7140096,"rejectOp":7140096},
+{"id":"YuleModelSubtreeSlide.t:toRef","p":0.03686402293658159,"accept":271082,"reject":23299239,"acceptFC":271079,"rejectFC":23293415,"rejectIv":4024347,"rejectOp":4024347},
+{"id":"YuleModelNarrow.t:toRef","p":"NaN","accept":0,"reject":3026934,"acceptFC":0,"rejectFC":3021170,"rejectIv":3026934,"rejectOp":3026934},
+{"id":"YuleModelWide.t:toRef","p":"NaN","accept":0,"reject":1471116,"acceptFC":0,"rejectFC":1469978,"rejectIv":1471116,"rejectOp":1471116},
+{"id":"YuleModelWilsonBalding.t:toRef","p":"NaN","accept":0,"reject":1470320,"acceptFC":0,"rejectFC":1469162,"rejectIv":1470320,"rejectOp":1470320}
+]}
+-->

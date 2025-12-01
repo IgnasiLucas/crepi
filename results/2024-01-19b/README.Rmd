@@ -1,0 +1,327 @@
+---
+title: 'Phylogeny reconstruction with COI for Crepidostomum'
+author: 'Mar Llaberia-Robledillo'
+date: "`r Sys.Date()`"
+output: 
+  html_document: 
+    toc: TRUE
+---
+
+## Most common haplotypes
+Those sequences with the major number of bases and less gaps that 
+belongs to either the first or the second haplotype were selected for 
+the Crepidostomum genus phylogenetic reconstruction. 
+
+
+```{r}
+suppressWarnings(library(stringr))
+suppressWarnings(library(Biostrings))
+
+hapList <- read.table('../2024-01-18/hapList.txt', header = TRUE)
+#hapList <- hapList[-c(which(is.na(hapList$freq))), ]
+hapList$Accession[1:3] <- str_split(hapList$Accession[1:3], ";")
+haps <- hapList$Accession[1:3]
+
+CrepiCOI <- readDNAStringSet("../2023-10-02/GB/COI_MW_Cfar_align.fa")
+z <- alphabetFrequency(CrepiCOI)
+rownames(z) <- names(CrepiCOI)
+#seqComplete <- z[z[,"N"] < 0, "N"]
+
+z_sum <- z[,"A"] + z[,"C"] + z[,"G"] + z[,"T"]
+z_sorted <- z[order(z_sum, decreasing = TRUE), ]
+
+z_sorted[grep("^(L)", rownames(z_sorted)), ]
+hap1 <- c("L098Cxd", "L043Cxd")
+
+z_sorted[grep("^(S)", rownames(z_sorted)), ]
+hap2 <- c("S119Cma", "S002Cma")
+
+## REPRESENTATIVES
+writeLines(hap1, "hap1.txt")
+writeLines(hap2, "hap2.txt")
+```
+
+
+## Extraction of markers from the most common haplotypes
+We extract the consensus sequence again, since we need the full version 
+and not the trimmed one in ../2023-10-02/GB/COI_MW_Cfar_align.fa-gb.
+- BAM file corresponding to the marker: COI_MW_Cfar
+```{bash, collapse = TRUE}
+if [ ! -d SampCOI_hap1 ]; then mkdir SampCOI_hap1; fi
+for i in $(cat hap1.txt); do
+  if [ ! -e SampCOI_hap1/${i}_COI.fa ]; then
+    BAM=../2023-10-02/BAM_COI_MW_Cfar/${i}.bam
+    samtools consensus -r COI_MW_Cfar $BAM -A --P-het 0 \
+                         -l 2000 -a --show-del yes --show-ins no | \
+    sed "s/>COI_MW_Cfar/>${i}/" >> SampCOI_hap1/${i}_COI.fa
+  fi
+done
+if [ ! -e hap1.fa ]; then cat SampCOI_hap1/*.fa > hap1.fa; fi
+
+
+if [ ! -d SampCOI_hap2 ]; then mkdir SampCOI_hap2; fi
+for i in $(cat hap2.txt); do
+  if [ ! -e SampCOI_hap2/${i}_COI.fa ]; then
+    BAM=../2023-10-02/BAM_COI_MW_Cfar/${i}.bam
+    samtools consensus -r COI_MW_Cfar $BAM -A --P-het 0 \
+                         -l 2000 -a --show-del yes --show-ins no | \
+    sed "s/>COI_MW_Cfar/>${i}/" >> SampCOI_hap2/${i}_COI.fa
+  fi
+done
+if [ ! -e hap2.fa ]; then cat SampCOI_hap2/*.fa > hap2.fa; fi
+```
+
+```{r}
+suppressWarnings(library(Biostrings))
+## Edit the sequences names
+hap1 <- readDNAStringSet("hap1.fa")
+names(hap1)[1] <- "L043Cxd_Crepidostomum_spp._NO_Langfjordvatn*"
+names(hap1)[2] <- "L098Cxd_Crepidostomum_spp._NO_Langfjordvatn*"
+writeXStringSet(hap1, "hap1.fa")
+
+hap2 <- readDNAStringSet("hap2.fa")
+names(hap2)[1] <- "S002Cma_Crepidostomum_spp._NO_Suohpatjávri*"
+names(hap2)[2] <- "S119Cma_Crepidostomum_spp._NO_Suohpatjávri*"
+writeXStringSet(hap2, "hap2.fa")
+
+
+```
+
+## Extraction of markers from the reference genome of Crepidsotomum 
+Done in 2023-06-22 folder. 
+```{r message=FALSE, collapse=TRUE, eval=FALSE}
+suppressWarnings(library(Biostrings))
+markers <- readDNAStringSet("../2023-10-02/markers/COI_MW_Cfar.fa")
+names(markers) <- "C.farionis_NO_Takvatn*"
+
+writeXStringSet(markers, "Cox1_RefGen.fa")
+```
+
+## Obtain the Cox1 sequences of GeneBank 
+```{bash, collapse=TRUE}
+# From ENA:
+if [ ! -d Genbank ]; then mkdir Genbank; fi
+if [ ! -e Genbank/CrepiCoxENA.fa ]; then
+   if [ ! -e Genbank/INFO_accessions.txt ]; then
+   ## COI
+      PORTAL="https://www.ebi.ac.uk/ena/portal/api/search?"
+      RESULT="result=sequence&"
+      QUERY="query=tax_tree(334452)%20AND%20description%3D%22coi%22&"
+      FIELDS="fields=accession%2Cscientific_name%2Chost%2Ccountry%2Ctax_id&"
+      FORMAT="format=tsv"
+      curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT >> Genbank/INFO_accessions.txt
+   ## COX1
+      PORTAL="https://www.ebi.ac.uk/ena/portal/api/search?"
+      RESULT="result=sequence&"
+      QUERY="query=tax_tree(334452)%20AND%20description%3D%22cox1%22&"
+      FIELDS="fields=accession%2Cscientific_name%2Chost%2Ccountry%2Ctax_id&"
+      FORMAT="format=tsv"
+      curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT | tail -n +2 >> Genbank/INFO_accessions.txt
+      # if I do Coi and Cox1 at the same time add this | tail -n +2 
+   fi
+   BROWSER="https://www.ebi.ac.uk/ena/browser/api/fasta/"
+   cut -f 1 Genbank/INFO_accessions.txt | tail -n +2 > Genbank/accessions.txt
+   ACCESSIONS=$(gawk -v ORS="," '{print}' Genbank/accessions.txt |  sed 's/.$//' )
+   curl -s $BROWSER$ACCESSIONS > Genbank/CrepiCoxENA.fa
+fi
+```
+
+# Edit and selecting the sequences of GenBank
+```{r, collapse = TRUE, warning=FALSE}
+suppressWarnings(library('DECIPHER'))
+suppressWarnings(library('htmltools'))
+suppressWarnings(library('stringr'))
+
+## Edit the sequences of GenBank
+CrepiENA <- readDNAStringSet("Genbank/CrepiCoxENA.fa")
+
+for (i in 1:length(names(CrepiENA))) {
+  name <- paste0("C._", strsplit(names(CrepiENA), " ")[[i]][3])
+  accession <- substr(strsplit(names(CrepiENA), " ")[[i]][1], 5, 12)
+  names(CrepiENA)[i] <- paste0(accession, "_", name)
+}
+
+### Keep only one sequences for sp
+names(CrepiENA)[(grep("illinoiense", names(CrepiENA)))]
+CrepiENA <- CrepiENA[-grep("illinoiense", names(CrepiENA))[c(1:6,8:9)]]
+names(CrepiENA)[(grep("affine", names(CrepiENA)))]
+CrepiENA <- CrepiENA[-grep("affine", names(CrepiENA))[c(1,3:4)]]
+names(CrepiENA)[(grep("metoecus", names(CrepiENA)))]
+CrepiENA <- CrepiENA[-grep("metoecus", names(CrepiENA))[c(1:2)]]
+names(CrepiENA)[(grep("auriculatum", names(CrepiENA)))]
+CrepiENA <- CrepiENA[-grep("auriculatum", names(CrepiENA))[2]]
+names(CrepiENA)[(grep("auritum", names(CrepiENA)))]
+CrepiENA <- CrepiENA[-grep("auritum", names(CrepiENA))[2]]
+
+CrepiENA <- CrepiENA[-grep("isostomum", names(CrepiENA))]
+
+#BrowseSeqs(AlignSeqs(CrepiENA), htmlFile = "Align_ENABrowser.html")
+
+writeXStringSet(CrepiENA, "CrepiENA_CoxEdited.fa")
+
+```
+### Modifying the names of the sequences and adding some information
+```{r}
+CrepiENA2 <- readDNAStringSet("CrepiENA_CoxEdited.fa")
+info <- read.delim("Genbank/INFO_accessions.txt", header = TRUE)
+rownames(info) <- info$accession
+
+accessions <- character()
+for (i in 1:length(names(CrepiENA2))) {accessions[i] <- strsplit(names(CrepiENA2), "_")[[i]][1]}
+info <- info[accessions, ]
+
+for (i in 1:length(names(CrepiENA2))) {
+  name <- paste0("C._", strsplit(names(CrepiENA2), "_")[[i]][3])
+  accession <- strsplit(names(CrepiENA2), "_")[[i]][1]
+  #host <- paste0(strsplit(info[accession, 2], " ")[[1]][1], "_", strsplit(info[accession, 2], " ")[[1]][2])
+  country <- str_to_upper(substr(info[accession, 4], 1,2))
+  names(CrepiENA2)[i] <- paste0(accession, "_", name, "_", country)
+}
+
+writeXStringSet(CrepiENA2, "CrepiENA_CoxEdited2.fa")
+```
+
+
+## Obtain the two outgroups for the phylogeny 
+```{bash, collapse=TRUE}
+## Allocreadium gotoi
+if [ ! -e Genbank/accessionAG.txt ]; then
+   PORTAL="https://www.ebi.ac.uk/ena/portal/api/search?"
+   RESULT="result=sequence&"
+   QUERY="query=accession=LC215273&"
+   FIELDS="fields=accession%2Cscientific_name&"
+   FORMAT="format=tsv"
+   curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT | \
+   cut -f 1 | tail -n +2 > Genbank/accessionAG.txt
+fi
+BROWSER="https://www.ebi.ac.uk/ena/browser/api/fasta/"
+ACCESSION=$(gawk -v ORS="," '{print}' Genbank/accessionAG.txt | sed 's/.$//' | cut -d ',' -f 1)
+if [ ! -e Genbank/$ACCESSION.fa ]; then 
+  curl -s $BROWSER$ACCESSION > Genbank/$ACCESSION.fa
+  sed -i "/>/c >${ACCESSION}_Allocreadium_gotoi" Genbank/${ACCESSION}.fa
+fi
+cat Genbank/${ACCESSION}.fa >> Outgroups.fa
+
+## Allocreadium khankaiensis
+if [ ! -e Genbank/accessionAK.txt ]; then
+   PORTAL="https://www.ebi.ac.uk/ena/portal/api/search?"
+   RESULT="result=sequence&"
+   QUERY="query=accession=MW729428&"
+   FIELDS="fields=accession%2Cscientific_name&"
+   FORMAT="format=tsv"
+   curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT | \
+   cut -f 1 | tail -n +2 > Genbank/accessionAK.txt
+fi
+BROWSER="https://www.ebi.ac.uk/ena/browser/api/fasta/"
+ACCESSION=$(gawk -v ORS="," '{print}' Genbank/accessionAK.txt | sed 's/.$//' | cut -d ',' -f 1)
+if [ ! -e Genbank/$ACCESSION.fa ]; then 
+  curl -s $BROWSER$ACCESSION > Genbank/$ACCESSION.fa
+  sed -i "/>/c >${ACCESSION}_Allocreadium_khankaiensis" Genbank/${ACCESSION}.fa
+fi
+cat Genbank/${ACCESSION}.fa >> Outgroups.fa
+
+```
+
+# Reconstruct the phylogeny 
+
+First, align and visualize the sequences (with R and Mafft)
+
+```{r, collapse=TRUE}
+
+CrepiENA <- readDNAStringSet("CrepiENA_CoxEdited2.fa")
+Outgroups <- readDNAStringSet("Outgroups.fa")
+
+HAP1 <- readDNAStringSet("hap1.fa")
+HAP2 <- readDNAStringSet("hap2.fa")
+#Cox_RefGen <- readDNAStringSet("Cox1_RefGen.fa")
+
+Sequences_tree <- c(CrepiENA, HAP1, HAP2, Outgroups)
+writeXStringSet(Sequences_tree, "Seq_tree.fa")
+#BrowseSeqs(AlignSeqs(Sequences_tree))
+```
+
+### Align the sequences with mafft
+```{bash}
+FOLDER=RAxML/round00
+if [ ! -d RAxML ]; then mkdir RAxML; fi
+if [ ! -d $FOLDER ]; then mkdir $FOLDER; fi
+if [ ! -e $FOLDER/AlignTree_Mafft_01.alg ]; then
+  mafft --maxiterate 1000 --thread 24 --localpair Seq_tree.fa > $FOLDER/AlignTree_Mafft_01.alg
+fi
+```
+#### Trimm the alignment
+```{bash}
+FOLDER=RAxML/round00
+#if [ ! -e AlignTree_Mafft_01.alg-gb1 ]; then
+  Gblocks $FOLDER/AlignTree_Mafft_01.alg -t=d -b1=9 -b2=14 -e=-gb1 -d=y -v=1000 -b5=h
+  #mv $FOLDER/AlignTree_Mafft_01.alg-gb1 $FOLDER/AlignTree_Mafft_02.alg
+#fi
+```
+
+```{r}
+if (file.exists("RAxML/round00/AlignTree_Mafft.alg") == FALSE) {
+  Align <- readDNAStringSet("RAxML/round00/AlignTree_Mafft_01.alg-gb1")
+  #BrowseSeqs(subseq(Align, start = 97, end = 241))
+  #Align <- subseq(Align, start = 173, end = 320)
+  writeXStringSet(Align, "RAxML/round00/AlignTree_Mafft.alg")
+}
+```
+
+### Reconstruct the tree
+```{bash, collapse = TRUE}
+FOLDER=RAxML/round00
+
+if [ ! -e T1_1000.raxml.support ]; then 
+  raxml-ng --all --msa $FOLDER/AlignTree_Mafft.alg --model GTR+G --prefix $FOLDER/T1_1000 --bs-trees 1000 --threads 48
+fi
+if [ ! -e $FOLDER/EvalMod_GTR+R4.raxml.log ]; then 
+  for i in GTR+G GTR+R4 GTR JC JC+G; do
+    raxml-ng --evaluate --msa $FOLDER/AlignTree_Mafft.alg --tree $FOLDER/T1_1000.raxml.bestTree --model ${i} --prefix $FOLDER/EvalMod_${i}
+  done
+fi
+```
+```{bash}
+FOLDER=RAxML/round00
+# Which model yields the highest log-likelihood? 
+grep "logLikelihood" $FOLDER/EvalMod*
+## The model is GTR+R4, but
+# AIC/BIC scores (lower values are better)
+grep "AIC" $FOLDER/EvalMod*
+```
+
+```{bash, collapse = TRUE, eval = FALSE}
+FOLDER=RAxML/round00
+## Finally run a tree Search
+raxml-ng --msa $FOLDER/AlignTree_Mafft.alg --model GTR+G --prefix $FOLDER/T2 --threads 48 --redo
+
+## Compute and map bootstrap support values to the best ML tree (S1.raxml.bestTree)
+raxml-ng --bootstrap --msa $FOLDER/AlignTree_Mafft.alg --model GTR+R4 --prefix $FOLDER/S2_bestTree --tree $FOLDER/T2.raxml.bestTree --threads 48 --bs-trees 10000
+# Recompute support values using the Transfer Bootstrap Expectation (TBE) algorithm. Did this change the support values?
+raxml-ng --support --tree $FOLDER/T2.raxml.bestTree --bs-trees $FOLDER/S2_bestTree.raxml.bootstraps --prefix $FOLDER/S2_FBP --threads 48 --bs-metric fbp
+raxml-ng --support --tree $FOLDER/T2.raxml.bestTree --bs-trees $FOLDER/S2_bestTree.raxml.bootstraps --prefix $FOLDER/S2_TBE --threads 48 --bs-metric tbe
+
+```
+
+```{r, fig.width=14, fig.height=20}
+suppressWarnings(library(ape))
+suppressWarnings(library(phytools))
+Tree <- read.tree("RAxML/round04_nHost/S2_FBP.raxml.support")
+## Modification to draw only the node labels above 50
+Tree$node.label[as.numeric(Tree$node.label) < 50] <- NA
+#Tree <- midpoint.root(Tree)
+Tree <- root(Tree, "MW729428_Allocreadium_khankaiensis")
+
+tiff(filename = 'CrepiCox_S2_FBP.tiff', width = 4200, height = 4500, units = "px", res = 300)
+plot.phylo(Tree, show.node.label = TRUE, cex = 0.8)
+dev.off()
+
+plot.phylo(Tree, show.node.label = TRUE, cex = 0.8)
+```
+
+# Session information
+
+```{r sessioninfo}
+sessionInfo()
+```
+
+

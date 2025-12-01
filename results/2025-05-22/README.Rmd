@@ -1,0 +1,220 @@
+---
+title: "Untitled"
+author: "Mar Llaberia-Robledillo"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+## Filtering and preparing the input files for SNAPPER
+### From alignments to reference
+
+```{r}
+toRef <- read.table('/nata/joiglu/crepidostomum2/results/2025-03-15/toRef.geno')
+bams  <- scan('/nata/joiglu/crepidostomum2/results/2025-03-15/bamlist1.txt', what = 'character', quiet = TRUE)
+samples <- sub('.bam', '', basename(bams))
+rm(bams)
+loci <- toRef[, 1:2]
+names(loci) <- c('contig', 'pos')
+geno <- toRef[, -c(1,2)]
+names(geno) <- samples
+
+geno <- geno[, !(names(geno) %in% c('L019Cxa', 'L019Cxb', 'L088Cma', 'S023Cxd'))]
+
+
+#plot(ecdf(colSums(geno >= 0)), xlab = 'Number of loci genotyped per sample',
+#     main = '', ylab = 'Cumulative fraction of samples')
+#abline(v = 200000, lty = 2, col = 'orange')
+#abline(v = 1000000, lty = 2, col = 'red')
+```
+
+I will include samples with at least 200000 genotyped loci, in order to
+include the two individuals which seem to belong to a different
+species, presumably *C. metoecus*, namely T165Cxa and S031Cmc. And for
+the moment, I will keep only variable sites genotyped in these samples.
+
+```{r}
+MinLoci <- 200000
+geno <- geno[, colSums(geno >= 0, na.rm = TRUE) > MinLoci]
+rm(toRef, samples)
+geno[geno == -1] <- NA
+ObsHet <- sapply(1:dim(geno)[2],
+                 function(x) {
+                    sum(geno[, x] == 1, na.rm = TRUE) / sum(! is.na(geno[, x]))
+                 })
+GeneticIds <- read.table('../2024-10-05/summary.txt', header = TRUE)
+GeneticIds$species <- ifelse(GeneticIds$K2.1 > 0.95, 'pseudofarionis', NA)
+GeneticIds$species <- ifelse(GeneticIds$K2.2 > 0.95, 'farionis', GeneticIds$species)
+# without hybrids
+#GeneticIds <- GeneticIds[!is.na(GeneticIds$species), ]
+
+Species <- GeneticIds[match(colnames(geno), GeneticIds$Sample), 'species']
+Species[is.na(Species)] <- 'metoecus'
+f1 <- Species == 'farionis'
+f2 <- Species == 'pseudofarionis'
+loci$freqFario  <- rowSums(geno[,f1], na.rm = TRUE) /
+   (2 * rowSums(geno[, f1] >= 0, na.rm = TRUE))
+loci$freqFario <- ifelse(loci$freqFario <= 0.5, loci$freqFario, 1.0 - loci$freqFario)
+loci$freqPseudo <- rowSums(geno[,f2], na.rm = TRUE) /
+   (2 * rowSums(geno[, f2] >= 0, na.rm = TRUE))
+loci$freqPseudo <- ifelse(loci$freqPseudo <= 0.5, loci$freqPseudo, 1.0 - loci$freqPseudo)
+loci$freqs <- rowSums(geno, na.rm = TRUE) / (2 * rowSums(! is.na(geno)))
+par(mfrow = c(1,3))
+barplot(table(round(loci$freqFario, 1)), las = 2, cex.names = 0.5, main = 'SFS C. farionis')
+barplot(table(round(loci$freqPseudo, 1)), las = 2, cex.names = 0.5, main = 'SFS C. pseudofarionis')
+boxplot(ObsHet ~ Species)
+
+withMetoecus <- ! (is.na(geno[, 'S031Cmc']) | is.na(geno[, 'T165Cxa']))
+geno <- geno[withMetoecus, ]
+loci <- loci[withMetoecus, ]
+Variable <- loci$freqFario + loci$freqPseudo > 0
+genoVar <- geno[Variable, ]
+lociVar <- loci[Variable, ]
+```
+
+I still need to remove positions in close linkage from others. The
+strategy is to use the distances among adjacent loci. Such distances
+are mostly short within a *locus*, and eventually larger among different
+loci. Thus, I can assign a locus to every position and then select
+one SNP (with highest MAF) per locus. I arbitrary set the distance
+threshold to 1000, beyond which the SNPs are assigned different loci.
+Of course, they are also different loci if they are in different contigs.
+
+```{r, eval=TRUE}
+library(plyr)
+MaxDist <- 1000
+numloci <- dim(genoVar)[1]
+lociVar$dist <- c(NA, lociVar[2:numloci, 'pos'] - lociVar[1:(numloci-1), 'pos'])
+lastcontig <- c('contig_null', lociVar[1:(numloci - 1), 'contig'])
+lociVar[lociVar$contig != lastcontig, 'dist'] <- NA
+rm(lastcontig, numloci)
+lociVar$locus <- cumsum(is.na(lociVar$dist) | lociVar$dist > MaxDist)
+lociVar$n <- rowSums(! is.na(genoVar))
+selected <- ddply(lociVar, .(locus), function(x) x[which.max(x$freqs * x$n),])
+selIndex <- match(paste(selected$contig, selected$pos, ":"),
+                  paste(lociVar$contig, lociVar$pos, ":"))
+selGeno <- geno[selIndex,]
+GenoStrings <- sapply(selGeno,
+                      function(x) {
+                         x[is.na(x)] <- '-'
+                         paste0(x, collapse = '')
+                      })
+write('#NEXUS',
+      file = 'no_hybrids/toRef.nex')
+write('BEGIN Data;',
+      file = 'no_hybrids/toRef.nex', append = TRUE)
+write(sprintf('\tDIMENSIONS NTAX=%i NCHAR=%i;',
+              length(GenoStrings), nchar(GenoStrings[1])),
+      file = 'no_hybrids/toRef.nex', append = TRUE)
+write('\tFormat datatype=integerdata symbols="012" missing=-;',
+      file = 'no_hybrids/toRef.nex', append = TRUE)
+write('\tMatrix',
+      file = 'no_hybrids/toRef.nex', append = TRUE)
+write.table(data.frame(Sample = names(geno), Genotypes = GenoStrings),
+            'no_hybrids/toRef.nex', quote = FALSE, row.names = FALSE,
+            col.names = FALSE, append = TRUE)
+write('\t;',
+      file = 'no_hybrids/toRef.nex', append = TRUE)
+write('END;',
+      file = 'no_hybrids/toRef.nex', append = TRUE)
+```
+
+
+## From alignments to ddRAD loci
+
+```{r}
+rm(list=ls())
+toRad <- read.table('/nata/joiglu/crepidostomum2/results/2025-03-15/toRad.geno')
+bams  <- scan('/nata/joiglu/crepidostomum2/results/2025-03-15/bamlist2.txt', what = 'character', quiet = TRUE)
+samples <- sub('.bam', '', basename(bams))
+rm(bams)
+loci <- toRad[, 1:2]
+names(loci) <- c('contig', 'pos')
+geno <- toRad[, -c(1,2)]
+names(geno) <- samples
+#plot(ecdf(colSums(geno >= 0)), xlab = 'Number of loci genotyped per sample',
+#     main = '', ylab = 'Cumulative fraction of samples')
+#abline(v = 500000, lty = 2, col = 'red')
+
+geno <- geno[, !(names(geno) %in% c('L019Cxa', 'L019Cxb', 'L088Cma', 'S023Cxd'))]
+
+```
+
+
+```{r}
+MinLoci <- 200000
+geno <- geno[, colSums(geno >= 0) > MinLoci]
+rm(toRad, samples)
+geno[geno == -1] <- NA
+ObsHet <- sapply(1:dim(geno)[2],
+                 function(x) {
+                    sum(geno[, x] == 1, na.rm = TRUE) / sum(! is.na(geno[, x]))
+                 })
+GeneticIds <- read.table('../2024-10-05/summary.txt', header = TRUE)
+Species <- GeneticIds[match(colnames(geno), GeneticIds$Sample), 'species']
+Species[is.na(Species)] <- 'unknown'
+f1 <- Species == 'farionis'
+f2 <- Species == 'pseudofarionis'
+loci$freqFario  <- rowSums(geno[,f1], na.rm = TRUE) /
+   (2 * rowSums(geno[, f1] >= 0, na.rm = TRUE))
+loci$freqFario <- ifelse(loci$freqFario <= 0.5, loci$freqFario, 1.0 - loci$freqFario)
+loci$freqPseudo <- rowSums(geno[,f2], na.rm = TRUE) /
+   (2 * rowSums(geno[, f2] >= 0, na.rm = TRUE))
+loci$freqPseudo <- ifelse(loci$freqPseudo <= 0.5, loci$freqPseudo, 1.0 - loci$freqPseudo)
+
+loci$freqs <- rowSums(geno, na.rm = TRUE) / (2 * rowSums(geno >= 0, na.rm = TRUE))
+loci$freqs <- ifelse(loci$freqs <= 0.5, loci$freqs, 1.0 - loci$freqs)
+barplot(table(round(loci$freqs, 2)), las = 2, cex.names = 0.5, main = 'SFS')
+loci$completeness <- rowSums(! is.na(geno))
+plot(ecdf(loci$completeness), xlab = 'Samples genotyped',
+     ylab = 'Cumulative fraction of loci', main = '')
+```
+
+I still need to remove positions in close linkage from others. The
+strategy here is to keep only one SNP per ddRAD locus: the one that
+maximizes the product of minor allele frequency and completeness.
+
+```{r, eval=TRUE}
+library(plyr)
+MinCompleteness <- 80
+MinFreq <- 0.25
+#f <- loci$completeness >= MinCompleteness & loci$freqs >= MinFreq
+f <- ! (is.na(geno[,'S031Cmc']) | is.na(geno[,'T165Cxa'])) & loci$freqs >= MinFreq
+loci <- loci[f,]
+geno <- geno[f,]
+
+selected <- ddply(loci, .(contig), function(x) x[which.max(x$freqs * x$completeness),])
+selIndex <- match(paste(selected$contig, selected$pos, ":"),
+                  paste(loci$contig, loci$pos, ":"))
+selGeno <- geno[selIndex,]
+GenoStrings <- sapply(selGeno,
+                      function(x) {
+                         x[is.na(x)] <- '-'
+                         paste0(x, collapse = '')
+                      })
+write('#NEXUS',
+      file = 'toRad.nex')
+write('BEGIN Data;',
+      file = 'toRad.nex', append = TRUE)
+write(sprintf('\tDIMENSIONS NTAX=%i NCHAR=%i;',
+              length(GenoStrings), nchar(GenoStrings[1])),
+      file = 'toRad.nex', append = TRUE)
+write('\tFormat datatype=integerdata symbols="012" missing=-;',
+      file = 'toRad.nex', append = TRUE)
+write('\tMatrix',
+      file = 'toRad.nex', append = TRUE)
+write.table(data.frame(Sample = names(geno), Genotypes = GenoStrings),
+            'toRad.nex', quote = FALSE, row.names = FALSE,
+            col.names = FALSE, append = TRUE)
+write('\t;',
+      file = 'toRad.nex', append = TRUE)
+write('END;',
+      file = 'toRad.nex', append = TRUE)
+```
+
+
+## Running SNAPPER 
+
+```{bash}
+
+```
+

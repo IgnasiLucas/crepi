@@ -1,0 +1,186 @@
+---
+title: 'PLOTS_Fig.2: Population Structure of *Crepidostomum farionis*'
+author: "Mar Llaberia-Robledillo"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# PCA
+
+The following results come from the analysis of 39698 SNPs, on different loci,
+selected among 190266 ddRAD loci, where at least 60 (out of 90) individuals
+have a coverage depth of at least 2.
+
+### Arctic region (ARCTIC)
+
+```{r plotPCAs, fig.height=8, fig.width=14, message=FALSE, collapse=TRUE}
+library(ape)
+library(plyr)
+library(ggplot2)
+bams <- scan('ARCTIC.list', what = 'character', quiet = TRUE)
+Labels <- gsub('^.*/(.*)\\.bam$', '\\1', bams)
+Lake <- factor(substring(Labels, 1, 1), levels = c('L', 'S'), ordered = TRUE)
+Lake <- revalue(Lake, c("L"="Langfjordvatn", "S"="Suohpatjávri"))
+
+#Region <- factor(rep('Alpine', length(Lake)), levels = c('Arctic', 'Alpine'))
+#Region[Lake %in% c('Langfjordvatn','Suohpatjávri')] <- 'Arctic'
+cov <- as.matrix(read.table('PCangsd/ARCTIC.cov'))
+e   <- eigen(cov)
+tab <- as.data.frame(e$vectors)
+
+#lake_color = c("yellow2", "royalblue", "orange1", "darkorange3", "seagreen4", "pink2")
+ggplot(tab, aes(x = V1, y = V2, col = Lake)) + geom_point(size = 8) + 
+  labs(x = paste("PC1", round(100 * e$values[1] / sum(e$values), digits = 2), "%"), 
+       y = paste("PC2", round(100 * e$values[2] / sum(e$values), digits = 2), "%")) + 
+  theme_bw() + theme(axis.title.y = element_text(size = 30), axis.title.x = element_text(size = 30), 
+                     axis.text.x = element_text(size = 18), axis.text.y = element_text(size = 18)) +
+  theme(legend.title = element_text(size = 0)) + theme(legend.text = element_text(size = 0)) +
+  scale_color_manual(values = c("yellow2", "royalblue"))
+  #geom_text(label = rownames(tab), nudge_x = 0.25, nudge_y = 0.25, check_overlap = F)
+```
+
+```{r}
+ggplot(tab, aes(x = V1, y = V3, col = Lake)) + geom_point(size = 8) + 
+  labs(x = paste("PC1", round(100 * e$values[1] / sum(e$values), digits = 2), "%"), 
+       y = paste("PC3", round(100 * e$values[3] / sum(e$values), digits = 2), "%")) + 
+  theme_bw() + theme(axis.title.y = element_text(size = 30), axis.title.x = element_text(size = 30), 
+                     axis.text.x = element_text(size = 18), axis.text.y = element_text(size = 18)) +
+  theme(legend.title = element_text(size = 12)) + theme(legend.text = element_text(size = 12)) +
+  scale_color_manual(values = c("yellow2", "royalblue"))
+
+ggplot(tab, aes(x = V2, y = V3, col = Lake)) + geom_point(size = 8) + 
+  labs(x = paste("PC2", round(100 * e$values[2] / sum(e$values), digits = 2), "%"), 
+       y = paste("PC3", round(100 * e$values[3] / sum(e$values), digits = 2), "%")) + 
+  theme_bw() + theme(axis.title.y = element_text(size = 30), axis.title.x = element_text(size = 30), 
+                     axis.text.x = element_text(size = 18), axis.text.y = element_text(size = 18)) +
+  theme(legend.title = element_text(size = 12)) + theme(legend.text = element_text(size = 12)) +
+  scale_color_manual(values = c("yellow2", "royalblue"))
+
+```
+
+# NGSadmix
+Perform Admixture analysis on `angsd` results. 
+Ordered by lake, and not by proportions. 
+
+```{r NGSadmixPlots, collapse=TRUE, figure.align = "center", fig.height=5, fig.width=12}
+source('/data/joiglu/bin/evalAdmix/visFuns.R')
+MetaData <- read.table('../../data/IDs/Crepido_fish_IDs_all_data_2021Dec.txt', header = TRUE)
+row.names(MetaData) <- MetaData$P_code
+IndNames <- gsub('^.*/(.*)\\.bam$', '\\1',
+                 scan('ARCTIC.list', what = 'character', quiet = TRUE))
+Lake <- MetaData[IndNames, 'Lake']
+Lake <- revalue(Lake, c("Langfjordvatn"="LAN", "Suopatjavri"="SUO"))
+Q <-  read.table(paste('NGSadmix/ARCTIC.K2.qopt', sep=""))
+ord <- orderInds(pop = Lake, q = Q, popord = c('LAN', 'SUO'))
+
+source('../../bin/plotAdmix.R')
+for (i in 3) {
+  Q <-  read.table(paste('NGSadmix/ARCTIC.K', i ,'.qopt', sep=""))
+  par(mar=c(7,4,4,2))
+  plotAdmix(Q, pop = Lake, ord = ord, rotatelab = 180, 
+            colorpal= c("red4","royalblue", "yellow2"),
+                      main = NULL,
+                      cex.main = 1.5, cex.lab = 2 ,padj = 0, cex.inds = 1,
+                      drawindslines = TRUE)
+}
+
+```
+
+Saving the results:
+```{r SAVE_NGSadmixPlots, eval = FALSE, collapse=TRUE}
+source('/data/joiglu/bin/evalAdmix/visFuns.R')
+MetaData <- read.table('../../data/IDs/Crepido_fish_IDs_all_data_2021Dec.txt', header = TRUE)
+row.names(MetaData) <- MetaData$P_code
+IndNames <- gsub('^.*/(.*)\\.bam$', '\\1',
+                 scan('ARCTIC.list', what = 'character', quiet = TRUE))
+Lake <- MetaData[IndNames, 'Lake']
+Lake <- revalue(Lake, c("Langfjordvatn"="LAN", "Suopatjavri"="SUO"))
+Q <-  read.table(paste('NGSadmix/ARCTIC.K2.qopt', sep=""))
+ord <- orderInds(pop = Lake, q = Q, popord = c('LAN', 'SUO'))
+
+source('../../bin/plotAdmix.R')
+if (!dir.exists('PLOTS')) {dir.create('PLOTS')}
+
+Q2 <-  read.table(paste('NGSadmix/ARCTIC.K2.qopt', sep=""))
+tiff(filename = paste('PLOTS/ADMIX_ARCTIC.K2.tiff', sep=""), width = 4200, height = 1200, units = "px", res = 300)
+#par(mar=c(8,4,4,3))
+plotAdmix(Q2, pop = Lake, ord = ord, rotatelab = 180, 
+          colorpal= c("yellow2", "royalblue"),
+                    main = NULL, cex.lab = 2, padj = 0.1, cex.inds = 0,
+                    drawindslines = TRUE)
+dev.off()
+
+Q3 <-  read.table(paste('NGSadmix/ARCTIC.K3.qopt', sep=""))
+tiff(filename = paste('PLOTS/ADMIX_ARCTIC.K3.tiff', sep=""), width = 4200, height = 1200, units = "px", res = 300)
+#par(mar=c(8,4,4,3))
+plotAdmix(Q3, pop = Lake, ord = ord, rotatelab = 180, 
+          colorpal= c("red4","royalblue", "yellow2"),
+                    main = NULL, cex.lab = 2, padj = 0.1, cex.inds = 0,
+                    drawindslines = TRUE)
+dev.off()
+
+
+
+```
+
+# IBS by sampling only one read per site per individual (alternative to fineRADstructure)
+
+### Arctic region (ARCTIC)
+
+```{r PCA_MDS, fig.width=8, fig.height=8, collapse=TRUE}
+Labels <- scan('ARCTIC.list', what = 'character', quiet = TRUE)
+Labels <- gsub('^.*/(.*)\\.bam$', '\\1', Labels)
+m1 <- as.matrix(read.table('Likes2/ARCTIC.ibsMat'))
+row.names(m1) <- Labels
+colnames(m1)  <- Labels
+heatmap(m1, scale = 'none', Colv = 'Rowv', symm = TRUE, cexRow = 0.5, cexCol = 0.5)
+
+
+```
+
+Saving the results:
+
+```{r SAVE_HEATMAP, eval=FALSE, collapse=TRUE}
+library(pheatmap)
+library(RColorBrewer)
+Labels <- scan('ARCTIC.list', what = 'character', quiet = TRUE)
+Labels <- gsub('^.*/(.*)\\.bam$', '\\1', Labels)
+m1 <- as.matrix(read.table('Likes2/ARCTIC.ibsMat'))
+row.names(m1) <- Labels
+colnames(m1)  <- Labels
+tiff(filename = "PLOTS/HEATMAP_ARCTIC.tiff", width = 3000, height = 3000, units = "px", res = 500)
+pheatmap(m1, color = colorRampPalette(brewer.pal(9, "YlOrRd"))(12), 
+         treeheight_row = 0,
+         fontsize = 10, 
+         border_color = NA,
+         legend = TRUE,
+         show_rownames = FALSE,
+         show_colnames = FALSE,
+         cellwidth = 2.5, cellheight = 2.5,
+         )
+
+dev.off()
+
+Labels <- scan('ARCTIC.list', what = 'character', quiet = TRUE)
+Labels <- gsub('^.*/(.*)\\.bam$', '\\1', Labels)
+m1 <- as.matrix(read.table('Likes2/ARCTIC.ibsMat'))
+#row.names(m1) <- Labels
+#colnames(m1)  <- Labels
+Lake <- substring(Labels, 1, 1)
+paleta <- c(B = 'darkgreen', L = 'yellow', N = 'orange', S = 'blue', T = 'brown', W = 'pink')
+heatmap(m1, symm = TRUE, revC = TRUE, labRow = '', labCol = '',
+        RowSideColors = paleta[Lake], ColSideColors = paleta[Lake])
+png('PLOTS/HEATMAP_ARTIC_SYM.png', width = 3000, height = 3000, units = 'px', res = 500)
+heatmap(m1, symm = TRUE, revC = TRUE, labRow = '', labCol = '',
+        RowSideColors = paleta[Lake], ColSideColors = paleta[Lake], 
+        col = colorRampPalette(brewer.pal(9, "YlOrRd"))(12))
+#legend(x="left", legend=c("min", "med", "max"), fill= colorRampPalette(brewer.pal(9, "YlOrRd"))(12))
+
+dev.off()
+```
+
+# Session information
+
+```{r sessioninfo}
+sessionInfo()
+```
