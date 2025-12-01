@@ -1,0 +1,592 @@
+---
+title: "About species delimitation with genomic data"
+author: "J. Ignacio Lucas Lledó"
+date: "`r Sys.Date()`"
+output: html_document
+bibliography: ../../doc/references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The history of how molecular data has been used in Parasitology
+to identify and to define species is relevant for our study. One
+important difference between parasites and their hosts is that
+parasites are usually much smaller, and often tiny. The small
+size of many parasites has conditioned the adoption of molecular
+data in parasitology. On one side, molecular markers must have
+helped a lot to identify similar species. Without knowing the
+field, I would guess that parasitologists eagerly adopted molecular
+markers for barcoding very early on. However, the small size of
+parasites also makes it difficult to get enough DNA to develop
+genomic resources. This must have affected the pace of adoption
+of genomic methods. Our own low coverage and low quality of the
+reference genome can be attributed to the limited amount of DNA
+that can be extracted from single individuals.
+
+Now, we need to convince readers that our use of genomic data is
+better than the traditional single-gene markers for species
+delimitation. In particular, markers and some morphological characters
+distinguish \emph{C. farionis} from \emph{C. pseudofarionis} [@Faltynkova2020].
+And we claim they are so close to each other that they could be
+considered two divergent lineages or populations of the same
+species. Genomic data has been criticized for over-splitting
+taxa, rather than for lumping them together [@Sukumaran2017;@Huang2018;@Chambers2020].
+We need to explain why our super-powerful data set does not
+separate the two populations, despite having much higher resolution
+than a single marker. While reading about this, I understood a few
+ideas that might be useful to keep in mind.
+
+First, the call for *integrative* taxonomy [@Dayrat2005] was meant
+to be conservative when proposing new names. New names should *not*
+be given without enough evidence. This explains why several authors
+are very reluctant to base species-delimitation decisions on genomic
+data [@Sukumaran2017;@Huang2018]. With genomic data, the more loci
+you use, the higher resolution you get to differentiate more similar
+groups. The delimitation of species should not be based on such an
+arbitrary methodological decision.
+
+The underlying reason why genomic data usually over-splits taxa is
+the use of the multi-species coalescent (MSC) model, which assumes the
+complete absence of migration or introgression among species. That
+is, when applying the MSC what we can differentiate are groups that
+have been genetically isolated for a certain amount of time. The more
+data you have, the shorter the time of isolation needs to be for such
+methods to detect the isolation.
+
+In some cases, this is good enough. For example, when all individuals
+are in sympatry. If prolonged sympatry did not break genetic isolation,
+then the reasons for reproductive isolation must be functional or
+adaptive, which is a strong argument in favor of speciation. An example
+is the radiation of *Coregonus* fish. But if groups identified as
+genetically isolated are geographically apart, they could be members
+of the same species, isolated by distance. That would not be enough
+evidence to call them different species.
+
+@Yang2010 warn that the "the amount of time that genetic isolation must
+have persisted before we recognize genetically isolated samples as distinct
+species (rather than subpopulations) [...] **is an essential component of
+a species definition**". I think this is the key for using genomic data
+for species delimitation. Having the power to differentiate every local
+population, how different the populations must be to be considered different
+species? This is an unavoidable decision we must make. And it may have to
+be different for different groups.
+
+This question brings us to another one: what is the correct way to measure
+differences? @Yang2010 put it in terms of time. But in evolutionary biology
+time is more accurately measured in number of expected mutations per site.
+I would argue this is the correct scale when assessing how different two
+sequences, two genomes or two populations are. Importantly, $F_{ST}$ is
+**not** the correct way to assess if two populations are the same species.
+Thus, the first thing we should do with genomic data is to fit an
+MSC model to estimate the possible speciation times (in mutations per
+site), to get an idea of how different groups are among them.
+
+One of the last improvements of genomic species delimitation is the
+explicit inclusion of introgression (sporadic) and migration (frequent)
+in the MSC model [] (another one is the use of machine learning tools).
+Introgression between *different* species is an accepted phenomenon, and
+needs to be taken into account. Otherwise, the MSC can suffer from the
+opposite problem: that of lumping together separate species. Now, how
+do the algorithms differentiate between a pair of species with introgression
+and a pair of distant populations of the same species? That I don't know
+yet.
+
+In any case, it is clear that our Bayesian analysis is deficient because
+it does not take introgression into account. They could actually be two
+different species that just happened to be involved in recent gene
+flow. I definitely plan to use BPP version 4.8, which incorporates a
+modified MSC model with introgression.
+
+## Preparation of the data
+BPP ignores the labels of individuals, after knowing what populations
+they belong to. Thus, we do not need a complete matrix of genotypes,
+but at least two sequences per locus, not necessarily from the same
+two individuals at every locus. The input data we need for BPP is one
+of the outputs of `ipyrad`, in folder `2023-05-17b/crepi95_outputfiles`.
+But we need to select a subset of the large number of loci. First, we
+should select loci where both populations have more than one sequence.
+And we should avoid loci affected by collapsed paralogy. I think the
+best filter for collapsed paralogy was applied in `2025-06-12`, where
+loci with extremely low (negative) inbreeding coefficient were discarded,
+independently for the two populations. The files
+`2025-06-12/rad/SFS/unfiltered/farionis.chr.txt` and
+`2025-06-12/rad/SFS/unfiltered/pseudofarionis.chr.txt` list the
+RAD loci selected for population statistics, after exclusion of the
+collapsed-paralogous loci. The common loci can easily be obtained.
+RAD loci were named according to their original number, as given
+at the end of the summary line of every locus in
+`2023-05-17b/crepi95_outfiles/crepi95.alleles` (see `2024-10-03`).
+
+Individuals were assigned to their population according to the
+NGSadmix analysis in `2024-10-05`.
+
+The good thing of the `crepi95.alleles` file is that the two
+sequences of each individual are phased. However, given the low
+coverage, this must usually be a duplication of a single allele
+observed. Thus, I need to pick only one sequence per individual.
+I don't think we need more than 7 sequences per population, per
+locus. And we can do with 5.
+
+To combine the information of 5 different files, one of them in a
+very particular format (`crepi95.alleles`), is not easy...
+
+```{r}
+ALLELES <- '../2023-05-17b/crepi95_outfiles/crepi95.alleles'
+LOC.FAR <- '../2025-06-12/rad/SFS/unfiltered/farionis.chr.txt'
+LOC.PSE <- '../2025-06-12/rad/SFS/unfiltered/pseudofarionis.chr.txt'
+IDS.FAR <- '../2025-06-12/farionis.txt'
+IDS.PSE <- '../2025-06-12/pseudofarionis.txt'
+
+farionis <- scan(IDS.FAR, what = 'character', quiet = TRUE)
+pseudofa <- scan(IDS.PSE, what = 'character', quiet = TRUE)
+pop <- c(rep('farionis', length(farionis)),
+         rep('pseudofarionis', length(pseudofa)))
+names(pop) <- c(farionis, pseudofa)
+
+if (! file.exists('crepi.phy')) {
+   loci.far <- scan(LOC.FAR, what = 'character', quiet = TRUE)
+   loci.pse <- scan(LOC.PSE, what = 'character', quiet = TRUE)
+   loci.common <- intersect(loci.far, loci.pse)
+   alleles  <- readLines(ALLELES)
+   delimiters <- which(startsWith(alleles, '//'))
+   lociNames <- sprintf(
+      'loc%07i',
+      as.numeric(
+         sapply(strsplit(alleles[delimiters], '|', fixed = TRUE), '[', 2)
+      )
+   )
+
+   dfs <- lapply(
+      which(lociNames %in% loci.common),
+      function(x) {
+         locus <- lociNames[x]
+         # Assumes the first locus is not in the list
+         lines <- alleles[(delimiters[x - 1] + 1):(delimiters[x] - 1)]
+         lines <- lines[grepl('_0', lines)]
+         lines <- gsub('_0', '', lines)
+         seqs  <- strsplit(lines, " +")
+         seqnames <- sapply(seqs, '[', 1)
+         sequence <- sapply(seqs, '[', 2)
+         numFar <- sum(seqnames %in% farionis)
+         numPse <- sum(seqnames %in% pseudofa)
+         return(
+            data.frame(
+               Sample = seqnames,
+               Population = pop[seqnames],
+               Locus = rep(locus, length(seqnames)),
+               Sequence = sequence,
+               row.names = NULL
+            )
+         )
+      }
+   )
+
+   phylipfile <- file('crepi.phy', open = 'w')
+   dev.null <- lapply(
+      dfs,
+      function(x) {
+         tb <- table(x$Population)
+         if ((length(tb) == 2) & (tb['farionis'] >= 5) & (tb['pseudofarionis'] >= 5)){
+            xf <- x[x$Population %in% 'farionis', ]
+            xf <- xf[sample(1:nrow(xf), min(7, nrow(xf))), ]
+            xp <- x[x$Population %in% 'pseudofarionis', ]
+            xp <- xp[sample(1:nrow(xp), min(7, nrow(xp))), ]
+            x <- rbind(xf, xp)
+            cat(paste0(nrow(x), " ", nchar(x[1, 'Sequence']), '\n'),
+                file = phylipfile,
+                append = TRUE)
+            for (i in 1:nrow(x)) {
+               cat(paste0(x[i, 'Locus'],
+                          '^',
+                          x[i, 'Sample'],
+                          '   ',
+                          x[i, 'Sequence'],
+                          '\n'),
+                   file = phylipfile,
+                   append = TRUE)
+            }
+         }
+      }
+   )
+   close(phylipfile)
+}
+
+if (! file.exists('imap.txt')) {
+   df <- data.frame(
+      sample = c(farionis, pseudofa),
+      pop = c(rep('A', length(farionis)),
+              rep('B', length(pseudofa)))
+   )
+   write.table(df, 'imap.txt', quote = FALSE, sep = '\t',
+               row.names = FALSE, col.names = FALSE)
+}
+```
+
+```{bash}
+if [ ! -e template.ctl ]; then
+   echo "seed = -1"                > template.ctl
+   echo "seqfile = crepi.phy"     >> template.ctl
+   echo "Imapfile = imap.txt"     >> template.ctl
+   echo "jobname = out.txt"       >> template.ctl
+   echo "speciesdelimitation = 0" >> template.ctl
+   echo "speciestree = 0"         >> template.ctl
+   echo "species&tree = 2 A B"    >> template.ctl
+   echo "                 7 7   * maxseqs"   >> template.ctl
+   echo "                (A,B); * guidetree" >> template.ctl
+   echo "phase = 0 0"             >> template.ctl
+   echo "usedata = 1"             >> template.ctl
+   echo "nloci = 200"             >> template.ctl
+   echo "alphaprior = 1 1 4"      >> template.ctl
+   echo "cleandata = 1"           >> template.ctl
+   echo "thetaprior = 3 0.04 e"   >> template.ctl
+   echo "tauprior = 3 0.01"       >> template.ctl
+   echo "phiprior = 1 1"          >> template.ctl
+   echo "clock = 1"               >> template.ctl
+   # From previous runs:
+   echo "finetune = 1 Gage:99.000000 Gspr:0.001201 th1:0.000255 th2:0.000775 tau:0.000274 mix:0.122370 alfa:2.758459" >> template.ctl
+   echo "print = 1 0 0 0 0"       >> template.ctl
+   echo "burnin = 25000"          >> template.ctl
+   echo "sampfreq = 75"           >> template.ctl
+   echo "nsample = 200000"        >> template.ctl
+   echo "threads = 1"             >> template.ctl
+fi
+
+if [ ! -e onesp1.ctl ]; then
+   cp template.ctl onesp1.ctl
+   sed -i "/Imapfile =/c * Imapfile = imap.txt"          onesp1.ctl
+   sed -i "/jobname = /c jobname = onespecies/out1"      onesp1.ctl
+   sed -i "/species&tr/c species&tree = 1 A"             onesp1.ctl
+   sed -i "/ * maxseqs/c                 14 * maxseqs"   onesp1.ctl
+   sed -i "/ * guidetr/c * guidetree"                    onesp1.ctl
+   sed -i "/phase = /c phase = 0"                        onesp1.ctl
+   sed -i "/burnin = /c burnin = 25000"                  onesp1.ctl
+   sed -i "/sampfreq =/c sampfreq = 75"                  onesp1.ctl
+   sed -i "/nsample = /c nsample = 200000"               onesp1.ctl
+   sed -i "/threads = /c threads = 8 25 1"               onesp1.ctl
+fi
+
+if [ ! -e onesp2.ctl ]; then
+   cp onesp1.ctl onesp2.ctl
+   sed -i "/jobname = /c jobname = onespecies/out2"      onesp2.ctl
+   sed -i "/threads = /c threads = 8 17 1"               onesp2.ctl
+fi
+if [ ! -d onespecies ]; then mkdir onespecies; fi
+if [ ! -e onespecies/out1.txt ]; then
+   bpp --cfile onesp1.ctl 1> onespecies/out1.log 2> onespecies/out1.err &
+fi
+if [ ! -e onespecies/out2.txt ]; then
+   sleep 21
+   bpp --cfile onesp2.ctl 1> onespecies/out2.log 2> onespecies/out2.err &
+fi
+
+if [ ! -e twosp1.ctl ]; then
+   cp template.ctl twosp1.ctl
+   sed -i "/Imapfile =/c Imapfile = imap.txt"            twosp1.ctl
+   sed -i "/jobname = /c jobname = twospecies/out1"      twosp1.ctl
+   sed -i "/species&tr/c species&tree = 2 A B "          twosp1.ctl
+   sed -i "/ * maxseqs/c                  7 7 "          twosp1.ctl
+   sed -i "/ * guidetr/c                (A,B);"          twosp1.ctl
+   sed -i "/phase = /c phase = 0 0"                      twosp1.ctl
+   sed -i "/burnin = /c burnin = 25000"                  twosp1.ctl
+   sed -i "/sampfreq =/c sampfreq = 75"                  twosp1.ctl
+   sed -i "/nsample = /c nsample = 200000"               twosp1.ctl
+   sed -i "/threads = /c threads = 8 9 1"                twosp1.ctl
+fi
+if [ ! -e twosp2.ctl ]; then
+   cp twosp1.ctl twosp2.ctl
+   sed -i "/jobname = /c jobname = twospecies/out2"      twosp2.ctl
+   sed -i "/jobname = /c threads = 8 1 1"                twosp2.ctl
+fi
+if [ ! -d twospecies ]; then mkdir twospecies; fi
+
+if [ ! -e twospecies/out1.txt ]; then
+   bpp --cfile twosp1.ctl 1> twospecies/out1.log 2> twospecies.err1 &
+fi
+if [ ! -e twospecies/out2.txt ]; then
+   bpp --cfile twosp2.ctl 1> twospecies/out2.log 2> twospecies.err2 &
+fi
+wait
+```
+
+## Check for autocorrelation
+
+```{r}
+library('MetBrewer')
+mcmc11 <- read.table('onespecies/out1.mcmc.txt', header = TRUE)
+mcmc12 <- read.table('onespecies/out2.mcmc.txt', header = TRUE)
+mcmc21 <- read.table('twospecies/out1.mcmc.txt', header = TRUE)
+mcmc22 <- read.table('twospecies/out2.mcmc.txt', header = TRUE)
+
+autocor <- function(mcmc, skip) {
+   cor(mcmc[1:(length(mcmc) - skip)],
+       mcmc[(skip + 1):(length(mcmc))])
+}
+autocor11 <- sapply(1:20,
+                    function(x, mcmc) autocor(mcmc, x),
+                    mcmc = mcmc11$lnL)
+autocor12 <- sapply(1:20,
+                    function(x, mcmc) autocor(mcmc, x),
+                    mcmc = mcmc12$lnL)
+autocor21 <- sapply(1:20,
+                    function(x, mcmc) autocor(mcmc, x),
+                    mcmc = mcmc21$lnL)
+autocor22 <- sapply(1:20,
+                    function(x, mcmc) autocor(mcmc, x),
+                    mcmc = mcmc22$lnL)
+paleta <- met.brewer('Egypt', 4)
+plot(c(1, 20), range(c(autocor11, autocor12, autocor21, autocor22)),
+     type = 'n', xlab = 'Offset', ylab = 'Autocorrelation')
+lines(1:20, autocor11, col = paleta[1])
+lines(1:20, autocor12, col = paleta[2])
+lines(1:20, autocor21, col = paleta[3])
+lines(1:20, autocor22, col = paleta[4])
+abline(h = 0, col = 'gray', lty = 2)
+legend(10, 0.15, c('One species, chain 1',
+                  'One species, chain 2',
+                  'Two species, chain 1',
+                  'Two species, chain 2'),
+       lty = 1, lwd = 2, col = paleta)
+```
+
+The MCMC chains had been sampled every 5 generations. But autocorrelation
+lasts much longer. If we skip every 15 samples, we are sure to have reduced
+autocorrelation to noise levels, while keeping over 13000 samples.
+
+## Check for convergence
+
+Covergence to the posterior distribution is presumably achived if all chains
+show the same distribution and if there are no tendencies along the chains.
+
+```{r}
+library('ggplot2')
+f <- 1:nrow(mcmc11) %% 15 == 0
+mcmc11$chain <- 'first'
+mcmc12$chain <- 'second'
+mcmc21$chain <- 'first'
+mcmc22$chain <- 'second'
+
+z1 <- rbind(mcmc11[f,], mcmc12[f,])
+z2 <- rbind(mcmc21[f,], mcmc22[f,])
+ggplot(z1, aes(x = Gen, y = theta.1.A, color = chain)) +
+   geom_point(size = 0.5, alpha = 0.5) + geom_smooth()
+ggplot(z2, aes(x = Gen, y = theta.1.A, color = chain)) +
+   geom_point(size = 0.5, alpha = 0.5) + geom_smooth()
+ggplot(z2, aes(x = Gen, y = theta.2.B, color = chain)) +
+   geom_point(size = 0.5, alpha = 0.5) + geom_smooth()
+ggplot(z2, aes(x = Gen, y = theta.3.A.B, color = chain)) +
+   geom_point(size = 0.5, alpha = 0.5) + geom_smooth()
+ggplot(z2, aes(x = Gen, y = tau.3.A.B, color = chain)) +
+   geom_point(size = 0.5, alpha = 0.5) + geom_smooth()
+```
+
+```{r, fig.width=12, fig.height=8}
+pal <- met.brewer('Hiroshige', 2)
+par(mfrow = c(2,3))
+plot(density(mcmc11[f, 'theta.1.A']), col = pal[1], lwd = 2,
+     main = 'One species', xlab = expression(theta))
+lines(density(mcmc12[f, 'theta.1.A']), col = pal[2], lwd = 2)
+plot(density(mcmc21[f, 'theta.1.A']), col = pal[1], lwd = 2,
+     main = 'Two species', xlab = expression(theta[A]))
+lines(density(mcmc22[f, 'theta.1.A']), col = pal[2], lwd = 2)
+plot(density(mcmc21[f, 'theta.2.B']), col = pal[1], lwd = 2,
+     main = 'Two species', xlab = expression(theta[B]))
+lines(density(mcmc22[f, 'theta.2.B']), col = pal[2], lwd = 2)
+plot(density(mcmc21[f, 'theta.3.A.B']), col = pal[1], lwd = 2,
+     main = 'Two species', xlab = expression(theta[A*B]))
+lines(density(mcmc22[f, 'theta.3.A.B']), col = pal[2], lwd = 2)
+plot(density(mcmc21[f, 'tau.3.A.B']), col = pal[1], lwd = 2,
+     main = 'Two species', xlab = expression(tau[A*B]))
+lines(density(mcmc22[f, 'tau.3.A.B']), col = pal[2], lwd = 2)
+plot(c(0, 1), c(0, 1), type = 'n', axes = FALSE, xlab = '', ylab = '')
+legend(0.1, 0.9, lwd = 3, col = pal, cex = 2, bty = 'n',
+       legend = c('First chain', 'Second chain'))
+```
+
+## Mean Values
+
+```{r}
+suppressMessages(library('kableExtra'))
+averages <- data.frame(
+   Model = c('One species', rep('Two species', 4)),
+   Parameter = c('Theta', 'Theta.A', 'Theta.B', 'Theta.A.B', 'Tau.A.B'),
+   Mean = c(mean(c(mcmc11[f, 'theta.1.A'], mcmc12[f, 'theta.1.A'])),
+            mean(c(mcmc21[f, 'theta.1.A'], mcmc22[f, 'theta.1.A'])),
+            mean(c(mcmc21[f, 'theta.2.B'], mcmc22[f, 'theta.2.B'])),
+            mean(c(mcmc21[f, 'theta.3.A.B'], mcmc22[f, 'theta.3.A.B'])),
+            mean(c(mcmc21[f, 'tau.3.A.B'], mcmc22[f, 'tau.3.A.B']))),
+   StdDev = c(sd(c(mcmc11[f, 'theta.1.A'], mcmc12[f, 'theta.1.A'])),
+              sd(c(mcmc21[f, 'theta.1.A'], mcmc22[f, 'theta.1.A'])),
+              sd(c(mcmc21[f, 'theta.2.B'], mcmc22[f, 'theta.2.B'])),
+              sd(c(mcmc21[f, 'theta.3.A.B'], mcmc22[f, 'theta.3.A.B'])),
+              sd(c(mcmc21[f, 'tau.3.A.B'], mcmc22[f, 'tau.3.A.B'])))
+)
+kable(averages) %>% kable_styling(full_width = FALSE)
+```
+
+To make sense of these numbers, a graphical representation of the model
+with two species may help.
+
+```{r, fig.width=5, fig.height=5}
+source('../2025-11-25/plotModel.R')
+Tau <- mean(c(mcmc21[f, 'tau.3.A.B'], mcmc22[f, 'tau.3.A.B']))
+Width.A <- mean(c(mcmc21[f, 'theta.1.A'], mcmc22[f, 'theta.1.A']))
+Width.B <- mean(c(mcmc21[f, 'theta.2.B'], mcmc22[f, 'theta.2.B']))
+Width.C <- mean(c(mcmc21[f, 'theta.3.A.B'], mcmc22[f, 'theta.3.A.B']))
+plotAB(Width.A, Width.B, Width.C, Tau)
+```
+
+In blue I represent the expected coalescence of two pairs of
+randomly picked copies of a gene. The width of each branch of
+the species tree is proportional to its $\theta$ parameter,
+that is, $4N_e\mu$, and it represents the expected number of
+accumulated substitutions *per site* between two homologous
+sequences from the same population. Time, in the Y axis, is measured
+in expected substitutions per site. And the expected time until
+coalescence of two sequences is either 2N generations or $2N\mu$
+mutations per site. That is, half the amount of differences between
+two sequences, because under the infinite sites model, each sequence
+being compared accumulates half of the mutations that differentiate them.
+
+The mutation rate, $\mu$, is usually measured as expected number of
+mutations per site *per generation*. Any round of clonal growth during
+a generation will contribute to the mutation rate per generation, rather
+than increasing the number of generations per year. Thus, assuming one
+generation per year is correct, as long as the mutation rate is properly
+scaled. Among metazoans, spontaneous mutation rates measured by high-throughput
+sequencing of mutation-accumulation lines, vary by a factor of almost 4, between
+$1.7\times 10^{-9}$ (*Caenorhabditis elegans*) and $5.02\times 10^{-9}$.
+Thus, a $\tau_{AB} \simeq 0.0015791$ implies divergence must have occurred
+at least $0.0015791 / 5.02\times 10^{-9} =$ `r sprintf('%.0f', 0.0015791 / 5.0e-09)`
+generations ago, and possibly as far back as `r sprintf('%.0f', 0.0015791 / 1.7e-09)`
+generations ago.
+
+## Two species with introgression
+The four admixed individuals have over 60% of *C. pseudofarionis* ancestry
+(see `2024-10-05`), which is the slightly more diverse ancestry (species B
+here).
+
+Previous runs inform that the acceptance rates seem reasonable, but autocorrelation
+extends much further. The $\phi$ parameters, representing introgression, did not
+coverge, and seem to require much longer chains. Below I use a longer burn-in
+to improve convergence, and more spaced samples, to reduce autocorrelation.
+But I limit the number of samples from the posterior, hoping to have reduced the
+autocorrelation. I also feed the chains more data.
+
+```{bash}
+if [ ! -d introgression ]; then mkdir introgression; fi
+if [ ! -e introgress1.ctl ]; then
+   cp template.ctl introgress1.ctl
+   sed -i '/jobname = /c jobname = introgression/out1' introgress1.ctl
+   sed -i '/* guidetree/c ((A, Y)X, (B, X)Y) R;'       introgress1.ctl
+   sed -i '/nloci = /c nloci = 500'                    introgress1.ctl
+   sed -i '/threads = /c threads = 8 57 1'             introgress1.ctl
+   sed -i '/finetune = /c finetune = 1 Gage:99.000000 Gspr:0.001078 th1:0.000240 th2:0.042187 tau:0.000672 mix:0.112042 phis:0.037160 alfa:2.829299' introgress1.ctl
+   sed -i '/burnin = /c burnin = 500000'               introgress1.ctl
+   sed -i '/sampfreq = /c sampfreq = 5000'             introgress1.ctl
+   sed -i '/nsample = /c nsample = 10000'              introgress1.ctl
+fi
+if [ ! -e introgress2.ctl ]; then
+   cp introgress1.ctl introgress2.ctl
+   sed -i '/jobname = /c jobname = introgression/out2' introgress2.ctl
+   sed -i '/threads = /c threads = 8 49 1'             introgress2.ctl
+fi
+
+if [ ! -e introgression/out1.log ]; then
+   bpp --cfile introgress1.ctl 1> introgression/out1.log 2> introgression/out1.err &
+fi
+if [ ! -e introgression/out2.log ]; then
+   bpp --cfile introgress2.ctl 1> introgression/out2.log 2> introgression/out2.err &
+fi
+wait
+```
+
+### Autocorrelation
+
+```{r}
+mcmc31 <- read.table('introgression/out1.mcmc.txt', header = TRUE)
+mcmc32 <- read.table('introgression/out2.mcmc.txt', header = TRUE)
+autocor <- function(mcmc, skip) {
+   cor(mcmc[1:(length(mcmc) - skip)],
+       mcmc[(skip + 1):(length(mcmc))])
+}
+autocor31 <- sapply(1:50,
+                    function(x, mcmc) autocor(mcmc, x),
+                    mcmc = mcmc31$lnL)
+autocor32 <- sapply(1:50,
+                    function(x, mcmc) autocor(mcmc, x),
+                    mcmc = mcmc32$lnL)
+paleta <- met.brewer('Egypt', 4)
+plot(c(1, 50), range(c(autocor31, autocor32)),
+     type = 'n', xlab = 'Offset', ylab = 'Autocorrelation')
+lines(1:50, autocor31, col = paleta[1])
+lines(1:50, autocor32, col = paleta[2])
+
+abline(h = 0, col = 'gray', lty = 2)
+legend(10, 0.15, c('Two species with flux, chain 1',
+                   'Two species with flux, chain 2'),
+       lty = 1, lwd = 2, col = paleta[1:2])
+```
+
+### Convergence
+
+```{r}
+#jump <- min(which.min(abs(autocor31)), which.min(abs(autocor32)))
+jump <- 1
+f <- 1:nrow(mcmc31) %% jump == 0
+mcmc31$chain <- 'first'
+mcmc32$chain <- 'second'
+
+z3 <- rbind(mcmc31[f,], mcmc32[f,])
+
+ggplot(z3, aes(x = Gen, y = theta.1.A, color = chain)) +
+   geom_point(size = 0.5, alpha = 0.5) + geom_smooth()
+ggplot(z3, aes(x = Gen, y = theta.2.B, color = chain)) +
+   geom_point(size = 0.5, alpha = 0.5) + geom_smooth()
+ggplot(z3, aes(x = Gen, y = theta.3.R, color = chain)) +
+   geom_point(size = 0.5, alpha = 0.5) + geom_smooth()
+ggplot(z3, aes(x = Gen, y = theta.4.X, color = chain)) +
+   geom_point(size = 0.5, alpha = 0.5) + geom_smooth()
+ggplot(z3, aes(x = Gen, y = theta.5.Y, color = chain)) +
+   geom_point(size = 0.5, alpha = 0.5) + geom_smooth()
+ggplot(z3, aes(x = Gen, y = tau.3.R, color = chain)) +
+   geom_point(size = 0.5, alpha = 0.5) + geom_smooth()
+ggplot(z3, aes(x = Gen, y = tau.4.X, color = chain)) +
+   geom_point(size = 0.5, alpha = 0.5) + geom_smooth()
+ggplot(z3, aes(x = Gen, y = tau.5.Y, color = chain)) +
+   geom_point(size = 0.5, alpha = 0.5) + geom_smooth()
+ggplot(z3, aes(x = Gen, y = phi.6..5.X..Y, color = chain)) +
+   geom_point(size = 0.5, alpha = 0.5) + geom_smooth()
+ggplot(z3, aes(x = Gen, y = phi.7..4.Y..X, color = chain)) +
+   geom_point(size = 0.5, alpha = 0.5) + geom_smooth()
+```
+
+```{r, fig.width=12, fig.height=16}
+pal <- met.brewer('Hiroshige', 2)
+par(mfrow = c(4,3))
+for (i in 2:12) {
+   plot(range(c(mcmc31[f, i], mcmc32[f, i])),
+        c(0, max(max(density(mcmc31[f, i])$y), max(density(mcmc32[f, i])$y))),
+        type = 'n', main = 'With hybridization', xlab = names(mcmc31[i]))
+   lines(density(mcmc31[f, i]), col = pal[1], lwd = 2)
+   lines(density(mcmc32[f, i]), col = pal[2], lwd = 2)
+}
+```
+
+### Summary of results
+
+```{r}
+averages2 <- data.frame(
+   Model = rep('Introgression', 10),
+   Parameter = names(mcmc31)[2:11],
+   Mean   = sapply(2:11, function(x) mean(c(mcmc31[f, x], mcmc32[f, x]))),
+   StdDev = sapply(2:11, function(x) mean(c(mcmc31[f, x], mcmc32[f, x])))
+)
+kable(rbind(averages, averages2)) %>% kable_styling(full_width = FALSE)
+```
+
+## Marginal likelihoods
+
+# References
+

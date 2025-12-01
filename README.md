@@ -1,5 +1,28 @@
 (Note the inverse chronological order: more recent first)
 
+# 2025-11-25
+We parse genotypes called with ANGSD to produce the alignments in the
+format expected by `bpp`. Here we run three models: one species, two
+species without migratioin, and two species with migration.
+
+# 2025-11-06
+Started as some personal notes on literature review, but ended up running
+`bpp`.
+
+Partial results suggest clear separation between the two populations.
+Here, we used sequences obtained with `ipyrad` (`2023-05-17b/crepi95_outfiles/crepi95.alleles`),
+which supposedly separate the two haplotypes of every locus, and call
+genotypes with a sense of sequencing errors. However, I don't fully
+trust the quality of those sequences. Their coverage is low, because
+the re-mapping to assembled RAD loci was done later.
+The results contrast with those obtained from genotypes called from
+posterior probabilities (with ANGSD). It may be worth feeding `bpp`
+cleaner sequences, maybe predicted with ANGSD.
+
+The chains run to fit the model with punctual introgression did not
+converge. I move ahead to a new folder in order to use data more
+comparable to those used with SNAPPER.
+
 # 2025-07-09
 I follow @Kosman2024 to estimate the effective number of different
 populations (ENDP) among the individuals identified as *C. farionis* and
