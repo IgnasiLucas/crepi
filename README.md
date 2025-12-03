@@ -2,8 +2,15 @@
 
 # 2025-11-25
 We parse genotypes called with ANGSD to produce the alignments in the
-format expected by `bpp`. Here we run three models: one species, two
-species without migratioin, and two species with migration.
+format expected by `bpp`. Here we want to run five models: one species,
+two species without migration, two species with migration, three
+species without migration and three species with migration between
+two of them.
+
+The `README.Rmd` is long and complex, in part due to the attempt at
+using alignments to the reference genome, where loci need to be defined
+and then filtered. Those alignments are not used in the end. They are longer
+than RAD loci, and they contain more sites with only heterozygous genotypes.
 
 # 2025-11-06
 Started as some personal notes on literature review, but ended up running

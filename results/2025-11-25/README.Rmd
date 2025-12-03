@@ -1,0 +1,736 @@
+---
+title: "Running `bpp` on sequences from posterior genotype calls"
+author: "J. Ignacio Lucas Lledó & Mar Llaberia Robledillo"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+In `2025-11-06` `bpp` suggested the divergence between the two population is
+deeper than the average coalescence within any of the two populations. This
+is at odds with the analyses in `2025-07-09`, where we prove that the effective
+number of *different* populations was not much larger than 1.0. The previous
+`bpp` results also contrast with SNAPPER's analysis, run by Mar either including
+or excluding the admixed individuals.
+
+The main difference between the `bpp` execution and previous results is that
+`bpp` was run in `2025-11-06` on the sequences found in `2023-05-17b/crepi95_outfiles/crepi95.alleles`,
+which is one of the output files from `ipyrad`. In principle, those sequences
+are phased and called with a binomial model that incorporates global allele
+frequencies and an estimate of error rates (I think). So, they are not raw
+reads, and should not be plagued with sequencing errors. But, still, they were
+obtained by `ipyrad` with low coverage data. Chances are that they are less
+accurate than the genotypes called by ANGSD in `2025-03-15`. To rule out the
+chance that input data biased `bpp`'s result in `2025-06-11`, I will run it
+again with diploid sequences (instead of haplotypes) derived from the genotypes
+called with ANGSD in `2025-03-15`.
+
+## Preparation of data files
+
+In `2025-03-15` we have the following files:
+
+- `toRad.geno`: genotype matrix of RAD loci in 96 samples, coded as *minor* allele
+  count (0, 1 or 2), with the value -1 for missing data.
+- `toRef.geno`: genotype matrix of reference-mapped loci in 96 samples.
+- `toRad.mafs.gz`: compressed list of RAD loci specifying the alleles present and
+  which one is considered the minor one.
+- `toRef.mafs.gz`: same, for reference-mapped loci.
+- `bamlist1.txt`: list of BAM files mapped to the reference genome.
+- `bamlist2.txt`: list of BAM files mapped to the RAD loci.
+
+We should also take into account the analyisis in `2025-06-12`, where we found
+several loci suspected to be collapsed paralogous regions. To filter them out,
+a HWE test was run individually in each population. The inbreeding coefficient
+*F* reported in the `.hwe.gz` files was used to remove sites where all samples
+were heterozygous ($F \simeq -1$). I can use those reports, but the goal is to
+filter full loci, not individual sites, because collapsed paralogy, if real,
+must be a problem of the whole locus.
+
+### Collapsed paralogous loci revisited
+
+```{bash}
+# These are needed to remove collapsed paralogous loci:
+if [ ! -e toRef.far.hwe ]; then
+   gunzip -c ../2025-06-12/ref/SFS/unfiltered/farionis.hwe.gz > toRef.far.hwe
+fi
+
+if [ ! -e toRef.pse.hwe ]; then
+   gunzip -c ../2025-06-12/ref/SFS/unfiltered/pseudofarionis.hwe.gz > toRef.pse.hwe
+fi
+
+if [ ! -e toRad.far.hwe ]; then
+   gunzip -c ../2025-06-12/rad/SFS/unfiltered/farionis.hwe.gz > toRad.far.hwe
+fi
+
+if [ ! -e toRad.pse.hwe ]; then
+   gunzip -c ../2025-06-12/rad/SFS/unfiltered/pseudofarionis.hwe.gz > toRad.pse.hwe
+fi
+```
+
+```{r, fig.width=10, fig.height=10, echo=FALSE}
+RadFarHwe <- read.table('toRad.far.hwe', header = TRUE)
+RadPseHwe <- read.table('toRad.pse.hwe', header = TRUE)
+RefFarHwe <- read.table('toRef.far.hwe', header = TRUE)
+RefPseHwe <- read.table('toRef.pse.hwe', header = TRUE)
+
+par(mfrow = c(2, 2))
+plot(c(0, 0.5), c(-1, 1), type = 'n', main = 'RAD loci, C. farionis',
+     xlab = 'Minor allele frequency', ylab = 'Inbreeding coefficient')
+f <- sample(1:nrow(RadFarHwe), 10000)
+points(RadFarHwe[f, 'Freq'], RadFarHwe[f, 'F'], pch = 16, cex = 0.5)
+
+plot(c(0, 0.5), c(-1, 1), type = 'n', main = 'RAD loci, C. pseudofarionis',
+     xlab = 'Minor allele frequency', ylab = 'Inbreeding coefficient')
+f <- sample(1:nrow(RadPseHwe), 10000)
+points(RadPseHwe[f, 'Freq'], RadPseHwe[f, 'F'], pch = 16, cex = 0.5)
+
+plot(c(0, 0.5), c(-1, 1), type = 'n', main = 'Reference loci, C. farionis',
+     xlab = 'Minor allele frequency', ylab = 'Inbreeding coefficient')
+f <- sample(1:nrow(RefFarHwe), 10000)
+points(RefFarHwe[f, 'Freq'], RefFarHwe[f, 'F'], pch = 16, cex = 0.5)
+
+plot(c(0, 0.5), c(-1, 1), type = 'n', main = 'Reference loci, C. pseudofarionis',
+     xlab = 'Minor allele frequency', ylab = 'Inbreeding coefficient')
+f <- sample(1:nrow(RefPseHwe), 10000)
+points(RefPseHwe[f, 'Freq'], RefPseHwe[f, 'F'], pch = 16, cex = 0.5)
+par(mfrow = c(1, 1))
+```
+
+I do not think there is any biological reason for such a relationship between
+allele frequency and deviation from Hardy-Weinberg equilibrium. Because both
+parameters were estimated jointly by maximum likelihood with ANGSD, I assume
+the relationship is an artifact of the method, maybe due to very low coverage.
+In any case, high MAF sites are a minority. We may not loose much by removing
+RAD loci containing sites with very negative inbreeding coefficients. The main
+discontinuity in the ECDF of the minimum *F* value per locus is at the the
+lowest value, which justifies using the same threshold as in `2025-06-12`.
+
+### Filtering of RAD loci
+
+```{r}
+suppressMessages(library('dplyr'))
+RadFarSum <- summarise(
+   RadFarHwe,
+   .by = Chromo,
+   MinF   = min(F)
+)
+
+RadPseSum <- summarise(
+   RadPseHwe,
+   .by = Chromo,
+   MinF   = min(F)
+)
+
+plot(ecdf(RadFarSum$MinF), main = c('Lowest F per locus'))
+lines(ecdf(RadPseSum$MinF), col = 'blue')
+legend(0.4, 0.4, c('C. farionis', 'C. pseudofarionis'),
+                   lwd = 2, col = c('black', 'blue'), bty = 'n')
+
+SelectedRadLoci <- intersect(
+   RadFarSum[RadFarSum$MinF > min(RadFarSum$MinF), 'Chromo'],
+   RadPseSum[RadPseSum$MinF > min(RadPseSum$MinF), 'Chromo'])
+
+write(SelectedRadLoci, 'SelectedRadLoci.txt')
+```
+
+Following the estrategy in `2025-03-15`, I subdivide reference contigs by
+loci, but I set the maximum gap length to only 100 (it was 1000 before).
+That is, contiguous sites are the same locus, long as it may be. And when
+a site with genotype data is more than 100 bases from the previous site
+with data, it becomes a new locus. I define loci within the `2025-03-15/toRef.geno`
+file, which has the same coordinates as `2025-03-15/toRef.mafs.gz`, and holds
+data from the two populations. However, the coordinates are different in
+`toRef.far.hwe` and `toRef.pse.hwe`, which hold the HWE information required
+to filter loci. It was difficult to transfer the locus information from
+the *geno* file to the *hwe*s within R. When using coordinates of a *hwe*
+file as indices of the *geno* file, the assignment of locus values would neither
+fail nor finish, because R got stuck with non-existent indices. The way I do
+it below is to reduce the *hwe* files to only positions present in the *geno*
+file. Only then the assignment of values works fine.
+
+### Filtering of loci mapped to the reference genome
+
+```{r, eval=TRUE}
+MaxDist <- 100
+toRef.sample <- sub('.bam', '', basename(
+  scan('../2025-03-15/bamlist1.txt',
+       what = 'character', quiet = TRUE)))
+GenoRef <- read.table('../2025-03-15/toRef.geno',
+                      col.names = c('Contig', 'Pos', toRef.sample))
+Map <- GenoRef[, c('Contig', 'Pos')]
+n <- nrow(Map)
+Map$Dist <- c(NA, Map[2:n, 'Pos'] - Map[1:(n - 1), 'Pos'])
+previousContig <- c('NullContig',  Map[1:(n - 1), 'Contig'])
+Map[Map$Chromo != previousContig, 'Dist'] <- NA
+Map$Locus <- cumsum(is.na(Map$Dist) | Map$Dist > MaxDist)
+row.names(Map) <- paste(Map$Contig, Map$Pos, sep = ':')
+
+GenoRef$Locus <- Map$Locus
+
+RFH <- RefFarHwe[paste(RefFarHwe$Chromo, RefFarHwe$Position, sep = ':') %in%
+                    row.names(Map), ]
+RFH$Locus <- Map[paste(RFH$Chromo,
+                       RFH$Position,
+                       sep = ':'), 'Locus']
+
+RPH <- RefPseHwe[paste(RefPseHwe$Chromo, RefPseHwe$Position, sep = ':') %in%
+                    row.names(Map), ]
+RPH$Locus <- Map[paste(RPH$Chromo,
+                       RPH$Position,
+                       sep = ':'), 'Locus']
+
+RefFarSum <- summarise(
+   RFH,
+   .by = Locus,
+   MinF   = min(F)
+)
+RefPseSum <- summarise(
+   RPH,
+   .by = Locus,
+   MinF   = min(F)
+)
+MapSum <- dplyr::summarise(Map, .by = Locus,
+                    Contig = dplyr::first(Contig),
+                    Start  = min(Pos),
+                    End    = max(Pos))
+write.table(MapSum, file = 'RefLoci.txt', quote = FALSE,
+            sep = '\t', row.names = FALSE)
+
+SelectedRefLoci <- intersect(
+   RefFarSum[RefFarSum$MinF > min(RefFarSum$MinF), 'Locus'],
+   RefPseSum[RefPseSum$MinF > min(RefPseSum$MinF), 'Locus']
+)
+```
+
+Only `r length(SelectedRefLoci)` are devoid of sites where all samples
+seem heterozygous in both populations.
+
+### Reconstruction of loci alignments
+Recall that sequences used in SNAPPER were obtained by calling genotypes
+with ANGSD based on their posterior probabilities (`2025-03-15`). We used
+the `-doGeno 2` flag in ANGSD, which produces genotypes coded by count of
+the minor allele (0, 1, 2) or -1 if the genotype is not called. Those
+genotypes are in `2025-03-15/toRad.geno` and `2025-03-15/toRef.geno`. The
+corresponding minor and major alleles are in `2025-03-15/to*.mafs` files.
+The heterozygous positions should be turned to ambiguous IUPAC nucleotide
+codes (I think). The `bpp` program will use ambiguity codes if `cleandata = 0`
+is in order.
+
+```{bash}
+if [ ! -e toRef.mafs ]; then
+   gunzip -c ../2025-03-15/toRef.mafs.gz > toRef.mafs
+fi
+if [ ! -e toRad.mafs ]; then
+   gunzip -c ../2025-03-15/toRad.mafs.gz > toRad.mafs
+fi
+```
+
+```{r, eval=TRUE}
+devnull <- sapply(c('RadFarHwe', 'RadPseHwe', 'RefFarHwe', 'RefPseHwe',
+                    'RadFarSum', 'RadPseSum', 'RefFarSum', 'RefPseSum'),
+                  function(x) if (x %in% ls()) rm(x))
+
+toRad.sample <- sub('.bam', '', basename(
+  scan('../2025-03-15/bamlist2.txt',
+       what = 'character', quiet = TRUE)))
+all.equal(toRef.sample, toRad.sample)
+
+MafsRef <- read.table('toRef.mafs', header = TRUE)
+stopifnot(all.equal(GenoRef$Contig, MafsRef$chromo))
+stopifnot(all.equal(GenoRef$Pos,    MafsRef$position))
+MafsRef$Locus <- Map$Locus
+GenoRef <- GenoRef[GenoRef$Locus %in% SelectedRefLoci, ]
+
+GenoRad <- read.table('../2025-03-15/toRad.geno',
+                      col.names = c('Locus', 'Pos', toRad.sample))
+GenoRad <- GenoRad[GenoRad$Locus %in% SelectedRadLoci, ]
+MafsRad <- read.table('toRad.mafs', header = TRUE)
+
+GeneticIds <- read.table('../2024-10-05/summary.txt', header = TRUE)
+GeneticIds$species <- ifelse(GeneticIds$K2.1 > 0.95, 'pseudofarionis', 'unknown')
+GeneticIds$species <- ifelse(GeneticIds$K2.2 > 0.95, 'farionis', GeneticIds$species)
+farionis <- GeneticIds[GeneticIds$species == 'farionis',       'Sample']
+pseudofa <- GeneticIds[GeneticIds$species == 'pseudofarionis', 'Sample']
+minCount2Seq <- function(x, minor, major){
+   # Intended to turn one vector of minor counts (for one locus)
+   # into a string of nucleotides, knowning the minor and major
+   # alleles at those sites.
+   stopifnot(is.numeric(x))
+   stopifnot(all(x >= -1))
+   stopifnot(all(x <= 2))
+   stopifnot(length(x) == length(minor))
+   stopifnot(length(minor) == length(major))
+   x <- x + 2
+   hets <- Biostrings::mergeIUPACLetters(paste0(minor, major))
+   Code <- cbind(rep('-', length(x)), major, hets, minor)
+   Seq <- paste0(mapply(function(i, j) Code[i, j], 1:length(x), x),
+                 collapse = '')
+   return(Seq)
+}
+
+if (! file.exists('crepiRad.phy')) {
+   phyfile = file('crepiRad.phy', 'w')
+   devnull <- lapply(
+      SelectedRadLoci,
+      function(x) {
+         Minor <- MafsRad[MafsRad$chromo == x, 'minor']
+         Major <- MafsRad[MafsRad$chromo == x, 'major']
+         Genos <- GenoRad[GenoRad$Locus == x, ]
+         if (length(Minor) > 25) {
+            Seqs <- lapply(
+               toRad.sample,
+               function(y) {
+                  s <- minCount2Seq(Genos[, y], Minor, Major)
+                  if (stringr::str_count(s, '-') < 0.25 * nchar(s)) {
+                     return(s)
+                  } else {
+                     return(NULL)
+                  }
+               }
+            )
+            names(Seqs) <- toRad.sample
+            Seqs <- Seqs[! sapply(Seqs, is.null)]
+            NumFar <- sum(names(Seqs) %in% farionis)
+            NumPse <- sum(names(Seqs) %in% pseudofa)
+            if ((NumFar > 1) & (NumPse > 1)) {
+               Seqs <- Seqs[names(Seqs) %in% c(farionis, pseudofa)]
+               cat(paste0(length(Seqs), ' ', length(Minor), '\n'),
+                   file = phyfile, append = TRUE)
+               for (i in 1:length(Seqs)) {
+                  cat(paste0(x, '^', names(Seqs)[i], '   ', Seqs[i], '\n'),
+                      file = phyfile, append = TRUE)
+               }
+            }
+         }
+      })
+   close(phyfile)
+}
+
+if (! file.exists('crepiRef.phy')) {
+   phyfile = file('crepiRef.phy', 'w')
+   devnull <- lapply(
+      SelectedRefLoci,
+      function(x) {
+         Minor <- MafsRef[MafsRef$Locus == x, 'minor']
+         Major <- MafsRef[MafsRef$Locus == x, 'major']
+         Genos <- GenoRef[GenoRef$Locus == x, ]
+         if (length(Minor) > 25) {
+            Seqs <- lapply(
+               toRef.sample,
+               function(y) {
+                  s <- minCount2Seq(Genos[, y], Minor, Major)
+                  if (stringr::str_count(s, '-') < 0.25 * nchar(s)) {
+                     return(s)
+                  } else {
+                     return(NULL)
+                  }
+               }
+            )
+            names(Seqs) <- toRef.sample
+            Seqs <- Seqs[! sapply(Seqs, is.null)]
+            NumFar <- sum(names(Seqs) %in% farionis)
+            NumPse <- sum(names(Seqs) %in% pseudofa)
+            if ((NumFar > 1) & (NumPse > 1)) {
+               Seqs <- Seqs[names(Seqs) %in% c(farionis, pseudofa)]
+               cat(paste0(length(Seqs), ' ', length(Minor), '\n'),
+                   file = phyfile, append = TRUE)
+               for (i in 1:length(Seqs)) {
+                  cat(paste0(x, '^', names(Seqs)[i], '   ', Seqs[i], '\n'),
+                      file = phyfile, append = TRUE)
+               }
+            }
+         }
+      })
+   close(phyfile)
+}
+```
+
+## Running `bpp`
+The `bpp` will not be able to use loci with too many samples or with too many
+variable sites, because now we are using diploid sequences, which need to be
+phased, and `bpp` considers every possible combination of alleles along
+heterozygous sites of a locus. Before preparing the control files, I need to
+reduce the data set and select up to 7 sequences per population.
+
+Loci have in general unexpectedly high average fraction of heterozygous sites
+per sequence (not shown). I apply some arbitrary filter for excess of heterozygosity
+just to facilitate `bpp`'s job. Inevitably, this introduces a bias: we will
+estimate population parameters from sites chosen to be less variable.
+
+Below I use the functions `rand()` and `asorti()` in `gawk` to randomly
+choose a few sequences from each population. The dataset from alignments to
+the reference does not seem good enough. From RAD loci I generate a third
+data file with up to 4 sequences per population and including 2, 3 or 4
+sequences from lake Bienne, which are suspected to be *C. metoecus*.
+
+### Data file reduction
+
+```{bash}
+# "A" is C. farionis, "B" is C. pseudofarionis and C...
+if [ ! -e imap.txt ]; then
+   tail -n +2 ../2024-10-05/summary.txt | \
+   gawk '($3 > 0.95){
+      print $1 "\tA"
+   }($2 > 0.95){
+      print $1 "\tB"
+   }' > imap.txt
+   echo -e "N044Cx2\tC" >> imap.txt
+   echo -e "N048Cma\tC" >> imap.txt
+   echo -e "N048Cmb\tC" >> imap.txt
+   echo -e "N048Cmc\tC" >> imap.txt
+fi
+
+if [ ! -e crepiRad2.phy ]; then
+   gawk -v MAXHET=3 '(FILENAME == "imap.txt"){
+      SP[$1] = $2
+   }(/\^/){
+      split($1, A, /\^/)
+      LOC = A[1]
+      SMP = A[2]
+      SEQ[A[2]] = $2
+      HET = gsub(/[YRMKSW]/, "n", $2)
+      if ((HET <= MAXHET) && (SP[SMP] == "A")) {
+         NUMA += 1
+         ORDA[sprintf("%.0f", rand() * 10000)] = A[2]
+         asorti(ORDA, NEWA)
+      }
+      if ((HET <= MAXHET) && (SP[SMP] == "B")) {
+         NUMB += 1
+         ORDB[sprintf("%.0f", rand() * 10000)] = A[2]
+         asorti(ORDB, NEWB)
+      }
+      if (HET == MAXHET) WARN++ 
+   }(/^[0-9]+ [0-9]+$/){
+      if ((NUMA >= 7) && (NUMB >= 7) && (WARN < 4)) {
+         print "14 " length(SEQ[SMP])
+         for (i = 1; i <= 7; i++) {
+            SA = ORDA[NEWA[i]]
+            SB = ORDB[NEWB[i]]
+            print LOC "^" SA "   " SEQ[SA]
+            print LOC "^" SB "   " SEQ[SB]
+         }
+      }
+      delete SEQ
+      delete ORDA
+      delete ORDB
+      delete NEWA
+      delete NEWB
+      NUMA = 0
+      NUMB = 0
+      WARN = 0
+   }' imap.txt crepiRad.phy > crepiRad2.phy
+fi
+
+if [ ! -e crepiRef2.phy ]; then
+   gawk -v MAXHET=4 '(FILENAME == "imap.txt"){
+      SP[$1] = $2
+   }(/\^/){
+      split($1, A, /\^/)
+      LOC = A[1]
+      SMP = A[2]
+      SEQ[A[2]] = $2
+      HET = gsub(/[YRMKSW]/, "n", $2)
+      if ((HET <= MAXHET) && (SP[SMP] == "A")) {
+         NUMA += 1
+         ORDA[sprintf("%.0f", rand() * 10000)] = A[2]
+         asorti(ORDA, NEWA)
+      }
+      if ((HET <= MAXHET) && (SP[SMP] == "B")) {
+         NUMB += 1
+         ORDB[sprintf("%.0f", rand() * 10000)] = A[2]
+         asorti(ORDB, NEWB)
+      }
+      if (HET == MAXHET) WARN++ 
+   }(/^[0-9]+ [0-9]+$/){
+      if ((NUMA >= 7) && (NUMB >= 7) && (WARN < 5)) {
+         print "14 " length(SEQ[SMP])
+         for (i = 1; i <= 7; i++) {
+            SA = ORDA[NEWA[i]]
+            SB = ORDB[NEWB[i]]
+            print LOC "^" SA "   " SEQ[SA]
+            print LOC "^" SB "   " SEQ[SB]
+         }
+      }
+      delete SEQ
+      delete ORDA
+      delete ORDB
+      delete NEWA
+      delete NEWB
+      NUMA = 0
+      NUMB = 0
+      WARN = 0
+   }' imap.txt crepiRef.phy > crepiRef2.phy
+fi
+
+if [ ! -e crepiRad3.phy ]; then
+   gawk -v MAXHET=3 '(FILENAME == "imap.txt"){
+      SP[$1] = $2
+   }(/\^/){
+      split($1, A, /\^/)
+      LOC = A[1]
+      SMP = A[2]
+      SEQ[A[2]] = $2
+      HET = gsub(/[YRMKSW]/, "n", $2)
+      if ((HET <= MAXHET) && (SP[SMP] == "A")) {
+         NUMA += 1
+         ORDA[sprintf("%.0f", rand() * 10000)] = A[2]
+         asorti(ORDA, NEWA)
+      }
+      if ((HET <= MAXHET) && (SP[SMP] == "B")) {
+         NUMB += 1
+         ORDB[sprintf("%.0f", rand() * 10000)] = A[2]
+         asorti(ORDB, NEWB)
+      }
+      if ((HET <= MAXHET) && (SP[SMP] == "C")) {
+         NUMC += 1
+         ORDC[NUMC] = A[2]
+      }
+      if (HET == MAXHET) WARN++ 
+   }(/^[0-9]+ [0-9]+$/){
+      if ((NUMA >= 4) && (NUMB >= 4) && (NUMC > 1) && (WARN < 10)) {
+         print 4 + 4 + NUMC " " length(SEQ[SMP])
+         for (i = 1; i <= 4; i++) {
+            SA = ORDA[NEWA[i]]
+            SB = ORDB[NEWB[i]]
+            print LOC "^" SA "   " SEQ[SA]
+            print LOC "^" SB "   " SEQ[SB]
+         }
+         for (i in ORDC) {
+            print LOC "^" ORDC[i] "   " SEQ[ORDC[i]]
+         }
+      }
+      delete SEQ
+      delete ORDA
+      delete ORDB
+      delete ORDC
+      delete NEWA
+      delete NEWB
+      delete NEWC
+      NUMA = 0
+      NUMB = 0
+      NUMC = 0
+      WARN = 0
+   }' imap.txt crepiRad.phy > crepiRad3.phy
+fi
+```
+
+### One species
+
+```{bash}
+if [ ! -e template.ctl ]; then
+   echo "seed = -1"                                > template.ctl
+   echo "seqfile = input.phy"                     >> template.ctl
+   echo "Imapfile = imap.txt"                     >> template.ctl
+   echo "jobname = out.txt"                       >> template.ctl
+   echo "speciesdelimitation = 0"                 >> template.ctl
+   echo "speciestree = 0"                         >> template.ctl
+   echo "species&tree = 2 A B"                    >> template.ctl
+   echo "                 7 7  * maxseqs"         >> template.ctl
+   echo "               (A,B); * guidetree"       >> template.ctl
+   echo "phase = 1 1"                             >> template.ctl
+   echo "usedata = 1"                             >> template.ctl
+   echo "nloci = 1000"                            >> template.ctl
+   echo "alphaprior = 1 1 4"                      >> template.ctl
+   echo "cleandata = 0"                           >> template.ctl
+   echo "thetaprior = 3 0.04 e"                   >> template.ctl
+   echo "tauprior = 3 0.01"                       >> template.ctl
+   echo "locusrate = 1 0 0 5.0 iid"               >> template.ctl
+   echo "clock = 1"                               >> template.ctl
+   echo "finetune = 1"                            >> template.ctl
+   echo "print = 1 0 0 0 0"                       >> template.ctl
+   echo "burnin = 25000"                          >> template.ctl
+   echo "sampfreq = 250"                          >> template.ctl
+   echo "nsample = 100000"                        >> template.ctl
+   echo "threads = 8 25 1"                        >> template.ctl
+fi
+
+if [ ! -e onesp1.ctl ]; then
+   cp template.ctl onesp1.ctl
+   sed -i "/Imapfile =/c * Imapfile = imap.txt"   onesp1.ctl
+   sed -i "/seqfile = /c seqfile = crepiRad2.phy" onesp1.ctl
+   sed -i "/jobname = /c jobname = onesp/out1"    onesp1.ctl
+   sed -i "/species&tr/c species&tree = 1 A"      onesp1.ctl
+   sed -i "/ * maxseqs/c            14 * maxseqs" onesp1.ctl
+   sed -i "/ * guidetr/c               * guidetr" onesp1.ctl
+   sed -i "/phase = /c phase = 1"                 onesp1.ctl
+   sed -i "/finetune =/c finetune = 1 Gage:99.000000 Gspr:0.001216 th1:0.000382 tau:0.000000 mix:0.041259 alfa:2.638333 mu_i:0.867624" onesp1.ctl
+fi
+
+if [ ! -e onesp2.ctl ]; then
+   cp onesp1.ctl onesp2.ctl
+   sed -i "/jobname = /c jobname = onesp/out2"    onesp2.ctl
+   sed -i "/threads = /c threads = 8 17 1"        onesp2.ctl
+fi
+
+if [ ! -d onesp ]; then mkdir onesp; fi
+if [ ! -e onesp/out1.txt ]; then
+   bpp --cfile onesp1.ctl 1> onesp/out1.log 2> onesp/out1.err &
+fi
+if [ ! -e onesp/out2.txt ]; then
+   bpp --cfile onesp2.ctl 1> onesp/out2.log 2> onesp/out2.err &
+fi
+wait
+```
+
+### Two isolated species
+
+```{bash, eval=FALSE}
+if [ ! -e imap2.txt ]; then
+   grep -v -P "\tC$" imap.txt > imap2.txt
+fi
+if [ ! -d twosp ]; then mkdir twosp; fi
+if [ ! -e twosp1.ctl ]; then
+   cp template.ctl twosp1.ctl
+   sed -i "/seqfile = /c seqfile = crepiRad2.phy"    twosp1.ctl
+   sed -i "/Imapfile =/c Imapfile = imap2.txt"       twosp1.ctl
+   sed -i "/jobname = /c jobname = twosp/out1"       twosp1.ctl
+   sed -i "/finetune =/c finetune = 1" twosp1.ctl
+fi
+
+if [ ! -e twosp2.ctl ]; then
+   cp twosp1.ctl twosp2.ctl
+   sed -i "/jobname = /c jobname = twosp/out2"       twosp2.ctl
+   sed -i "/threads = /c threads = 8 17 1"           twosp2.ctl
+fi
+
+if [ ! -e twosp/out1.txt ]; then
+   bpp --cfile twosp1.ctl 1> twosp/out1.log 2> twosp/out1.err &
+fi
+
+if [ ! -e twosp/out2.txt ]; then
+   bpp --cfile twosp2.ctl 1> twosp/out2.log 2> twosp/out2.err &
+fi
+wait
+```
+
+### Three isolated species
+
+```{bash, eval=FALSE}
+if [ ! -d threesp ]; then mkdir threesp; fi
+if [ ! -e threesp1.ctl ]; then
+   cp template.ctl threesp1.ctl
+   sed -i "/seqfile = /c seqfile = crepiRad3.phy"     threesp1.ctl
+   sed -i "/jobname = /c jobname = threesp/out1"      threesp1.ctl
+   sed -i "/species&tr/c species&tree = 3 A B C"      threesp1.ctl
+   sed -i "/ * maxseqs/c                  4 4 4"      threesp1.ctl
+   sed -i "/ * guidetr/c             ((A,B),C);"      threesp1.ctl
+   sed -i "/phase = /c phase = 1 1 1"                 threesp1.ctl
+   sed -i "/finetune =/c finetune = 1" threesp1.ctl
+fi
+
+if [ ! -e threesp2.ctl ]; then
+   cp threesp1.ctl threesp2.ctl
+   sed -i "/jobname = /c jobname = threesp/out2"      threesp2.ctl
+   sed -i "/threads = /c threads = 8 17 1"            threesp2.ctl
+fi
+
+if [ ! -e threesp/out1.txt ]; then
+   bpp --cfile threesp1.ctl 1> threesp/out1.log 2> threesp/out1.err &
+fi
+
+if [ ! -e threesp/out2.txt ]; then
+   bpp --cfile threesp2.ctl 1> threesp/out2.log 2> threesp/out2.err &
+fi
+wait
+```
+
+### Two species with migration
+
+```{bash, eval=FALSE}
+if [ ! -d twoMig ]; then mkdir twoMig; fi
+if [ ! -e twoMig1.ctl ]; then
+   cp template.ctl twoMig1.ctl
+   sed -i "/seqfile = /c seqfile = crepiRad2.phy"    twoMig1.ctl
+   sed -i "/jobname = /c jobname = twoMig/out1"      twoMig1.ctl
+   sed -i "/phase = /c *newline  \nphase = 1 1"      twoMig1.ctl
+   sed -i "/*newline /c migprior = 2 200\n*newline " twoMig1.ctl
+   sed -i "/*newline /c migration 2\n  A B\n  B A"   twoMig1.ctl
+fi
+if [ ! -e twoMig2.ctl ]; then
+   cp twoMig1.ctl twoMig2.ctl
+   sed -i "/jobname = /c jobname = twoMig/out2"      twoMig2.ctl
+   sed -i "/threads = /c threads = 8 17 1"           twoMig2.ctl
+fi
+
+if [ ! -e twoMig/out1.txt ]; then
+   bpp --cfile twoMig1.ctl 1> twoMig/out1.log 2> twoMig/out1.err &
+fi
+if [ ! -e twoMig/out2.txt ]; then
+   bpp --cfile twoMig2.ctl 1> twoMig/out2.log 2> twoMig/out2.err &
+fi
+wait
+```
+
+
+### Three species with migration between two of them
+
+```{bash, eval=FALSE}
+if [ ! -d threeMig ]; then mkdir threeMig; fi
+if [ ! -e threeMig1.ctl ]; then
+   cp template.ctl threeMig1.ctl
+   sed -i "/seqfile = /c seqfile = crepiRad3.phy"    threeMig1.ctl
+   sed -i "/jobname = /c jobname = threeMig/out1"    threeMig1.ctl
+   sed -i "/species&tr/c species&tree = 3 A B C"     threeMig1.ctl
+   sed -i "/ * maxseqs/c                  4 4 4"     threeMig1.ctl
+   sed -i "/ * guidetr/c              ((A,B),C);"    threeMig1.ctl
+   sed -i "/phase = /c *newline  \nphase = 1 1 1"    threeMig1.ctl
+   sed -i "/*newline /c migprior = 2 200\n*newline " threeMig1.ctl
+   sed -i "/*newline /c migration 2\n  A B\n  B A"   threeMig1.ctl
+fi
+if [ ! -e threeMig2.ctl ]; then
+   cp threeMig1.ctl threeMig2.ctl
+   sed -i "/jobname = /c jobname = threeMig/out2"    threeMig2.ctl
+   sed -i "/threads = /c threads = 8 17 1"           threeMig2.ctl
+fi
+
+if [ ! -e threeMig/out1.txt ]; then
+   bpp --cfile threeMig1.ctl 1> threeMig/out1.log 2> threeMig/out1.err &
+fi
+if [ ! -e threeMig/out2.txt ]; then
+   bpp --cfile threeMig2.ctl 1> threeMig/out2.log 2> threeMig/out2.err &
+fi
+wait
+```
+
+## Analysis of results
+
+### One species
+
+```{r, fig.width=10, fig.height=5}
+source('mcmc.R')
+mcmc1 <- read.table('onesp/out1.mcmc.txt', header = TRUE)
+mcmc2 <- read.table('onesp/out2.mcmc.txt', header = TRUE)
+par(mfrow = c(1, 2))
+autocorPlot(mcmc1)
+autocorPlot(mcmc2)
+par(mfrow = c(1, 1))
+```
+
+```{r, fig.width=4, fig.height=8}
+tendencyPlot(mcmc1)
+tendencyPlot(mcmc2)
+
+convergencePlot(mcmc1, mcmc2)
+```
+
+```{r}
+onesp <- rbind(mcmc1, mcmc2)
+plot(density(onesp$theta.1.A, bw = 'SJ'), main = expression(theta[A]))
+abline(v = mean(onesp$theta.1.A), col = 'red', lty = 2)
+text(0.015, 1000, sprintf("Mean = %.4f\nS.D. = %.4f",
+                           mean(onesp$theta.1.A),
+                           sd(onesp$theta.1.A)))
+```
+
+### Two isolated species
+
+### Two species with migration
+
+### Three isolated species
+
+### Three species with migration between two of them
