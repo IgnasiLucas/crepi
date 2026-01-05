@@ -1,0 +1,208 @@
+---
+title: "Site frequency spectrum of the whole population"
+author: "J. Ignacio Lucas Lledó"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+When using `ipyrad`'s data, `bpp` suggested in `2025-11-06` that the total ancestral
+variation was split between the two daughter populations: they did not seem to grow.
+But when using predicted genotypes from ANGSD in `2025-11-25`, the daughter
+populations seem more diverse than the ancestral ones. They actually seem to have
+grown over 5 (*C. farionis*) and 7-fold (*C. pseudofarionis*) with respect to the
+ancestral population. I suppose the reason is that the two
+populations accumulated low-frequency variants independently in recent times, which
+are even lower-frequency when considered a single population. Low frequency variants
+must have been missed by `ipyrad` under it's conservative settings. To check this
+interpretation, I want to run ANGSD with all samples as a single population. I expect
+ANGSD to report an SFS more biased towards low frequency variants. Let's see.
+
+In `2025-06-12`, we removed a few thousand sites from analysis that appeared
+heterozygous in all samples from the same population:
+
+  |  Dataset   |  Population  | Total sites |  Removed  |  Sites used  |
+  | ---------- | ------------ | ----------- | --------- | ------------ |
+  | Reference  | C. farionis  |   2101093   |    8344   |   2092749    |
+  | Reference  | C. pseudofa. |   1875360   |    4470   |   1870890    |
+  | Rad loci   | C. farionis  |   3257248   |    7522   |   3249726    |
+  | Rad loci   | C. pseudofa. |   3025512   |    4085   |   3021427    |
+
+Now, pooling the two populations together, we must remove those sites all together,
+and use only sites valid in both populations. Using the `*.sites.txt` files in
+`2025-06-12/*/SFS/unfiltered/`, I manually count 1147152 and 1627689 sites common
+to both populations in the reference and rad loci data sets, respectively. Although
+the filters may affect the final number of sites included.
+
+```{bash}
+RADBAM=../2024-10-04/BAM
+REFBAM=../2023-05-18/BAM
+RADREF=../2024-10-04/radloci.fa
+REFREF=../2023-05-15/assembly.fasta
+
+if [ ! -d rad ]; then mkdir rad; fi
+if [ ! -d ref ]; then mkdir ref; fi
+
+
+if [ ! -e onesp.txt ]; then
+   gawk '((NR > 1) && ($2 > 0.95)){
+      print $1
+   }' ../2024-10-05/summary.txt >  onesp.txt
+   gawk '((NR > 1) && ($3 > 0.95)){
+      print $1
+   }' ../2024-10-05/summary.txt >> onesp.txt
+fi
+
+if [ ! -e rad/onesp.list ]; then
+   find $RADBAM -name '*.bam' | grep -f onesp.txt | sort > rad/onesp.list
+fi
+
+if [ ! -e ref/onesp.list ]; then
+   find $REFBAM -name '*.bam' | grep -f onesp.txt | sort > ref/onesp.list
+fi
+
+if [ ! -e rad/sites.txt.idx ]; then
+   if [ ! -e rad/sites.txt ]; then
+      sdiff ../2025-06-12/rad/SFS/unfiltered/farionis.sites.txt \
+            ../2025-06-12/rad/SFS/unfiltered/pseudofarionis.sites.txt | \
+      grep -v '[\|><]' | cut -f 1,2 > rad/sites.txt
+   fi
+   angsd sites index rad/sites.txt 1> rad/sites.log 2> rad/sites.err &
+fi
+
+if [ ! -e ref/sites.txt.idx ]; then
+   if [ ! -e ref/sites.txt ]; then
+      sdiff ../2025-06-12/ref/SFS/unfiltered/farionis.sites.txt \
+            ../2025-06-12/ref/SFS/unfiltered/pseudofarionis.sites.txt | \
+      grep -v '[\|><]' | cut -f 1,2 > ref/sites.txt
+   fi
+   angsd sites index ref/sites.txt 1> ref/sites.log 2> ref/sites.err &
+fi
+wait
+
+for i in ref rad; do
+   if [ ! -e $i/sites.chr.txt ]; then
+      cut -f 1 $i/sites.txt | sort | uniq > $i/sites.chr.txt
+   fi
+   if [ ! -e $i/onesp.saf.idx ]; then
+      REF=$RADREF
+      if [ "$i" = "ref" ]; then
+         REF=$REFREF
+      fi
+      angsd -b $i/onesp.list \
+            -anc $REF \
+            -ref $REF \
+            -rf    $i/sites.chr.txt \
+            -sites $i/sites.txt \
+            -out   $i/onesp \
+            -doGlf 1 \
+            -GL 1 \
+            -doSaf 1 \
+            -doMajorMinor 1 \
+            -minmapQ 30 \
+            -minQ 30 \
+            -only_proper_pairs 1 \
+            -baq 1 \
+            -minInd 60 \
+            -setMinDepthInd 4 \
+            -nThreads 8 1> $i/onesp.log \
+            2> $i/onesp.err &
+   fi
+done
+wait
+
+for i in rad ref; do
+   if [ ! -e $i/onesp.sfs ]; then
+      realSFS -fold 1 $i/onesp.saf.idx \
+      1> $i/onesp.sfs 2> $i/onesp.sfs.err &
+   fi
+done
+wait
+```
+
+The logs report 1606945 and 1138572 sites analysed in the RAD-loci and reference
+data sets respectively.
+
+## Nucleotide diversity
+
+```{r, fig.width=5, fig.height=10}
+PiTajima <- function(x, folded = TRUE){
+   n <- length(x) - 1  # the SFS includes invariable sites and, if folded, 0 values for i > n/2
+   a <- 1:(n/2)
+   Theta <- (2/(n * (n-1))) * sum(x[2:(n/2 + 1)] * a * (n - a)) / sum(x)
+   return(Theta)
+}
+PiWatterson <- function(x, folded = TRUE){
+   n <- length(x) - 1
+   a <- sum(1/(1:(n-1)))
+   Theta <- sum(x[-1]) / (a * sum(x))
+   return(Theta)
+}
+
+# SFS data and calculations
+ref <- scan('ref/onesp.sfs', quiet = TRUE)
+n <- (length(ref) - 1) / 2
+ref.pi.T <- PiTajima(ref)
+ref.pi.W <- PiWatterson(ref)
+
+rad <- scan('rad/onesp.sfs', quiet = TRUE)
+rad.pi.T <- PiTajima(rad)
+rad.pi.W <- PiWatterson(rad)
+
+# Plotting
+par(mfrow = c(2, 1))
+plot(c(0, n), c(0, 0.05), type = 'n', xlab = '', ylab = '', axes = FALSE,
+     main = 'One species, Ref alignments')
+barplot(ref[1:(n + 1)] / sum(ref), add = TRUE, space = 0)
+text(2 * n / 3, 0.040,
+     bquote(pi[T]==.(ref.pi.T)))
+text(2 * n / 3, 0.035,
+     bquote(pi[W]==.(ref.pi.W)))
+
+plot(c(0, n), c(0, 0.05), type = 'n', xlab = '', ylab = '', axes = FALSE,
+     main = 'One species, RAD loci')
+barplot(rad[1:(n + 1)] / sum(rad), add = TRUE, space = 0)
+text(2 * n / 3, 0.040,
+     bquote(pi[T]==.(rad.pi.T)))
+text(2 * n / 3, 0.035,
+     bquote(pi[W]==.(rad.pi.W)))
+```
+
+For comparison with previous results, I type below the numbers. But they are not
+updated automatically, and some of them (`bpp`'s results) may be provisional at the
+time of writing. The sources are `2025-06-12` for ANGSD's results of separate
+populations, the current document for ANGSD's results of a single species (*Together*),
+and `2025-11-25` for `bpp`'s results.
+
+ |  Source  |  Population  |  Estimator  |  Value  |
+ | -------- | ------------ | ----------- | ------- |
+ |   bpp    |  C. farionis |  Post. mean |  0.015  |
+ |   bpp    | C. pseudofa. |  Post. mean |  0.022  |
+ |   bpp    |   Together   |  Post. mean |  0.014  |
+ |  angsd   |  C. farionis |    Tajima   |  0.015  |
+ |  angsd   | C. pseudofa. |    Tajima   |  0.016  |
+ |  angsd   |   Together   |    Tajima   |  0.018  |
+ |  angsd   |  C. farionis |  Watterson  |  0.020  |
+ |  angsd   | C. pseudofa. |  Watterson  |  0.019  |
+ |  angsd   |   Together   |  Watterson  |  0.031  |
+ 
+The figures above are shown only for alignments to RAD loci, which is the
+only kind of data used by `bpp`. Keep in mind that loci used by `bpp` are a subset
+of the dataset aligned to RAD loci, with only 7 individuals used per locus. An arbitrary
+filter to avoid excess of heterozygosity may have biased `bpp`'s diversity estimates
+downwards.
+
+The main conclusions from this comparsions are:
+
+1. The nucleotide diversity of the two populations together, as a single species, is
+   very similar to the diversities observed in individual populations, when measured by
+   Tajima's estimate or by the posterior's mean. This is indicative of very little
+   divergence.
+2. Only Watterson's estimate indicate a considerably higher diversity in the whole
+   population, as compared to individual populations. This confirms the idea that the
+   main contributions to differences between populations are due to low frequency
+   variants, found in excess by all accounts.
+
