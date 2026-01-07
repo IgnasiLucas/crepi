@@ -945,7 +945,8 @@ The four admixed individuals do not have lower depth of coverage than the rest.
 indH <- read.table('summary_indH.txt', header = TRUE)
 indH$depth <- meanDepth.rad[indH$Ind]
 indH[indH$Assembly == 'Reference', 'depth'] <- medianDepth.ref[indH[indH$Assembly == 'Reference', 'Ind']]
-ggplot(data = indH, mapping = aes(x = depth, y = H, color = Pop)) + geom_point() + facet_wrap(~Assembly)
+f <- indH$Pop %in% c('Admixed', 'C.farionis', 'C.pseudofarionis')
+ggplot(data = indH[f,], mapping = aes(x = depth, y = H, color = Pop)) + geom_point() + facet_wrap(~Assembly, scales = 'free_x')
 ```
 
 The covariation of individual heterozygosity with median coverage is not
