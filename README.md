@@ -1,16 +1,28 @@
 (Note the inverse chronological order: more recent first)
 
+# 2026-01-03
+We run ANGSD once more, to estimate SFS in the whole set, without
+separating populations. The purpose is to check the conclusions from
+the previous folder, that is, that in the whole data set, nucleotide
+diversity is not much higher than in individual populations, and that
+the excess of low frequency variants is even more pronounced. Results
+are quite consistent.
+
 # 2025-11-25
 We parse genotypes called with ANGSD to produce the alignments in the
 format expected by `bpp`. Here we want to run five models: one species,
 two species without migration, two species with migration, three
 species without migration and three species with migration between
-two of them.
+two of them. For the moment, three are running.
 
 The `README.Rmd` is long and complex, in part due to the attempt at
 using alignments to the reference genome, where loci need to be defined
 and then filtered. Those alignments are not used in the end. They are longer
 than RAD loci, and they contain more sites with only heterozygous genotypes.
+
+Before the main three models finished, it seems that the two lineages split
+recently and grew independently, accumulating low frequency variants in excess.
+Migration seems to have been frequent.
 
 # 2025-11-06
 Started as some personal notes on literature review, but ended up running
@@ -73,6 +85,11 @@ The four individuals presumed to be admixed do not show significantly higher
 levels of heterozygosity, which is unexpected. I checked individual distributions
 of depth of coverage, and I confirm *admixed* individuals do not have lower
 depths of coverage.
+
+# 2025-05-22
+This is the folder were SNAPPER is run. The `README.Rmd` is not compiled,
+and it's just a copy of part of the script in `2025-03-15`. The analysis is not
+scripted. The folder misses a summary of results.
 
 # 2025-04-08
 Failed attempt at estimating population parameters with ANGSD, from
