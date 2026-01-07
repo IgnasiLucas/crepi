@@ -1,0 +1,5 @@
+<itsabeastystatewerein version='2.0' sample='1000000'>
+<statenode id='Tree.t:toRef'>((0:0.0020607952944402337,1:0.0020607952944402337)3:0.08757989331785364,2:0.08964068861229388)4:0.0</statenode>
+<statenode id='snapperCoalescentRate.t:toRef'>snapperCoalescentRate.t:toRef[5 1] (1.0E-10,1.0): 0.0032006999693019447 2.0619984318637574E-4 0.0025993243299917428 0.7622659261154382 0.9971871451529887 </statenode>
+<statenode id='birthRate.t:toRef'>birthRate.t:toRef[1 1] (-Infinity,Infinity): 1.9334619188503914 </statenode>
+</itsabeastystatewerein>

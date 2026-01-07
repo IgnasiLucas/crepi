@@ -1,0 +1,19 @@
+<itsabeastystatewerein version='2.0' sample='10000000'>
+<statenode id='Tree.t:toRef'>((0:0.05243561004166519,2:0.05243561004166519)3:0.0033586466699360024,1:0.055794256711601195)4:0.0</statenode>
+<statenode id='snapperCoalescentRate.t:toRef'>snapperCoalescentRate.t:toRef[5 1] (1.0E-10,10.0): 0.004829197705419628 2.2962858688416836 2.7007046058298196 0.00924343684409623 5.0079232308227075 </statenode>
+<statenode id='birthRate.t:toRef'>birthRate.t:toRef[1 1] (-Infinity,Infinity): 1.6079491918832296 </statenode>
+</itsabeastystatewerein>
+<!--
+{"operators":[
+{"id":"SnapperGammaMover.t:toRef","p":3.0538324575838383,"accept":591252,"reject":1991620,"acceptFC":589302,"rejectFC":1988816,"rejectIv":546920,"rejectOp":470153},
+{"id":"SnapperRateMixer.t:toRef","p":0.08875746161846632,"accept":4436,"reject":858008,"acceptFC":4410,"rejectFC":856537,"rejectIv":753279,"rejectOp":712845},
+{"id":"YuleBirthRateScaler.t:toRef","p":0.1674486013735741,"accept":49832,"reject":122712,"acceptFC":49540,"rejectFC":122677,"rejectIv":0,"rejectOp":0},
+{"id":"YuleModelTreeScaler.t:toRef","p":0.7183944837528631,"accept":109255,"reject":408138,"acceptFC":109173,"rejectFC":407284,"rejectIv":0,"rejectOp":0},
+{"id":"YuleModelTreeRootScaler.t:toRef","p":0.8344308782427279,"accept":16677,"reject":500553,"acceptFC":16666,"rejectFC":499645,"rejectIv":224539,"rejectOp":224539},
+{"id":"YuleModelUniformOperator.t:toRef","p":"NaN","accept":33871,"reject":2554785,"acceptFC":33815,"rejectFC":2550265,"rejectIv":0,"rejectOp":0},
+{"id":"YuleModelSubtreeSlide.t:toRef","p":0.0038455021103045535,"accept":91350,"reject":771392,"acceptFC":91323,"rejectFC":769851,"rejectIv":100591,"rejectOp":100591},
+{"id":"YuleModelNarrow.t:toRef","p":"NaN","accept":410406,"reject":107019,"acceptFC":409679,"rejectFC":106774,"rejectIv":0,"rejectOp":0},
+{"id":"YuleModelWide.t:toRef","p":"NaN","accept":136755,"reject":379808,"acceptFC":136506,"rejectFC":379046,"rejectIv":344510,"rejectOp":344510},
+{"id":"YuleModelWilsonBalding.t:toRef","p":"NaN","accept":1242,"reject":860890,"acceptFC":1241,"rejectFC":859250,"rejectIv":754323,"rejectOp":754323}
+]}
+-->

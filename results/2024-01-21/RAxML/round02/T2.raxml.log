@@ -1,0 +1,137 @@
+
+RAxML-NG v. 1.2.1 released on 22.12.2023 by The Exelixis Lab.
+Developed by: Alexey M. Kozlov and Alexandros Stamatakis.
+Contributors: Diego Darriba, Tomas Flouri, Benoit Morel, Sarah Lutteropp, Ben Bettisworth, Julia Haag, Anastasis Togkousidis.
+Latest version: https://github.com/amkozlov/raxml-ng
+Questions/problems/suggestions? Please visit: https://groups.google.com/forum/#!forum/raxml
+
+System: Intel(R) Xeon(R) CPU E5-4620 0 @ 2.20GHz, 32 cores, 251 GB RAM
+
+RAxML-NG was called at 06-Nov-2025 11:18:36 as follows:
+
+raxml-ng --msa RAxML/round02/AlignTree_Mafft.alg --model GTR+G --prefix RAxML/round02/T2 --threads 48 --redo
+
+Analysis options:
+  run mode: ML tree search
+  start tree(s): random (10) + parsimony (10)
+  random seed: 1762424316
+  tip-inner: OFF
+  pattern compression: ON
+  per-rate scalers: OFF
+  site repeats: ON
+  logLH epsilon: general: 10.000000, brlen-triplet: 1000.000000
+  fast spr radius: AUTO
+  spr subtree cutoff: 1.000000
+  fast CLV updates: ON
+  branch lengths: proportional (ML estimate, algorithm: NR-FAST)
+  SIMD kernels: AVX
+  parallelization: coarse-grained (auto), PTHREADS (48 threads), thread pinning: OFF
+
+WARNING: Running in REDO mode: existing checkpoints are ignored, and all result files will be overwritten!
+
+[00:00:00] Reading alignment from file: RAxML/round02/AlignTree_Mafft.alg
+[00:00:00] Loaded alignment with 13 taxa and 456 sites
+
+WARNING: Sequences MT080758_C.farionis_IC/RU and L098Cxd_Crepidostomum_spp._NO_Langfjordvatn* are exactly identical!
+WARNING: Duplicate sequences found: 1
+
+NOTE: Reduced alignment (with duplicates and gap-only sites/taxa removed) 
+NOTE: was saved to: /nata/mar/crepidostomum2/results/2024-01-21/RAxML/round02/T2.raxml.reduced.phy
+
+Alignment comprises 1 partitions and 91 patterns
+
+Partition 0: noname
+Model: GTR+FO+G4m
+Alignment sites / patterns: 456 / 91
+Gaps: 1.64 %
+Invariant sites: 78.51 %
+
+
+NOTE: Binary MSA file created: RAxML/round02/T2.raxml.rba
+
+Parallelization scheme autoconfig: 16 worker(s) x 3 thread(s)
+
+[00:00:00] Generating 10 random starting tree(s) with 13 taxa
+[00:00:00] Generating 10 parsimony starting tree(s) with 13 taxa
+Parallel parsimony with 48 threads
+Parallel reduction/worker buffer size: 1 KB  / 0 KB
+
+[00:00:00] Data distribution: max. partitions/sites/weight per thread: 1 / 31 / 496
+[00:00:00] Data distribution: max. searches per worker: 2
+
+Starting ML tree search with 20 distinct starting trees
+
+[00:00:00 -2401.108303] Initial branch length optimization
+[00:00:00 -2156.195973] Model parameter optimization (eps = 10.000000)
+[00:00:00 -1803.306756] AUTODETECT spr round 1 (radius: 5)
+[00:00:00 -1288.266521] AUTODETECT spr round 2 (radius: 10)
+[00:00:00 -1288.085122] SPR radius for FAST iterations: 10 (autodetect)
+[00:00:00 -1288.085122] Model parameter optimization (eps = 3.000000)
+[00:00:00 -1283.317949] FAST spr round 1 (radius: 10)
+[00:00:00] [worker #15] ML tree search #16, logLikelihood: -1267.555788
+[00:00:00] [worker #7] ML tree search #8, logLikelihood: -1267.556163
+[00:00:00 -1267.987756] FAST spr round 2 (radius: 10)
+[00:00:00] [worker #2] ML tree search #3, logLikelihood: -1267.556149
+[00:00:00] [worker #11] ML tree search #12, logLikelihood: -1267.555762
+[00:00:00 -1267.987729] Model parameter optimization (eps = 1.000000)
+[00:00:00] [worker #10] ML tree search #11, logLikelihood: -1267.555759
+[00:00:00] [worker #13] ML tree search #14, logLikelihood: -1267.555777
+[00:00:00] [worker #12] ML tree search #13, logLikelihood: -1267.555790
+[00:00:00] [worker #14] ML tree search #15, logLikelihood: -1267.555792
+[00:00:00 -1267.590461] SLOW spr round 1 (radius: 5)
+[00:00:00] [worker #1] ML tree search #2, logLikelihood: -1267.556915
+[00:00:00] [worker #4] ML tree search #5, logLikelihood: -1267.562252
+[00:00:00] [worker #8] ML tree search #9, logLikelihood: -1267.556073
+[00:00:00] [worker #9] ML tree search #10, logLikelihood: -1267.558087
+[00:00:00] [worker #3] ML tree search #4, logLikelihood: -1267.556335
+[00:00:00] [worker #5] ML tree search #6, logLikelihood: -1267.557588
+[00:00:00] [worker #6] ML tree search #7, logLikelihood: -1267.557101
+[00:00:00 -1267.587968] SLOW spr round 2 (radius: 10)
+[00:00:00 -1267.587967] Model parameter optimization (eps = 0.100000)
+
+[00:00:00] [worker #0] ML tree search #1, logLikelihood: -1267.557515
+
+[00:00:00 -1699.508433] Initial branch length optimization
+[00:00:00 -1308.104841] Model parameter optimization (eps = 10.000000)
+[00:00:00] [worker #2] ML tree search #19, logLikelihood: -1267.555784
+[00:00:00 -1268.612984] AUTODETECT spr round 1 (radius: 5)
+[00:00:00 -1267.606237] AUTODETECT spr round 2 (radius: 10)
+[00:00:00 -1267.604196] SPR radius for FAST iterations: 5 (autodetect)
+[00:00:00 -1267.604196] Model parameter optimization (eps = 3.000000)
+[00:00:00 -1267.556257] FAST spr round 1 (radius: 5)
+[00:00:00 -1267.556193] Model parameter optimization (eps = 1.000000)
+[00:00:00 -1267.555753] SLOW spr round 1 (radius: 5)
+[00:00:00] [worker #1] ML tree search #18, logLikelihood: -1267.555756
+[00:00:00 -1267.555753] SLOW spr round 2 (radius: 10)
+[00:00:00 -1267.555753] Model parameter optimization (eps = 0.100000)
+
+[00:00:00] [worker #0] ML tree search #17, logLikelihood: -1267.555750
+
+[00:00:00] [worker #3] ML tree search #20, logLikelihood: -1267.555775
+
+Optimized model parameters:
+
+   Partition 0: noname
+   Rate heterogeneity: GAMMA (4 cats, mean),  alpha: 0.311957 (ML),  weights&rates: (0.250000,0.006315) (0.250000,0.113823) (0.250000,0.615348) (0.250000,3.264514) 
+   Base frequencies (ML): 0.211525 0.239294 0.258012 0.291169 
+   Substitution rates (ML): 0.123495 3.247108 1.415047 0.177404 1.919355 1.000000 
+
+
+Final LogLikelihood: -1267.555750
+
+AIC score: 2599.111499 / AICc score: 2604.104407 / BIC score: 2731.031269
+Free parameters (model + branch lengths): 32
+
+WARNING: Best ML tree contains 2 near-zero branches!
+
+Best ML tree with collapsed near-zero branches saved to: /nata/mar/crepidostomum2/results/2024-01-21/RAxML/round02/T2.raxml.bestTreeCollapsed
+Best ML tree saved to: /nata/mar/crepidostomum2/results/2024-01-21/RAxML/round02/T2.raxml.bestTree
+All ML trees saved to: /nata/mar/crepidostomum2/results/2024-01-21/RAxML/round02/T2.raxml.mlTrees
+Optimized model saved to: /nata/mar/crepidostomum2/results/2024-01-21/RAxML/round02/T2.raxml.bestModel
+
+Execution log saved to: /nata/mar/crepidostomum2/results/2024-01-21/RAxML/round02/T2.raxml.log
+
+Analysis started: 06-Nov-2025 11:18:36 / finished: 06-Nov-2025 11:18:36
+
+Elapsed time: 0.648 seconds
+

@@ -1,0 +1,19 @@
+<itsabeastystatewerein version='2.0' sample='20000000'>
+<statenode id='Tree.t:toRef'>(0:0.04478355318423696,1:0.04478355318423696)2:0.0</statenode>
+<statenode id='snapperCoalescentRate.t:toRef'>snapperCoalescentRate.t:toRef[3 1] (1.0E-10,10.0): 0.6915942749269439 0.002656225549773171 1.4799059485179065 </statenode>
+<statenode id='birthRate.t:toRef'>birthRate.t:toRef[1 1] (-Infinity,Infinity): 0.7549939426845815 </statenode>
+</itsabeastystatewerein>
+<!--
+{"operators":[
+{"id":"SnapperGammaMover.t:toRef","p":1.1754695962021926,"accept":154997,"reject":494340,"acceptFC":154901,"rejectFC":494035,"rejectIv":144615,"rejectOp":0},
+{"id":"SnapperRateMixer.t:toRef","p":0.021382010167077803,"accept":0,"reject":649050,"acceptFC":0,"rejectFC":648643,"rejectIv":632811,"rejectOp":537884},
+{"id":"YuleBirthRateScaler.t:toRef","p":0.15482671014572774,"accept":539841,"reject":1407644,"acceptFC":538869,"rejectFC":1407487,"rejectIv":0,"rejectOp":0},
+{"id":"YuleModelTreeScaler.t:toRef","p":0.907444296291975,"accept":273710,"reject":1674373,"acceptFC":273680,"rejectFC":1673230,"rejectIv":0,"rejectOp":0},
+{"id":"YuleModelTreeRootScaler.t:toRef","p":0.9082983493334948,"accept":275998,"reject":1673059,"acceptFC":275977,"rejectFC":1671946,"rejectIv":0,"rejectOp":0},
+{"id":"YuleModelUniformOperator.t:toRef","p":"NaN","accept":0,"reject":19477990,"acceptFC":0,"rejectFC":19466645,"rejectIv":19477990,"rejectOp":19477990},
+{"id":"YuleModelSubtreeSlide.t:toRef","p":0.06241445901970583,"accept":69671,"reject":9675118,"acceptFC":69667,"rejectFC":9669365,"rejectIv":2695242,"rejectOp":2695242},
+{"id":"YuleModelNarrow.t:toRef","p":"NaN","accept":0,"reject":9734784,"acceptFC":0,"rejectFC":9729091,"rejectIv":9734784,"rejectOp":9734784},
+{"id":"YuleModelWide.t:toRef","p":"NaN","accept":0,"reject":1949689,"acceptFC":0,"rejectFC":1948478,"rejectIv":1949689,"rejectOp":1949689},
+{"id":"YuleModelWilsonBalding.t:toRef","p":"NaN","accept":0,"reject":1949739,"acceptFC":0,"rejectFC":1948633,"rejectIv":1949739,"rejectOp":1949739}
+]}
+-->

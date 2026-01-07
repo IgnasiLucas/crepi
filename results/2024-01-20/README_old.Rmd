@@ -1,0 +1,394 @@
+---
+title: 'Crepidostomum: Phylogeny reconstruction with 28S marker'
+author: 'Mar Llaberia-Robledillo'
+date: "`r Sys.Date()`"
+output: 
+  html_document: 
+    toc: TRUE
+---
+
+# Extraction of markers from the most common haplotypes
+According to the tree in 2024-01-19 for COI and the 
+haplotype network in 2024-01-17. 
+```{bash, collapse = TRUE}
+if [ ! -d Samp28S_farionis ]; then mkdir Samp28S_farionis; fi
+for i in $(cat ../2024-01-19/farionis.txt); do
+  if [ ! -e Samp28S_farionis/${i}_28S.fa ]; then
+    BAM=../2023-10-02/BAM_lsrDNA_MT_Cpse/${i}.bam
+    samtools consensus -r lsrDNA_MT_Cpse $BAM -A --P-het 0 \
+                         -l 2000 -a --show-del yes --show-ins no | \
+    sed "s/>lsrDNA_MT_Cpse/>${i}/" >> Samp28S_farionis/${i}_28S.fa
+  fi
+done
+if [ ! -e farSamp28S.fa ]; then cat Samp28S_farionis/*.fa > farSamp28S.fa; fi
+
+if [ ! -d Samp28S_pseudo ]; then mkdir Samp28S_pseudo; fi
+for i in $(cat ../2024-01-19/pseudo.txt); do
+  if [ ! -e Samp28S_pseudo/${i}_28S.fa ]; then
+    BAM=../2023-10-02/BAM_lsrDNA_MT_Cpse/${i}.bam
+    samtools consensus -r lsrDNA_MT_Cpse $BAM -A --P-het 0 \
+                         -l 2000 -a --show-del yes --show-ins no | \
+    sed "s/>lsrDNA_MT_Cpse/>${i}/" >> Samp28S_pseudo/${i}_28S.fa
+  fi
+done
+if [ ! -e pseSamp28S.fa ]; then cat Samp28S_pseudo/*.fa > pseSamp28S.fa; fi
+```
+
+```{r}
+suppressMessages(library(stringr))
+suppressMessages(library(Biostrings))
+## Edit the sequences names
+farSamp28S <- readDNAStringSet("farSamp28S.fa")
+names(farSamp28S)[1] <- "L065Cxa_C._farionis_NO_Langfjordvatn*"
+names(farSamp28S)[2] <- "S004Cma_C._farionis_NO_Suohpatjavri*"
+writeXStringSet(farSamp28S, "farSamp28S.fa")
+
+pseSamp28S <- readDNAStringSet("pseSamp28S.fa")
+names(pseSamp28S)[1] <- "L131Cmb_C._pseudofarionis_NO_Langfjordvatn*"
+names(pseSamp28S)[2] <- "S001Cma_C._pseudofarionis_NO_Suohpatjavri*"
+writeXStringSet(pseSamp28S, "pseSamp28S.fa")
+```
+
+## Obtain the sequences of GeneBank 
+```{bash, collapse=TRUE}
+
+# From ENA:
+if [ ! -d Genbank ]; then mkdir Genbank; fi
+if [ ! -e Genbank/Crepi28SENA.fa ]; then
+   if [ ! -e Genbank/INFO_accessions.txt ]; then
+   ## COI
+      PORTAL="https://www.ebi.ac.uk/ena/portal/api/search?"
+      RESULT="result=sequence&"
+      QUERY="query=tax_tree(334452)%20AND%20description%3D%22large%20subunit%20ribosomal%20%22&"
+      FIELDS="fields=accession%2Cscientific_name%2Chost%2Ccountry%2Ctax_id&"
+      FORMAT="format=tsv"
+      curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT >> Genbank/INFO_accessions.txt
+   ## COX1
+      PORTAL="https://www.ebi.ac.uk/ena/portal/api/search?"
+      RESULT="result=sequence&"
+      QUERY="query=tax_tree(334452)%20AND%20description%3D%2228S%22&"
+      FIELDS="fields=accession%2Cscientific_name%2Chost%2Ccountry%2Ctax_id&"
+      FORMAT="format=tsv"
+      curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT | tail -n +2 >> Genbank/INFO_accessions.txt
+      # if I do Coi and Cox1 at the same time add this | tail -n +2 
+   fi
+   BROWSER="https://www.ebi.ac.uk/ena/browser/api/fasta/"
+   cut -f 1 Genbank/INFO_accessions.txt | tail -n +2 > Genbank/accessions.txt
+   ACCESSIONS=$(gawk -v ORS="," '{print}' Genbank/accessions.txt |  sed 's/.$//' )
+   curl -s $BROWSER$ACCESSIONS > Genbank/Crepi28SENA.fa
+fi
+
+
+```
+
+# Edit and selecting the sequences of GenBank
+```{r, collapse = TRUE, warning=FALSE}
+suppressWarnings(library('DECIPHER'))
+suppressWarnings(library('htmltools'))
+suppressWarnings(library('stringr'))
+
+## Edit the sequences of GenBank
+Crepi28S <- readDNAStringSet("Genbank/Crepi28SENA.fa")
+
+for (i in 1:length(names(Crepi28S))) {
+  name <- paste0("C. ", strsplit(names(Crepi28S), " ")[[i]][3])
+  accession <- substr(strsplit(names(Crepi28S), " ")[[i]][1], 5, 12)
+  names(Crepi28S)[i] <- paste0(accession, " ", name)
+}
+
+## First round
+### We try to remove those duplicated accessions and information
+### Addittionally, create the .fa file for the tree test 
+Crepi28S <- Crepi28S[-grep("sp.", names(Crepi28S), fixed = TRUE)]
+info <- read.delim("Genbank/INFO_accessions.txt", header = TRUE)
+rownames(info) <- info$accession
+
+accessions <- character()
+for (i in 1:length(names(Crepi28S))) {accessions[i] <- strsplit(names(Crepi28S), " ")[[i]][1]}
+info <- info[accessions, ]
+
+for (i in 1:length(names(Crepi28S))) {
+  name <- paste0("C._", strsplit(names(Crepi28S), " ")[[i]][3])
+  accession <- strsplit(names(Crepi28S), " ")[[i]][1]
+  #host <- paste0(strsplit(info[accession, 3], " ")[[1]][1], "_", strsplit(info[accession, 3], " ")[[1]][2])
+  country <- str_to_upper(substr(info[accession, 4], 1,2))
+  if (country == "SW") { country <- "CH"}
+  if (country == "UN") { country <- "UK"}
+  names(Crepi28S)[i] <- paste0(accession, "_", name, "_", country)
+}
+
+writeXStringSet(Crepi28S, "Crepi28S_Edited.fa")
+if (!dir.exists("RAxML")) {dir.create("RAxML")}
+if (!dir.exists("RAxML/round00")) {dir.create("RAxML/round00")}
+writeXStringSet(Crepi28S, "RAxML/round00/Seq_round00.fa")
+```
+
+```{bash}
+FOLDER=RAxML/round00
+if [ ! -e $FOLDER/AlignTree_Mafft.alg ]; then
+  mafft --maxiterate 100 --thread 48 --localpair $FOLDER/Seq_round00.fa > $FOLDER/AlignTree_Mafft.alg
+  raxml-ng --all --msa $FOLDER/AlignTree_Mafft.alg --model GTR+G --prefix $FOLDER/T1_10 --bs-trees 10 --threads 48
+fi
+
+```
+
+```{r, FixNAMES_Pt2, collapse =TRUE}
+suppressWarnings(library('DECIPHER'))
+suppressWarnings(library('htmltools'))
+suppressWarnings(library('stringr'))
+suppressWarnings(library('phangorn'))
+
+## Too many sequences, we search for those who are exactly identical
+# with raxml, since it identifies the sequences that are 
+# identical and creates a reduced phy without gaps and duplicates
+phy <- read.phyDat("RAxML/round00/T1_10.raxml.reduced.phy")
+
+acphy <- character()
+for (i in 1:length(names(phy))) {acphy[i] <- strsplit(names(phy), "_")[[i]][1]}
+## Remove those that are not in the reduced phy 
+Origin <- readDNAStringSet("Crepi28S_Edited.fa")
+Crepi28S <- DNAStringSet()
+for (i in 1:length(acphy)) {
+  Crepi28S[i] <- Origin[grep(acphy[i], names(Origin), fixed = TRUE)]
+  if (strsplit(names(phy), "_")[[i]][1] == acphy[i]) {
+    names(Crepi28S)[i] <- names(phy)[i]
+  }
+}
+#BrowseSeqs(AlignSeqs(Crepi28S))
+
+writeXStringSet(Crepi28S, "Crepi28S_Edited2.fa")
+```
+
+```{r}
+## First we gonna trim the alignment and remove those sequences 
+#  without data 
+Crepi28S <- readDNAStringSet("Crepi28S_Edited2.fa")
+Crepi28S <- subseq(AlignSeqs(Crepi28S), start = 1480, end = 2500)
+
+Freq <- alphabetFrequency(Crepi28S)
+Freq <- which(Freq[,16] == length(Crepi28S[[1]]))
+Crepi28S <- Crepi28S[-Freq]
+
+
+### We have left 66 sequences, most of them repeating the 
+## species or country, so we gonna filter them and keep 
+## only two sequences for species
+
+## Keep 1 of each sp 
+names(Crepi28S)[(grep("oschmarini", names(Crepi28S)))]
+Crepi28S <- Crepi28S[-grep("oschmarini", names(Crepi28S))[c(1,3:5)]]
+
+names(Crepi28S)[(grep("brinkmanni", names(Crepi28S)))]
+Crepi28S <- Crepi28S[-grep("brinkmanni", names(Crepi28S))[c(2:3)]]
+
+names(Crepi28S)[(grep("illinoiense", names(Crepi28S)))]
+Crepi28S <- Crepi28S[-grep("illinoiense", names(Crepi28S))[c(1:4,6:12)]]
+
+names(Crepi28S)[(grep("affine", names(Crepi28S)))]
+Crepi28S <- Crepi28S[-grep("affine", names(Crepi28S))[c(2:5)]]
+
+names(Crepi28S)[(grep("_farionis", names(Crepi28S)))]
+Crepi28S <- Crepi28S[-grep("_farionis", names(Crepi28S))[c(2,5:6,8)]]
+
+names(Crepi28S)[(grep("metoecus", names(Crepi28S)))]
+Crepi28S <- Crepi28S[-grep("metoecus", names(Crepi28S))[c(1:10)]]
+
+names(Crepi28S)[(grep("nemachilus", names(Crepi28S)))]
+Crepi28S <- Crepi28S[-grep("nemachilus", names(Crepi28S))[c(2:4)]]
+
+names(Crepi28S)[(grep("cooperi", names(Crepi28S)))]
+Crepi28S <- Crepi28S[-grep("cooperi", names(Crepi28S))[c(1)]]
+
+names(Crepi28S)[(grep("auriculatum", names(Crepi28S)))]
+Crepi28S <- Crepi28S[-grep("auriculatum", names(Crepi28S))[c(1:2,4:5)]]
+
+names(Crepi28S)[(grep("chaenogobii", names(Crepi28S)))]
+Crepi28S <- Crepi28S[-grep("chaenogobii", names(Crepi28S))[c(1)]]
+
+names(Crepi28S)[(grep("cornutum", names(Crepi28S)))]
+Crepi28S <- Crepi28S[-grep("cornutum", names(Crepi28S))[c(1:5)]]
+
+names(Crepi28S)[(grep("auritum", names(Crepi28S)))]
+Crepi28S <- Crepi28S[-grep("auritum", names(Crepi28S))[2]]
+
+
+#BrowseSeqs(Crepi28S)
+
+# Replace "-" by "N" in each sequence (needed)
+#replace_gaps_with_N <- function(Crepi28S) {
+#  gsub("-", "N", as.character(Crepi28S))
+#}
+#sequences_N <- DNAStringSet(sapply(Crepi28S, replace_gaps_with_N))
+
+writeXStringSet(Crepi28S, "Crepi28S_Edited3.fa")
+
+```
+
+## Obtain the two outgroups for the phylogeny 
+```{bash, collapse=TRUE}
+
+# RESULT = Supported types are analysis,analysis_study,assembly,coding,noncoding,read_experiment,read_run,read_study,sample,sequence,study,taxon,tls_set,tsa_set,wgs_set
+
+## Allocreadium neotenicum
+if [ ! -e Genbank/accessionAN.txt ]; then
+   PORTAL="https://www.ebi.ac.uk/ena/portal/api/search?"
+   RESULT="result=sequence&"
+   QUERY="query=accession=MH143104&"
+   FIELDS="fields=accession%2Cscientific_name%2Chost%2Ccountry%2Ctax_id&"
+   FORMAT="format=tsv"
+   curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT | \
+   cut -f 1 | tail -n +2 > Genbank/accessionAN.txt
+   curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT | \
+   tail -n +2 > Genbank/info_AN.txt
+fi
+BROWSER="https://www.ebi.ac.uk/ena/browser/api/fasta/"
+ACCESSION=$(gawk -v ORS="," '{print}' Genbank/accessionAN.txt | sed 's/.$//' | cut -d ',' -f 1)
+SP=$(cut -f 2 Genbank/info_AN.txt | sed "s/$(echo ' ')/_/g")
+HOST=$(cut -f 3 Genbank/info_AN.txt | sed "s/$(echo ' ')/_/g")
+COUNTRY=$(cut -f 4 Genbank/info_AN.txt | cut -c1-3 | awk '{print toupper($0)}')
+if [ ! -e Genbank/$ACCESSION.fa ]; then
+  curl -s $BROWSER$ACCESSION > Genbank/$ACCESSION.fa
+  sed -i "/>/c >${ACCESSION}_${SP}" Genbank/${ACCESSION}.fa
+fi
+cat Genbank/${ACCESSION}.fa >> Outgroups.fa
+
+## Cercariaeum crassum
+if [ ! -e Genbank/accessionCC.txt ]; then
+   PORTAL="https://www.ebi.ac.uk/ena/portal/api/search?"
+   RESULT="result=sequence&"
+   QUERY="query=accession=OQ359131&"
+   FIELDS="fields=accession%2Cscientific_name%2Chost%2Ccountry%2Ctax_id&"
+   FORMAT="format=tsv"
+   curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT | \
+   cut -f 1 | tail -n +2 > Genbank/accessionCC.txt
+   curl -s $PORTAL$RESULT$QUERY$FIELDS$FORMAT | \
+   tail -n +2 > Genbank/info.txt
+fi
+BROWSER="https://www.ebi.ac.uk/ena/browser/api/fasta/"
+ACCESSION=$(gawk -v ORS="," '{print}' Genbank/accessionCC.txt | sed 's/.$//' | cut -d ',' -f 1)
+SP=$(cut -f 2 Genbank/info.txt | sed "s/$(echo ' ')/_/g")
+HOST=$(cut -f 3 Genbank/info.txt | sed "s/$(echo ' ')/_/g")
+COUNTRY=$(cut -f 4 Genbank/info.txt | cut -c1-3 | awk '{print toupper($0)}')
+if [ ! -e Genbank/$ACCESSION.fa ]; then
+  curl -s $BROWSER$ACCESSION > Genbank/$ACCESSION.fa
+  sed -i "/>/c >${ACCESSION}_${SP}" Genbank/${ACCESSION}.fa
+  #sed -i "/>/c >${ACCESSION}_${SP}\|\\${HOST}\|\\${COUNTRY}" ${ACCESSION}.fa
+fi
+cat Genbank/${ACCESSION}.fa >> Outgroups.fa
+
+```
+
+# Reconstruct the phylogeny 
+
+## Extraction of markers from the reference genome of Crepidsotomum 
+Done in 2023-06-22 folder. 
+```{r message=FALSE, collapse=TRUE}
+markers <- readDNAStringSet("lsrDNA_RefGen2.fa")
+names(markers)[1] <- "C._farionis_NO_Takvatn*"
+writeXStringSet(markers[1], "lsrDNA_RefGen2.fa")
+```
+
+First, align and visualize the sequences (with R and Mafft)
+
+```{r, collapse=TRUE}
+## Sequences
+farSamp28S <- readDNAStringSet("farSamp28S.fa")
+pseSamp28S <- readDNAStringSet("pseSamp28S.fa")
+#RefGen_28S <- readDNAStringSet("lsrDNA_RefGen.fa")
+#RefGen_28S <- lsrDNARef_far
+#RefGen_28S <- readDNAStringSet("../2023-06-22/Syn_lsrDNARef.fa")
+#RefGen2_28S <- readDNAStringSet("../2023-10-02/markers/lsrDNA_MW.fa")
+Outgroups <- readDNAStringSet("Outgroups.fa") 
+
+Crepi28S <- readDNAStringSet("Crepi28S_Edited3.fa")
+#GenBank_pseudo <- readDNAStringSet("Genbank/pseudofarionis_plus.fa")
+#Extra_28Spseudo <- readDNAStringSet("../2024-02-23/pseudofarionis_Elo.txt")
+#Extra2_28Spseudo <- readDNAStringSet("Genbank/pseudofarionisGB.txt")
+
+
+Sequences_tree <- c(farSamp28S, pseSamp28S, Outgroups, Crepi28S)
+writeXStringSet(Sequences_tree, "Seq28S_tree.fa")
+```
+
+```{bash}
+## Our sequences are so much longer than the ENA sequences, so first we align them with mafft, 
+## and then we trim the alignment before execute RAxML
+
+FOLDER=RAxML/round00
+if [ ! -d RAxML ]; then mkdir RAxML; fi
+if [ ! -d $FOLDER ]; then mkdir $FOLDER; fi
+if [ ! -e $FOLDER/AlignTree_Mafft_01.alg ]; then
+  mafft --maxiterate 1000 --thread 24 --localpair Seq28S_tree.fa > $FOLDER/AlignTree_Mafft_01.alg 
+fi
+```
+
+## Trimm the alignment
+```{r, collapse = TRUE}
+if (file.exists("RAxML/round00/AlignTree_Mafft.alg") == FALSE) {
+  Align <- readDNAStringSet("RAxML/round00/AlignTree_Mafft_01.alg")
+  #BrowseSeqs(Align)
+  #BrowseSeqs(subseq(Align, start = 100, end = 1119))
+  Align <- subseq(Align, start = 100, end = 1119)
+  writeXStringSet(Align, "RAxML/round00/AlignTree_Mafft.alg")
+}
+```
+
+```{bash, collapse = TRUE}
+FOLDER=RAxML/round00
+
+if [ ! -e T1_1000.raxml.support ]; then 
+  raxml-ng --all --msa $FOLDER/AlignTree_Mafft.alg --model GTR+G --prefix $FOLDER/T1_1000 --bs-trees 1000 --threads 48
+fi
+if [ ! -e $FOLDER/EvalMod_GTR+R4.raxml.log ]; then 
+  for i in GTR+G GTR+R4 GTR JC JC+G; do
+    raxml-ng --evaluate --msa $FOLDER/AlignTree_Mafft.alg --tree $FOLDER/T1_1000.raxml.bestTree --model ${i} --prefix $FOLDER/EvalMod_${i}
+  done
+fi
+```
+
+```{bash}
+FOLDER=RAxML/round00
+# Which model yields the highest log-likelihood? 
+grep "logLikelihood" $FOLDER/EvalMod*
+## The model is GTR+R4, but
+# AIC/BIC scores (lower values are better)
+grep "AIC" $FOLDER/EvalMod*
+```
+
+```{bash, collapse = TRUE, eval = FALSE}
+FOLDER=RAxML/round00
+## Finally run a tree Search
+raxml-ng --msa $FOLDER/AlignTree_Mafft.alg --model GTR+R4 --prefix $FOLDER/T2 --threads 48 --redo
+
+## Compute and map bootstrap support values to the best ML tree (S1.raxml.bestTree)
+raxml-ng --bootstrap --msa $FOLDER/AlignTree_Mafft.alg --model GTR+R4 --prefix $FOLDER/S2_bestTree --tree $FOLDER/T2.raxml.bestTree --threads 48 --bs-trees 1000
+# Recompute support values using the Transfer Bootstrap Expectation (TBE) algorithm. Did this change the support values?
+raxml-ng --support --tree $FOLDER/T2.raxml.bestTree --bs-trees $FOLDER/S2_bestTree.raxml.bootstraps --prefix $FOLDER/S2_FBP --threads 48 --bs-metric fbp
+raxml-ng --support --tree $FOLDER/T2.raxml.bestTree --bs-trees $FOLDER/S2_bestTree.raxml.bootstraps --prefix $FOLDER/S2_TBE --threads 48 --bs-metric tbe
+
+```
+
+```{r, fig.width=14, fig.height=20}
+suppressWarnings(library(ape))
+suppressWarnings(library(phytools))
+Tree <- read.tree("RAxML/round04_nHost/S2_FBP.raxml.support")
+## Modification to draw only the node labels above 50
+Tree$node.label[as.numeric(Tree$node.label) < 50] <- NA
+
+Tree <- midpoint.root(Tree)
+
+tiff(filename = 'Crepi28S_S2_FBP.tiff', width = 4000, height = 4500, units = "px", res = 300)
+plot.phylo(Tree, show.node.label = TRUE, cex = 0.8)
+dev.off()
+
+plot.phylo(Tree, show.node.label = TRUE, cex = 0.8)
+
+```
+
+# Session information
+
+```{r sessioninfo}
+sessionInfo()
+```
+
+
