@@ -1,0 +1,76 @@
+---
+title: "Number of loci in mappings to the reference"
+author: "J. Ignacio Lucas Lledó"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+It is not easy to determine how many *different* loci are found in mappings
+to the reference genome. We need the output of `samtools depth` to see what
+loci got any coverage. It was produced once in `2025-07-03/COV`, but
+erased because it take too much space.
+
+```{bash}
+if [ ! -e ref.cov.txt ]; then
+   if [ ! -e ref.cov.tmp ]; then
+      ls -1 ../2023-05-18/BAM/*.bam | \
+      xargs samtools depth -q 30 -Q 20 -o ref.cov.tmp
+   fi
+   gawk '{
+      TOTALDEPTH = 0
+      for (i = 3; i <= NF; i++) {
+         TOTALDEPTH += $i
+      }
+      if (TOTALDEPTH > 0) print $1 "\t" $2 "\t" TOTALDEPTH
+   }' ref.cov.tmp > ref.cov.txt
+fi
+```
+
+```{r, fig.width=10, fig.height=10}
+library(ggplot2)
+dep <- read.table('ref.cov.txt', col.names = c('contig', 'pos', 'depth'))
+firstcontigs <- head(unique(dep$contig), 16)
+f <- dep$contig %in% firstcontigs
+ggplot(data = dep[f,], mapping = aes(x = pos, y = depth)) +
+   geom_line() + facet_wrap(~ contig, scale = 'free_x') + ylim(0, 5000)
+```
+
+There is a background mapping noise, probably due to off-target sequenced
+fragments (mapping quality is not bad). Depth peaks reach scary hights,
+which could mean collapsed repeatitive regions or just amplification bias
+of some loci. The discontinuity in total depth would not be appreciated in
+a plot of the empirical cumulative density function. There is not any obvious
+choice of total depth threshold. Let's try a few values and count how many loci,
+and how long they are, when considering continuous stretches of a contig with
+a certain minimum threshold.
+
+```{r}
+mincov <- c(10, 30, 50, 60, 70, 80, 90, 100, 150, 200, 250, 300, 400, 500, 750, 1000)
+MaxDist <- 10
+Loci <- lapply(
+   mincov,
+   function(x) {
+      D <- dep[dep$depth >= x, ]
+      n <- nrow(D)
+      lastcontig <- c('none', D[1:(n-1), 'contig'])
+      D$sep <- c(NA, D[2:n, 'pos'] - D[1:(n-1), 'pos'])
+      D[D$contig != lastcontig, 'sep'] <- NA
+      D$locus <- cumsum(is.na(D$sep) | D$sep > MaxDist)
+      N <- length(unique(D$locus))
+      L <- mean(table(D$locus))
+      SD <- sd(table(D$locus))
+      return(data.frame(MinCov = x, Num = N, Size = L, SD = SD))
+   }
+)
+loci <- do.call(rbind, Loci)
+ggplot(data = loci, mapping = aes(x = MinCov, y = Num)) + geom_line()
+ggplot(data = loci, mapping = aes(x = MinCov, y = Size)) + geom_line()
+
+library('kableExtra')
+kable(loci) %>% kable_styling(full_width = FALSE)
+```
+
