@@ -107,7 +107,7 @@ parameters were estimated jointly by maximum likelihood with ANGSD, I assume
 the relationship is an artifact of the method, maybe due to very low coverage.
 In any case, high MAF sites are a minority. We may not loose much by removing
 RAD loci containing sites with very negative inbreeding coefficients. The main
-discontinuity in the ECDF of the minimum *F* value per locus is at the the
+discontinuity in the ECDF of the minimum *F* value per locus is at the
 lowest value, which justifies using the same threshold as in `2025-06-12`.
 
 ### Filtering of RAD loci
@@ -468,7 +468,7 @@ if [ ! -e crepiRef2.phy ]; then
 fi
 
 if [ ! -e crepiRad3.phy ]; then
-   gawk -v MAXHET=3 '(FILENAME == "imap.txt"){
+   gawk -v MAXHET=15 '(FILENAME == "imap.txt"){
       SP[$1] = $2
    }(/\^/){
       split($1, A, /\^/)
@@ -492,7 +492,7 @@ if [ ! -e crepiRad3.phy ]; then
       }
       if (HET == MAXHET) WARN++ 
    }(/^[0-9]+ [0-9]+$/){
-      if ((NUMA >= 4) && (NUMB >= 4) && (NUMC > 1) && (WARN < 10)) {
+      if ((NUMA >= 4) && (NUMB >= 4) && (NUMC >= 1) && (WARN < 10)) {
          print 4 + 4 + NUMC " " length(SEQ[SMP])
          for (i = 1; i <= 4; i++) {
             SA = ORDA[NEWA[i]]
@@ -518,6 +518,9 @@ if [ ! -e crepiRad3.phy ]; then
    }' imap.txt crepiRad.phy > crepiRad3.phy
 fi
 ```
+
+Unfortunately, `crepiRad3.phy` is empty. Aparently, there are no loci with at least
+four sequences of *C. farionis*, four of *C. pseudofarionis* and two *C. metoecus*.
 
 ### One species
 
@@ -577,7 +580,17 @@ fi
 wait
 ```
 
+This was finally run from `run1.sh`, but it's the same.
+
+The two chains were meant to run for 50 million generations, sampled every 500 generations.
+They run to around 20 million generations, and yieled around 40000 samples each. In Garnatxa,
+we run again the two chains with different priors (inverted gamma, instead of gamma), for 15
+million generations, sampled every 500 generations.
+
 ### Two isolated species
+In order to be able to manipulate the `README.Rmd` file while performing the analysis,
+and also to parallellize the runs, I run the following block from an independent scripts
+`run2.sh`.
 
 ```{bash, eval=FALSE}
 if [ ! -e imap2.txt ]; then
@@ -608,7 +621,14 @@ fi
 wait
 ```
 
+The model with two isolated species was run only in Thermomix, with gamma
+instead of inverted gamma priors. It is not strictly necessary, because
+we can compare the two species model with and without migration using the
+Savage-Dickey ratio from the posterior of the model with migration.
+
 ### Three isolated species
+The following could not be run, because the input file with three species
+is empty.
 
 ```{bash, eval=FALSE}
 if [ ! -d threesp ]; then mkdir threesp; fi
@@ -640,6 +660,8 @@ wait
 ```
 
 ### Two species with migration
+The following was run from `run3.sh`. In addition, I created `run4.sh` in
+order to run the same model without data, just to check the priors.
 
 ```{bash, eval=FALSE}
 if [ ! -d twoMig ]; then mkdir twoMig; fi
@@ -666,8 +688,12 @@ fi
 wait
 ```
 
+The model of two species with migration was run both in Thermomix (with
+gramma priors, as detailed above) and in Garnatxa (with inverse gamma
+priors). Details of the Garnatxa run are saved in the folder `Garnatxa`.
 
 ### Three species with migration between two of them
+This could not be run, for the same reason as above.
 
 ```{bash, eval=FALSE}
 if [ ! -d threeMig ]; then mkdir threeMig; fi
@@ -698,6 +724,8 @@ wait
 ```
 
 ## Analysis of results
+I move the analysis of results to a new folder.
+
 
 ### One species
 
