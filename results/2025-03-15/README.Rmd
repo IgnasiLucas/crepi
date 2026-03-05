@@ -138,26 +138,37 @@ the moment, I will keep only variable sites genotyped in these samples.
 ```{r}
 MinLoci <- 200000
 geno <- geno[, colSums(geno >= 0, na.rm = TRUE) > MinLoci]
-rm(toRef, samples)
+#rm(toRef, samples)
 geno[geno == -1] <- NA
-ObsHet <- sapply(1:dim(geno)[2],
-                 function(x) {
-                    sum(geno[, x] == 1, na.rm = TRUE) / sum(! is.na(geno[, x]))
-                 })
 GeneticIds <- read.table('../2024-10-05/summary.txt', header = TRUE)
 GeneticIds$species <- ifelse(GeneticIds$K2.1 > 0.95, 'pseudofarionis', NA)
 GeneticIds$species <- ifelse(GeneticIds$K2.2 > 0.95, 'farionis', GeneticIds$species)
 Species <- GeneticIds[match(colnames(geno), GeneticIds$Sample), 'species']
 Species[is.na(Species)] <- 'unknown'
+Species[colnames(geno) %in% c('S031Cmc', 'T165Cxa')] <- 'metoecus'
 f1 <- Species == 'farionis'
 f2 <- Species == 'pseudofarionis'
+f3 <- Species == 'metoecus'
 loci$freqFario  <- rowSums(geno[,f1], na.rm = TRUE) /
    (2 * rowSums(geno[, f1] >= 0, na.rm = TRUE))
 loci$freqFario <- ifelse(loci$freqFario <= 0.5, loci$freqFario, 1.0 - loci$freqFario)
 loci$freqPseudo <- rowSums(geno[,f2], na.rm = TRUE) /
    (2 * rowSums(geno[, f2] >= 0, na.rm = TRUE))
 loci$freqPseudo <- ifelse(loci$freqPseudo <= 0.5, loci$freqPseudo, 1.0 - loci$freqPseudo)
+loci$freqMetoec <- rowSums(geno[,f3], na.rm = TRUE) /
+   (2 * rowSums(geno[, f3] >= 0, na.rm = TRUE))
+loci$freqMetoec <- ifelse(loci$freqMetoec <= 0.5, loci$freqMetoec, 1.0 - loci$freqMetoec)
+
+# Remove unknown species from data set, which are admixed individuals
+geno <- geno[, Species %in% c('farionis', 'pseudofarionis', 'metoecus')]
+Species <- Species[Species %in% c('farionis', 'pseudofarionis', 'metoecus')]
+ObsHet <- sapply(1:dim(geno)[2],
+                 function(x) {
+                    sum(geno[, x] == 1, na.rm = TRUE) / sum(! is.na(geno[, x]))
+                 })
+
 loci$freqs <- rowSums(geno, na.rm = TRUE) / (2 * rowSums(! is.na(geno)))
+loci$freqs <- ifelse(loci$freqs <= 0.5, loci$freqs, 1.0 - loci$freqs)
 par(mfrow = c(1,3))
 barplot(table(round(loci$freqFario, 1)), las = 2, cex.names = 0.5, main = 'SFS C. farionis')
 barplot(table(round(loci$freqPseudo, 1)), las = 2, cex.names = 0.5, main = 'SFS C. pseudofarionis')
@@ -166,7 +177,7 @@ boxplot(ObsHet ~ Species)
 withMetoecus <- ! (is.na(geno[, 'S031Cmc']) | is.na(geno[, 'T165Cxa']))
 geno <- geno[withMetoecus, ]
 loci <- loci[withMetoecus, ]
-Variable <- loci$freqFario + loci$freqPseudo > 0
+Variable <- loci$freqs > 0
 genoVar <- geno[Variable, ]
 lociVar <- loci[Variable, ]
 ```
@@ -192,7 +203,7 @@ lociVar$n <- rowSums(! is.na(genoVar))
 selected <- ddply(lociVar, .(locus), function(x) x[which.max(x$freqs * x$n),])
 selIndex <- match(paste(selected$contig, selected$pos, ":"),
                   paste(lociVar$contig, lociVar$pos, ":"))
-selGeno <- geno[selIndex,]
+selGeno <- genoVar[selIndex,]
 GenoStrings <- sapply(selGeno,
                       function(x) {
                          x[is.na(x)] <- '-'
@@ -229,11 +240,10 @@ I will reduce both.
 toy <- selected[sample(1:dim(selected)[1], 1000),]
 toyIndex <- match(paste(toy$contig, toy$pos, ":"),
                   paste(loci$contig, loci$pos, ":"))
-hybrids  <- c('L019Cxa', 'L019Cxb', 'L088Cma', 'S023Cxd')
 metoecus <- c('T165Cxa', 'S031Cmc')
-farionis <- setdiff(grep('^L', colnames(geno), value = TRUE), c(hybrids, metoecus))
-pseudofa <- setdiff(grep('^S', colnames(geno), value = TRUE), c(hybrids, metoecus))
-few <- sort(c(hybrids, metoecus, sample(farionis, 10), sample(pseudofa, 10)))
+farionis <- colnames(geno)[Species == 'farionis']
+pseudofa <- colnames(geno)[Species == 'pseudofarionis']
+few <- sort(c(metoecus, sample(farionis, 10), sample(pseudofa, 10)))
 toyGeno <- geno[toyIndex, few]
 toyStrings <- sapply(toyGeno,
                       function(x) {
@@ -277,30 +287,46 @@ plot(ecdf(colSums(geno >= 0)), xlab = 'Number of loci genotyped per sample',
 abline(v = 500000, lty = 2, col = 'red')
 ```
 
-
 ```{r}
 MinLoci <- 500000
 geno <- geno[, colSums(geno >= 0) > MinLoci]
 rm(toRad, samples)
 geno[geno == -1] <- NA
-ObsHet <- sapply(1:dim(geno)[2],
-                 function(x) {
-                    sum(geno[, x] == 1, na.rm = TRUE) / sum(! is.na(geno[, x]))
-                 })
 GeneticIds <- read.table('../2024-10-05/summary.txt', header = TRUE)
+GeneticIds$species <- ifelse(GeneticIds$K2.1 > 0.95, 'pseudofarionis', NA)
+GeneticIds$species <- ifelse(GeneticIds$K2.2 > 0.95, 'farionis', GeneticIds$species)
 Species <- GeneticIds[match(colnames(geno), GeneticIds$Sample), 'species']
 Species[is.na(Species)] <- 'unknown'
+Species[colnames(geno) %in% c('S031Cmc', 'T165Cxa')] <- 'metoecus'
 f1 <- Species == 'farionis'
 f2 <- Species == 'pseudofarionis'
+f3 <- Species == 'metoecus'
 loci$freqFario  <- rowSums(geno[,f1], na.rm = TRUE) /
    (2 * rowSums(geno[, f1] >= 0, na.rm = TRUE))
 loci$freqFario <- ifelse(loci$freqFario <= 0.5, loci$freqFario, 1.0 - loci$freqFario)
 loci$freqPseudo <- rowSums(geno[,f2], na.rm = TRUE) /
    (2 * rowSums(geno[, f2] >= 0, na.rm = TRUE))
 loci$freqPseudo <- ifelse(loci$freqPseudo <= 0.5, loci$freqPseudo, 1.0 - loci$freqPseudo)
+loci$freqMetoec <- rowSums(geno[,f3], na.rm = TRUE) /
+   (2 * rowSums(geno[, f3] >= 0, na.rm = TRUE))
+loci$freqMetoec <- ifelse(loci$freqMetoec <= 0.5, loci$freqMetoec, 1.0 - loci$freqMetoec)
+geno <- geno[, Species %in% c('farionis', 'pseudofarionis', 'metoecus')]
+Species <- Species[Species %in% c('farionis', 'pseudofarionis', 'metoecus')]
+ObsHet <- sapply(1:dim(geno)[2],
+                 function(x) {
+                    sum(geno[, x] == 1, na.rm = TRUE) / sum(! is.na(geno[, x]))
+                 })
 
 loci$freqs <- rowSums(geno, na.rm = TRUE) / (2 * rowSums(geno >= 0, na.rm = TRUE))
 loci$freqs <- ifelse(loci$freqs <= 0.5, loci$freqs, 1.0 - loci$freqs)
+
+withMetoecus <- ! (is.na(geno[, 'S031Cmc']) | is.na(geno[, 'T165Cxa']))
+geno <- geno[withMetoecus, ]
+loci <- loci[withMetoecus, ]
+Variable <- loci$freqs > 0
+genoVar <- geno[Variable, ]
+lociVar <- loci[Variable, ]
+
 barplot(table(round(loci$freqs, 2)), las = 2, cex.names = 0.5, main = 'SFS')
 loci$completeness <- rowSums(! is.na(geno))
 plot(ecdf(loci$completeness), xlab = 'Samples genotyped',
