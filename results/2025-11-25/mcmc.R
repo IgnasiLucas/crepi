@@ -2,7 +2,7 @@ autocor <- function(mcmc, skip) {
    cor(mcmc[1:(length(mcmc) - skip)],
        mcmc[(skip + 1):(length(mcmc))])
 }
-autocorPlot <- function(mcmc, step = 1:20, paleta = 'Egypt'){
+autocorPlot <- function(mcmc, step = 1:20, paleta = 'Egypt', main = ''){
    R <- lapply(
       mcmc[, -1],
       function(x) {
@@ -15,7 +15,7 @@ autocorPlot <- function(mcmc, step = 1:20, paleta = 'Egypt'){
       }
    )
    plot(range(step), range(do.call(c, R)), type = 'n',
-        xlab = 'Step size', ylab = 'Autocorrelation')
+        xlab = 'Step size', ylab = 'Autocorrelation', main = main)
    pal <- MetBrewer::met.brewer(paleta, length(R))
    devnull <- lapply(
       1:length(R),

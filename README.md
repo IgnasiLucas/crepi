@@ -1,5 +1,25 @@
 (Note the inverse chronological order: more recent first)
 
+# 2026-02-27
+Revision of SNAPPER results. It is not up to date. We abandonned SNAPPER
+for inconsistencies in the Bayes factor estimation procedure. Basically,
+the chains of the power posterior were not converging and produced
+unreliable results.
+
+# 2026-02-24
+Analysis of results of the Bayesian delimitation of species with `bpp`,
+which was performed in `2025-11-25`. In summary, the best model is the
+one with two species without migration. The Bayes factor for a negligible
+migration rate is 1.0, which means that the data does not update the
+prior about migration. The Bayes factor between two and one species is
+in the order of 3000. The posterior mean for divergence time is 0.0026
+and populations sizes are 0.0027 (ancestral), 0.015 (*C. farionis*), and
+0.022 (*C. pseudofarionis).
+
+# 2026-01-07
+How many loci do we get from mappings to the reference? That depends on
+how you define the loci.
+
 # 2026-01-03
 We run ANGSD once more, to estimate SFS in the whole set, without
 separating populations. The purpose is to check the conclusions from
@@ -91,12 +111,15 @@ This is the folder were SNAPPER is run. The `README.Rmd` is not compiled,
 and it's just a copy of part of the script in `2025-03-15`. The analysis is not
 scripted. The folder misses a summary of results.
 
+The file `ML_chains.txt` contains the estimates of marginal log-likelihood
+of the two models.
+
 # 2025-04-08
 Failed attempt at estimating population parameters with ANGSD, from
 BAM files mapped to either the reference or the RAD loci. It failed
 because the folder became too crowded and the analysis too long and
 cumbersome. An excess of 50-percent-frequency SNPs suggested the
-presence of collapsed paralog regions in both the reference assembly
+presence of collapsed paralogous regions in both the reference assembly
 and the RAD loci. Filtering sites not in Hardy-Weinberg equilibrium
 removed the spurious excess of high frequency SNPs, as they were fully
 heterozygous, as expected from collapsed paralogous regions.

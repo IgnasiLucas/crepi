@@ -364,7 +364,7 @@ estimate population parameters from sites chosen to be less variable.
 
 Below I use the functions `rand()` and `asorti()` in `gawk` to randomly
 choose a few sequences from each population. The dataset from alignments to
-the reference does not seem good enough. From RAD loci I generate a third
+the reference does not seem good enough. From RAD loci I try to generate a third
 data file with up to 4 sequences per population and including 2, 3 or 4
 sequences from lake Bienne, which are suspected to be *C. metoecus*.
 
@@ -689,76 +689,14 @@ wait
 ```
 
 The model of two species with migration was run both in Thermomix (with
-gramma priors, as detailed above) and in Garnatxa (with inverse gamma
+gamma priors, as detailed above) and in Garnatxa (with inverse gamma
 priors). Details of the Garnatxa run are saved in the folder `Garnatxa`.
-
-### Three species with migration between two of them
-This could not be run, for the same reason as above.
-
-```{bash, eval=FALSE}
-if [ ! -d threeMig ]; then mkdir threeMig; fi
-if [ ! -e threeMig1.ctl ]; then
-   cp template.ctl threeMig1.ctl
-   sed -i "/seqfile = /c seqfile = crepiRad3.phy"    threeMig1.ctl
-   sed -i "/jobname = /c jobname = threeMig/out1"    threeMig1.ctl
-   sed -i "/species&tr/c species&tree = 3 A B C"     threeMig1.ctl
-   sed -i "/ * maxseqs/c                  4 4 4"     threeMig1.ctl
-   sed -i "/ * guidetr/c              ((A,B),C);"    threeMig1.ctl
-   sed -i "/phase = /c *newline  \nphase = 1 1 1"    threeMig1.ctl
-   sed -i "/*newline /c migprior = 2 200\n*newline " threeMig1.ctl
-   sed -i "/*newline /c migration 2\n  A B\n  B A"   threeMig1.ctl
-fi
-if [ ! -e threeMig2.ctl ]; then
-   cp threeMig1.ctl threeMig2.ctl
-   sed -i "/jobname = /c jobname = threeMig/out2"    threeMig2.ctl
-   sed -i "/threads = /c threads = 8 17 1"           threeMig2.ctl
-fi
-
-if [ ! -e threeMig/out1.txt ]; then
-   bpp --cfile threeMig1.ctl 1> threeMig/out1.log 2> threeMig/out1.err &
-fi
-if [ ! -e threeMig/out2.txt ]; then
-   bpp --cfile threeMig2.ctl 1> threeMig/out2.log 2> threeMig/out2.err &
-fi
-wait
-```
 
 ## Analysis of results
 I move the analysis of results to a new folder.
 
-
-### One species
-
-```{r, fig.width=10, fig.height=5}
-source('mcmc.R')
-mcmc1 <- read.table('onesp/out1.mcmc.txt', header = TRUE)
-mcmc2 <- read.table('onesp/out2.mcmc.txt', header = TRUE)
-par(mfrow = c(1, 2))
-autocorPlot(mcmc1)
-autocorPlot(mcmc2)
-par(mfrow = c(1, 1))
-```
-
-```{r, fig.width=4, fig.height=8}
-tendencyPlot(mcmc1)
-tendencyPlot(mcmc2)
-
-convergencePlot(mcmc1, mcmc2)
-```
+# Session information
 
 ```{r}
-onesp <- rbind(mcmc1, mcmc2)
-plot(density(onesp$theta.1.A, bw = 'SJ'), main = expression(theta[A]))
-abline(v = mean(onesp$theta.1.A), col = 'red', lty = 2)
-text(0.015, 1000, sprintf("Mean = %.4f\nS.D. = %.4f",
-                           mean(onesp$theta.1.A),
-                           sd(onesp$theta.1.A)))
+sessionInfo()
 ```
-
-### Two isolated species
-
-### Two species with migration
-
-### Three isolated species
-
-### Three species with migration between two of them
