@@ -115,5 +115,34 @@ them get ddRAD reads mapped to them: `r length(used)`. The
 of the assembly's length. Quite irrelevant.
 
 ## BLAST of contigs to the non-redudant nucleotide data base
+The BLAST search against the *nt* database is eternal. Plus, it
+stopped after several days running without finishing. I should
+program it in a way that can be re-run without having to repeat
+all previous work. That is, it is necessary to check for the
+existence of results for every contig individually.
+
+```{bash}
+export BLASTDB=$BLASTDB:/opt/blastdb/
+if [ ! -e query_list.txt ]; then
+   grep '^>' ../2023-05-15/assembly.fasta | sed 's/>//' > query_list.txt
+fi
+
+for SEQ in $(cat query_list.txt); do
+   if ! grep -q -P "${SEQ}\t" assembly2nt.txt; then
+      seqret -sequence ../2023-05-15/assembly.fasta:$SEQ -outseq query.fa
+      ~/bin/ncbi-blast-2.16.0+/bin/blastn -db /opt/blastdb/nt \
+          -query query.fa \
+          -outfmt "6 qacc sacc pident length evalue bitscore ssciname sblastname" \
+          -evalue 1.0e-6 \
+          -num_threads 24 \
+          -max_hsps 1 \
+          -max_target_seqs 1 1>>assembly2nt.txt 2>> blastn2.err
+   fi
+done
+
+if [ ! -e assembly2nt.txt ]; then
+   ~/bin/ncbi-blast-2.16.0+/bin/blastn -db /opt/blastdb/nt \
+fi
+```
 
 
