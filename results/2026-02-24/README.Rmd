@@ -1,0 +1,286 @@
+---
+title: "Analysis of results of the Bayesian delimitation of species with `bpp`"
+author: "J. Ignacio Lucas Lledó"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Reading the results
+
+```{r}
+source('mcmc.R')
+source('plotModel.R')
+
+one1.t <- read.table('../2025-11-25/onesp/out1.mcmc.txt', header = TRUE)
+one2.t <- read.table('../2025-11-25/onesp/out2.mcmc.txt', header = TRUE)
+one1.g <- read.table('../2025-11-25/garnatxa/onesp/out1.mcmc.txt', header = TRUE)
+one2.g <- read.table('../2025-11-25/garnatxa/onesp/out2.mcmc.txt', header = TRUE)
+two1.t <- read.table('../2025-11-25/twosp/out1.mcmc.txt', header = TRUE)
+two2.t <- read.table('../2025-11-25/twosp/out2.mcmc.txt', header = TRUE)
+mig0.t <- read.table('../2025-11-25/twoMig/out0.mcmc.txt', header = TRUE)
+mig1.t <- read.table('../2025-11-25/twoMig/out1.mcmc.txt', header = TRUE)
+mig2.t <- read.table('../2025-11-25/twoMig/out2.mcmc.txt', header = TRUE)
+mig0.g <- read.table('../2025-11-25/garnatxa/twoMig/out0.mcmc.txt', header = TRUE)
+mig1.g <- read.table('../2025-11-25/garnatxa/twoMig/out1.mcmc.txt', header = TRUE)
+mig2.g <- read.table('../2025-11-25/garnatxa/twoMig/out2.mcmc.txt', header = TRUE)
+```
+
+```{r, fig.width=10, fig.height=30}
+par(mfrow = c(6, 2))
+autocorPlot(one1.t, main = 'Thermomix one')
+autocorPlot(one2.t, main = 'Thermomix one')
+autocorPlot(one1.g, main = 'Garnatxa one')
+autocorPlot(one2.g, main = 'Garnatxa one')
+autocorPlot(two1.t, main = 'Thermomix, two')
+autocorPlot(two2.t, main = 'Thermomix, two')
+autocorPlot(mig0.t, main = 'Thermomix, mig. prior', step = 10:100)
+autocorPlot(mig0.g, main = 'Garnatxa, mig. prior', step = 10:80)
+autocorPlot(mig1.t, main = 'Thermomix, migration', step = 10:80)
+autocorPlot(mig2.t, main = 'Thermomix, migration', step = 10:80)
+autocorPlot(mig1.g, main = 'Garnatxa, migration')
+autocorPlot(mig2.g, main = 'Garnatxa, migration')
+```
+
+Below, I subsample some of the chains, in order to reduce the autocorrelation.
+I don't know why the chains exploring the prior show oscillating autocorrelation
+for some parameters.
+
+```{r}
+one1.t <- one1.t[seq(from = 1, to = nrow(one1.t), by = 5),]
+one2.t <- one2.t[seq(from = 1, to = nrow(one2.t), by = 10),]
+two1.t <- two1.t[seq(from = 1, to = nrow(two1.t), by = 14),]
+two2.t <- two2.t[seq(from = 1, to = nrow(two2.t), by = 10),]
+mig0.t <- mig0.t[seq(from = 1, to = nrow(mig0.t), by = 90),]
+mig0.g <- mig0.g[seq(from = 1, to = nrow(mig0.g), by = 55),]
+mig1.t <- mig1.t[seq(from = 1, to = nrow(mig1.t), by = 20),]
+mig2.t <- mig2.t[seq(from = 1, to = nrow(mig2.t), by = 20),]
+```
+
+# Checking convergence and merging chains
+I don't show it, to save space, but I did check for tendencies and I confirm
+that in all chains the burn-in was enough and no tendencies were observed.
+
+```{r, fig.height=10, fig.width=5}
+convergencePlot(one1.t, one2.t)
+convergencePlot(one1.g, one2.g)
+convergencePlot(two1.t, two2.t)
+convergencePlot(mig1.t, mig2.t)
+convergencePlot(mig1.g, mig2.g)
+```
+
+Convergence is perfect in all cases. Thus, we can consolidate the pairs
+of runs.
+
+```{r}
+one.t <- rbind(one1.t, one2.t)
+one.g <- rbind(one1.g, one2.g)
+two.t <- rbind(two1.t, two2.t)
+mig.t <- rbind(mig1.t, mig2.t)
+mig.g <- rbind(mig1.g, mig2.g)
+rm(one1.t, one2.t, one1.g, one2.g, two1.t, two2.t, mig1.t, mig2.t, mig1.g, mig2.g)
+```
+
+# Comparison of results produced in Garnatxa and in Thermomix
+During the process of running `bpp`, it was necessary to use Garnatxa. For
+consistency, both the one species model and the model with two species with
+migration were run in Garnatxa, although they had been run in Thermomix as
+well. In Garnatxa we took the chance to improve the priors. We had learned
+that `bpp` defaults to a Gamma distributions unless told otherwise.
+
+```{r, fig.height=10, fig.width=5}
+convergencePlot(one.t, one.g)
+convergencePlot(mig.t, mig.g)
+convergencePlot(mig0.t, mig0.g)
+```
+In all plots above, the red color shows results in Thermomix and blue, in
+Garnatxa.
+
+When originally running `bpp` in Thermomix, I set up the priors (red line in
+last set of plots above) to reflect the believe of populations possibly being
+large, the divergence not very large, and migration potentially intense. Then,
+first results had me concerned that the priors could have been too informative.
+An overlap between the prior and the posterior suggests lack of power
+in the data to update the prior. Therefore, I set more restrictive priors when
+running the chains again in Garnatxa, to make sure the data rather than the
+priors are driving the estimates. The different priors seem to have affected the
+estimates of the model of two species with migration. The parameters most affected
+by the priors are the migration rates, for which the data does not carry much
+information, apparently. Thus, when we assume migration rate could be rampant
+(red lines), population sizes become smaller and divergence deeper. In Garnatxa,
+departing from a prior of very low migration, populations seem larger and
+divergence shallower. Results from Garnatxa are more conservative: not having
+much evidence in the sequence data to support the idea of frequent migration,
+it is safe to assume there wasn't much.
+
+The large difference in likelihood is not important. In addition to the different
+priors, in Garnatxa we used several more loci than in Thermomix, which must have
+also reduced the overall likelihood.
+
+# Comparison between the two-species models with and without migration
+This is an approximation to the Bayes factor with a Savage-Dickey density ratio,
+following [Tomas Flouri's advice](https://github.com/Pas-Kapli/phylogenomics/wiki/Hypothesis-testing-with-BPP).
+The migration parameter, $w_{XY}$, is defined as the ratio between proportion of
+migrants per generation and mutation rate: $w_{XY} = \frac{m_{XY}}{\mu}$. I suppose
+a fraction of migrants lower than a hundredth of the mutation rate is quite
+negligible. Thus, I set 0.01 as the threshold below which migration isn't much
+different from zero. The prior is $\sim Gamma(2, 100)$.
+
+```{r}
+w0 <- 0.01
+prior <- pgamma(w0, shape = 2, rate = 100)
+posteriorAB <- sum(mig.g$W.1..2.A..B <= w0) / nrow(mig.g)
+posteriorBA <- sum(mig.g$W.2..1.B..A <= w0) / nrow(mig.g)
+bfAB <- prior / posteriorAB
+bfBA <- prior / posteriorBA
+
+bfAB
+bfBA
+```
+
+This means that the prior assigns an almost equal probability to a
+negligible migration rate than the posterior. The Bayes factor is
+insignificant.
+
+I suspect one reason for the lack of power is the fact that genotypes
+are not phased. Because genotypes were estimated from posterior
+probabilities, the linkage information from the reads was lost. This is
+quite unfortunate, but not easy to work around at the moment.
+
+# Comparison between the one-species model and the two-species model
+The chains for the 16 steps to get the marginal likelihood for the two-species
+model were interrumpted. Thus, the average likelihood for each power beta
+is not retrieved (yet). But, having between 8000 and 13000 samples of the
+power posteriors, I can approximate the average likelihood myself as just
+the average of the likelihoods in the chain. This is a provisional solution.
+
+```{bash}
+if [ ! -e ElnfX1.txt ]; then
+   find ../2025-11-25/garnatxa/bf/onesp -name onesp.txt \
+        -exec gawk '(/BFbeta/){print FILENAME "\t" $NF}' '{}' \; |
+   sort > ElnfX1.txt
+fi
+
+if [ ! -e ElnfX2.txt ]; then
+   find ../2025-11-25/garnatxa/bf/twoMig -name twoMig.txt \
+        -exec gawk '(/BFbeta/){print FILENAME "\t" $NF}' '{}' \; |
+   sort > ElnfX2.txt
+fi
+```
+
+
+```{r}
+bw1 <- read.table('../2025-11-25/garnatxa/bf/onesp/betaweights.csv',
+                  sep = ',', header = TRUE)
+#bw1$ElnfX <- read.table('ElnfX1.txt')$V2
+bw1$ElnfX <- read.table('ElnfX1.txt')$V2
+ones <- list(
+   o01 = read.table('../2025-11-25/garnatxa/bf/onesp/s01/onesp.mcmc.txt', header = TRUE),
+   o02 = read.table('../2025-11-25/garnatxa/bf/onesp/s02/onesp.mcmc.txt', header = TRUE),
+   o03 = read.table('../2025-11-25/garnatxa/bf/onesp/s03/onesp.mcmc.txt', header = TRUE),
+   o04 = read.table('../2025-11-25/garnatxa/bf/onesp/s04/onesp.mcmc.txt', header = TRUE),
+   o05 = read.table('../2025-11-25/garnatxa/bf/onesp/s05/onesp.mcmc.txt', header = TRUE),
+   o06 = read.table('../2025-11-25/garnatxa/bf/onesp/s06/onesp.mcmc.txt', header = TRUE),
+   o07 = read.table('../2025-11-25/garnatxa/bf/onesp/s07/onesp.mcmc.txt', header = TRUE),
+   o08 = read.table('../2025-11-25/garnatxa/bf/onesp/s08/onesp.mcmc.txt', header = TRUE),
+   o09 = read.table('../2025-11-25/garnatxa/bf/onesp/s09/onesp.mcmc.txt', header = TRUE),
+   o10 = read.table('../2025-11-25/garnatxa/bf/onesp/s10/onesp.mcmc.txt', header = TRUE),
+   o11 = read.table('../2025-11-25/garnatxa/bf/onesp/s11/onesp.mcmc.txt', header = TRUE),
+   o12 = read.table('../2025-11-25/garnatxa/bf/onesp/s12/onesp.mcmc.txt', header = TRUE),
+   o13 = read.table('../2025-11-25/garnatxa/bf/onesp/s13/onesp.mcmc.txt', header = TRUE),
+   o14 = read.table('../2025-11-25/garnatxa/bf/onesp/s14/onesp.mcmc.txt', header = TRUE),
+   o15 = read.table('../2025-11-25/garnatxa/bf/onesp/s15/onesp.mcmc.txt', header = TRUE),
+   o16 = read.table('../2025-11-25/garnatxa/bf/onesp/s16/onesp.mcmc.txt', header = TRUE)
+)
+bw1$meanlnL <- sapply(ones, function(x) mean(x$lnL))
+bw1[is.na(bw1$ElnfX), 'ElnfX'] <- bw1[is.na(bw1$ElnfX), 'meanlnL']
+MarginalLogLikelihood1 <- sum(bw1$weight * bw1$ElnfX) / 2
+
+bw2 <- read.table('../2025-11-25/garnatxa/bf/twoMig/betaweights.csv',
+                  sep = ',', header = TRUE)
+#bw2$ElnfX <- read.table('ElnfX2.txt')$V2
+bw2$ElnfX <- NA
+twos <- list(
+   t01 = read.table('../2025-11-25/garnatxa/bf/twoMig/s01/twoMig.mcmc.txt', header = TRUE),
+   t02 = read.table('../2025-11-25/garnatxa/bf/twoMig/s02/twoMig.mcmc.txt', header = TRUE),
+   t03 = read.table('../2025-11-25/garnatxa/bf/twoMig/s03/twoMig.mcmc.txt', header = TRUE),
+   t04 = read.table('../2025-11-25/garnatxa/bf/twoMig/s04/twoMig.mcmc.txt', header = TRUE),
+   t05 = read.table('../2025-11-25/garnatxa/bf/twoMig/s05/twoMig.mcmc.txt', header = TRUE),
+   t06 = read.table('../2025-11-25/garnatxa/bf/twoMig/s06/twoMig.mcmc.txt', header = TRUE),
+   t07 = read.table('../2025-11-25/garnatxa/bf/twoMig/s07/twoMig.mcmc.txt', header = TRUE),
+   t08 = read.table('../2025-11-25/garnatxa/bf/twoMig/s08/twoMig.mcmc.txt', header = TRUE),
+   t09 = read.table('../2025-11-25/garnatxa/bf/twoMig/s09/twoMig.mcmc.txt', header = TRUE),
+   t10 = read.table('../2025-11-25/garnatxa/bf/twoMig/s10/twoMig.mcmc.txt', header = TRUE),
+   t11 = read.table('../2025-11-25/garnatxa/bf/twoMig/s11/twoMig.mcmc.txt', header = TRUE),
+   t12 = read.table('../2025-11-25/garnatxa/bf/twoMig/s12/twoMig.mcmc.txt', header = TRUE),
+   t13 = read.table('../2025-11-25/garnatxa/bf/twoMig/s13/twoMig.mcmc.txt', header = TRUE),
+   t14 = read.table('../2025-11-25/garnatxa/bf/twoMig/s14/twoMig.mcmc.txt', header = TRUE),
+   t15 = read.table('../2025-11-25/garnatxa/bf/twoMig/s15/twoMig.mcmc.txt', header = TRUE),
+   t16 = read.table('../2025-11-25/garnatxa/bf/twoMig/s16/twoMig.mcmc.txt', header = TRUE)
+)
+bw2$meanlnL <- sapply(twos, function(x) mean(x$lnL))
+bw2[is.na(bw2$ElnfX), 'ElnfX'] <- bw2[is.na(bw2$ElnfX), 'meanlnL']
+MarginalLogLikelihood2 <- sum(bw2$weight * bw2$ElnfX) / 2
+
+BF <- MarginalLogLikelihood2 - MarginalLogLikelihood1
+```
+
+```{r}
+plot(bw1$beta, bw1$ElnfX, type = 'b', col = 'darkred', xlab = 'Beta',
+     ylab = 'Average log-likelihood')
+lines(bw2$beta, bw2$ElnfX, type = 'b', col = 'darkgreen')
+legend(0.6, -220000, c('One species', 'Two species'),
+       lty = 1, col = c('darkred', 'darkgreen'), bty='n')
+
+MarginalLogLikelihood1
+MarginalLogLikelihood2
+BF
+```
+
+The estimated marginal log-likelihoods suggest a very strong support for the model with
+two species.
+
+# Best model
+Therefore, best model is the one with two species without migration. Let's look at
+its posterior.
+
+```{r}
+library(MetBrewer)
+pal <- met.brewer('Egypt', 3)
+plot(c(0.0012, 0.028), c(0, 2300), type = 'n', xlab = 'Theta',
+     ylab = 'Density', main = 'Two species posteriors', axes = FALSE)
+axis(1, at = apply(two.t, 2, mean)[2:4])
+lines(density(mig.g$theta.1.A), col = pal[1], lty = 2)
+lines(density(two.t$theta.1.A), col = pal[1])
+lines(density(mig.g$theta.2.B), col = pal[2], lty = 2)
+lines(density(two.t$theta.2.B), col = pal[2])
+lines(density(mig.g$theta.3.A.B), col = pal[3], lty = 2)
+lines(density(two.t$theta.3.A.B), col = pal[3])
+legend(0.02, 2000, c('C. farionis', 'C. psedofarionis', 'Ancestral', 'With migration'),
+       lty = c(1, 1, 1, 2), col = c(pal, 'gray'), bty = 'n')
+```
+
+```{r}
+plot(density(mig.g$tau.3.A.B), main = 'Two species posteriors', xlab = 'Tau')
+lines(density(two.t$tau.3.A.B), lty = 2)
+legend(0.0027, 5000, c('Without migration', 'With migration'), lty = c(1, 2), bty = 'n')
+```
+
+```{r}
+u <- apply(two.t, 2, mean)[2:5]
+plotAB(u[1], u[2], u[3], u[4])
+```
+
+# Conclusion
+The split between the two populations may have happened 0.002583 substitutions per
+site ago, which would amount to any date between 260000 years ago, if the rate of
+mutations is very fast ($10^{-8}$), and 2.6 million years ago, if the rate of mutations
+is very slow ($10^{-9}$). Both population have expanded since then, with *C. pseudofarionis*
+being larger than *C. farionis* nowadays.
+
+The population expansion is consistent with the observed excess of low frequency
+variants inferred from the fact that Watterson estimates of diversity are higher
+than Tajima's (see `2026-01-03`).

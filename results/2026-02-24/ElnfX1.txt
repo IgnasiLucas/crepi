@@ -1,0 +1,16 @@
+../2025-11-25/garnatxa/bf/onesp/s01/onesp.txt	-246555.7216
+../2025-11-25/garnatxa/bf/onesp/s02/onesp.txt	-243998.7779
+../2025-11-25/garnatxa/bf/onesp/s03/onesp.txt	-239840.7507
+../2025-11-25/garnatxa/bf/onesp/s04/onesp.txt	-234511.9512
+../2025-11-25/garnatxa/bf/onesp/s05/onesp.txt	-228299.6819
+../2025-11-25/garnatxa/bf/onesp/s06/onesp.txt	-221330.0340
+../2025-11-25/garnatxa/bf/onesp/s07/onesp.txt	-214252.4360
+../2025-11-25/garnatxa/bf/onesp/s08/onesp.txt	-208042.1844
+../2025-11-25/garnatxa/bf/onesp/s09/onesp.txt	-203463.5892
+../2025-11-25/garnatxa/bf/onesp/s10/onesp.txt	-200514.8333
+../2025-11-25/garnatxa/bf/onesp/s11/onesp.txt	-198696.1100
+../2025-11-25/garnatxa/bf/onesp/s12/onesp.txt	-197548.6404
+../2025-11-25/garnatxa/bf/onesp/s13/onesp.txt	-196797.4516
+../2025-11-25/garnatxa/bf/onesp/s14/onesp.txt	-196300.6172
+../2025-11-25/garnatxa/bf/onesp/s15/onesp.txt	-195987.2338
+../2025-11-25/garnatxa/bf/onesp/s16/onesp.txt	-195822.7359
