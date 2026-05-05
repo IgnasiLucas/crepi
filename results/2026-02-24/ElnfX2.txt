@@ -1,0 +1,16 @@
+../2025-11-25/garnatxa/bf/twoMig/s01/twoMig.txt	-231608.5123
+../2025-11-25/garnatxa/bf/twoMig/s02/twoMig.txt	-227543.1867
+../2025-11-25/garnatxa/bf/twoMig/s03/twoMig.txt	-225514.8799
+../2025-11-25/garnatxa/bf/twoMig/s04/twoMig.txt	-222894.4593
+../2025-11-25/garnatxa/bf/twoMig/s05/twoMig.txt	-219562.1959
+../2025-11-25/garnatxa/bf/twoMig/s06/twoMig.txt	-215465.9014
+../2025-11-25/garnatxa/bf/twoMig/s07/twoMig.txt	-210949.6528
+../2025-11-25/garnatxa/bf/twoMig/s08/twoMig.txt	-206734.5414
+../2025-11-25/garnatxa/bf/twoMig/s09/twoMig.txt	-203449.4320
+../2025-11-25/garnatxa/bf/twoMig/s10/twoMig.txt	-201190.6463
+../2025-11-25/garnatxa/bf/twoMig/s11/twoMig.txt	-199701.8023
+../2025-11-25/garnatxa/bf/twoMig/s12/twoMig.txt	-198704.7556
+../2025-11-25/garnatxa/bf/twoMig/s13/twoMig.txt	-198018.0721
+../2025-11-25/garnatxa/bf/twoMig/s14/twoMig.txt	-197544.1555
+../2025-11-25/garnatxa/bf/twoMig/s15/twoMig.txt	-197235.3598
+../2025-11-25/garnatxa/bf/twoMig/s16/twoMig.txt	-197069.9379

@@ -152,10 +152,8 @@ quite unfortunate, but not easy to work around at the moment.
 
 # Comparison between the one-species model and the two-species model
 The chains for the 16 steps to get the marginal likelihood for the two-species
-model were interrumpted. Thus, the average likelihood for each power beta
-is not retrieved (yet). But, having between 8000 and 13000 samples of the
-power posteriors, I can approximate the average likelihood myself as just
-the average of the likelihoods in the chain. This is a provisional solution.
+model were delayed. But finally finished. This is the definitive result,
+almost identical to the provisional one, obtained before with partial chains.
 
 ```{bash}
 if [ ! -e ElnfX1.txt ]; then
