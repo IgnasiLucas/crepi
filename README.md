@@ -444,3 +444,9 @@ It suggests a very high heterozygosity (~8%). The fact is that the Illumina
 reads come from an individual with admixed ancestry (see 2024-10-18). But 8%
 heterozygosity is too much. The analysis also suggests a haploid genome size of
 680 million base pairs, with 62% unique sequence.
+
+***
+
+![](doc/MICIU+AEI.jpg){width=300px}
+
+Project PID2019-104908GB-I00 funded by MICIU/AEI/10.13039/501100011033.
