@@ -447,6 +447,6 @@ heterozygosity is too much. The analysis also suggests a haploid genome size of
 
 ***
 
-![](doc/MICIU+AEI.jpg | width=300)
+<img src="doc/MICIU+AEI.jpg" width="300" />
 
 Project PID2019-104908GB-I00 funded by MICIU/AEI/10.13039/501100011033.
